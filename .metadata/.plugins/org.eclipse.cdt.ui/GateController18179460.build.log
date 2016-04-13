@@ -1,0 +1,22 @@
+21:00:44 **** Incremental Build of configuration HardwareDebug for project GateController18179460 ****
+make -j4 all 
+'Scanning and building file: ../src/r_main.c'
+'Invoking: Scanner and Compiler'
+rl78-elf-gcc -MM -MP -MF "src/r_main.d" -MT"src/r_main.o" -MT"src/r_main.d" -x c   -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g "../src/r_main.c"
+rl78-elf-gcc -c -x c  -Wa,-adlhn="r_main.lst" -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g -o "src/r_main.o" "../src/r_main.c"
+'Finished scanning and building: ../src/r_main.c'
+
+'Invoking: Linker'
+'Building target:'
+rl78-elf-ld -o "Test_LCD.x" -T"C:\Users\trist\e2_studio\workspace\GateController18179460\HardwareDebug\Test_LCD_HardwareDebug_auto.gsi" @"C:\Users\trist\e2_studio\workspace\GateController18179460\HardwareDebug\LinkerSubCommand.tmp"    libTest_LCD.a  -M=Test_LCD.map -L"C:\Users\trist\e2_studio\workspace\GateController18179460\HardwareDebug" -L"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/lib/gcc/rl78-elf/4.9-GNURL78_v15.02/g14" --start-group -lTest_LCD -lgcc --end-group -e_PowerON_Reset
+'Finished building:'
+
+'Invoking: Objcopy'
+'Building target:'
+rl78-elf-objcopy -O srec   Test_LCD.x "Test_LCD.mot"
+'Finished building target:'
+
+'Build complete.'
+
+21:00:46 Build Finished. 0 errors, 0 warnings. (took 1s.960ms)
+

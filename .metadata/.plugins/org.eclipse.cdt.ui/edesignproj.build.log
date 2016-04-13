@@ -1,0 +1,22 @@
+13:39:30 **** Incremental Build of configuration HardwareDebug for project edesignproj ****
+make -j4 all 
+'Scanning and building file: ../src/r_cg_serial_user.c'
+'Invoking: Scanner and Compiler'
+rl78-elf-gcc -MM -MP -MF "src/r_cg_serial_user.d" -MT"src/r_cg_serial_user.o" -MT"src/r_cg_serial_user.d" -x c   -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g "../src/r_cg_serial_user.c"
+rl78-elf-gcc -c -x c  -Wa,-adlhn="r_cg_serial_user.lst" -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g -o "src/r_cg_serial_user.o" "../src/r_cg_serial_user.c"
+'Finished scanning and building: ../src/r_cg_serial_user.c'
+
+'Invoking: Linker'
+'Building target:'
+rl78-elf-ld -o "edesignproj.x" -T"C:\Users\trist\e2_studio\workspace\edesignproj\HardwareDebug\edesignproj_HardwareDebug_auto.gsi" @"C:\Users\trist\e2_studio\workspace\edesignproj\HardwareDebug\LinkerSubCommand.tmp"    -M=edesignproj.map -L"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/lib/gcc/rl78-elf/4.9-GNURL78_v15.02/g14" -L"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/lib/g14" --start-group -loptm -loptc -lgcc --end-group -e_PowerON_Reset
+'Finished building:'
+
+'Invoking: Objcopy'
+'Building target:'
+rl78-elf-objcopy -O srec   edesignproj.x "edesignproj.mot"
+'Finished building target:'
+
+'Build complete.'
+
+13:39:32 Build Finished. 0 errors, 0 warnings. (took 2s.82ms)
+

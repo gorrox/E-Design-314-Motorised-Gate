@@ -1,0 +1,408 @@
+
+Allocating common symbols
+Common symbol       size              file
+
+frameBase           0x2               ./src/global.o
+msg                 0x2               ./src/global.o
+modulate            0x1               ./src/global.o
+btnOpenTrigger      0x1               ./src/global.o
+tx                  0x1               ./src/global.o
+btnCloseTrigger     0x1               ./src/global.o
+
+Discarded input sections
+
+ .text          0x00000000        0x0 ./src/global.o
+ .data          0x00000000        0x0 ./src/global.o
+ .bss           0x00000000        0x0 ./src/global.o
+ .debug_frame   0x00000000       0x4c ./src/global.o
+ .debug_info    0x00000000      0x230 ./src/global.o
+ .debug_abbrev  0x00000000       0xe3 ./src/global.o
+ .debug_aranges
+                0x00000000       0x30 ./src/global.o
+ .debug_ranges  0x00000000       0x20 ./src/global.o
+ .debug_line    0x00000000      0x1e7 ./src/global.o
+ .debug_str     0x00000000      0x248 ./src/global.o
+ .text          0x00000000        0x0 ./src/r_cg_cgc.o
+ .data          0x00000000        0x0 ./src/r_cg_cgc.o
+ .bss           0x00000000        0x0 ./src/r_cg_cgc.o
+ .debug_frame   0x00000000       0x24 ./src/r_cg_cgc.o
+ .debug_info    0x00000000      0x133 ./src/r_cg_cgc.o
+ .debug_abbrev  0x00000000       0x82 ./src/r_cg_cgc.o
+ .debug_aranges
+                0x00000000       0x20 ./src/r_cg_cgc.o
+ .debug_ranges  0x00000000       0x10 ./src/r_cg_cgc.o
+ .debug_line    0x00000000       0x74 ./src/r_cg_cgc.o
+ .debug_str     0x00000000      0x1bc ./src/r_cg_cgc.o
+ .text          0x00000000        0x0 ./src/r_cg_cgc_user.o
+ .data          0x00000000        0x0 ./src/r_cg_cgc_user.o
+ .bss           0x00000000        0x0 ./src/r_cg_cgc_user.o
+ .debug_frame   0x00000000       0x24 ./src/r_cg_cgc_user.o
+ .debug_info    0x00000000       0x7a ./src/r_cg_cgc_user.o
+ .debug_abbrev  0x00000000       0x53 ./src/r_cg_cgc_user.o
+ .debug_aranges
+                0x00000000       0x20 ./src/r_cg_cgc_user.o
+ .debug_ranges  0x00000000       0x10 ./src/r_cg_cgc_user.o
+ .debug_line    0x00000000       0x69 ./src/r_cg_cgc_user.o
+ .debug_str     0x00000000      0x1c7 ./src/r_cg_cgc_user.o
+ .text          0x00000000        0x0 ./src/r_cg_intc.o
+ .data          0x00000000        0x0 ./src/r_cg_intc.o
+ .bss           0x00000000        0x0 ./src/r_cg_intc.o
+ .text.R_INTC0_Stop
+                0x00000000        0x9 ./src/r_cg_intc.o
+ .text.R_INTC1_Stop
+                0x00000000        0x9 ./src/r_cg_intc.o
+ .debug_frame   0x00000000       0x64 ./src/r_cg_intc.o
+ .debug_info    0x00000000      0x34d ./src/r_cg_intc.o
+ .debug_abbrev  0x00000000       0xa4 ./src/r_cg_intc.o
+ .debug_aranges
+                0x00000000       0x40 ./src/r_cg_intc.o
+ .debug_ranges  0x00000000       0x30 ./src/r_cg_intc.o
+ .debug_line    0x00000000      0x155 ./src/r_cg_intc.o
+ .debug_str     0x00000000      0x263 ./src/r_cg_intc.o
+ .text          0x00000000        0x0 ./src/r_cg_intc_user.o
+ .data          0x00000000        0x0 ./src/r_cg_intc_user.o
+ .bss           0x00000000        0x0 ./src/r_cg_intc_user.o
+ .text.startTMR2
+                0x00000000        0xe ./src/r_cg_intc_user.o
+ .text.delayNoInt
+                0x00000000       0x28 ./src/r_cg_intc_user.o
+ .debug_frame   0x00000000       0x94 ./src/r_cg_intc_user.o
+ .debug_info    0x00000000      0x2ac ./src/r_cg_intc_user.o
+ .debug_abbrev  0x00000000      0x141 ./src/r_cg_intc_user.o
+ .debug_aranges
+                0x00000000       0x38 ./src/r_cg_intc_user.o
+ .debug_ranges  0x00000000       0x28 ./src/r_cg_intc_user.o
+ .debug_line    0x00000000       0xfe ./src/r_cg_intc_user.o
+ .debug_str     0x00000000      0x264 ./src/r_cg_intc_user.o
+ .text          0x00000000        0x0 ./src/r_cg_port.o
+ .data          0x00000000        0x0 ./src/r_cg_port.o
+ .bss           0x00000000        0x0 ./src/r_cg_port.o
+ .debug_frame   0x00000000       0x24 ./src/r_cg_port.o
+ .debug_info    0x00000000      0x178 ./src/r_cg_port.o
+ .debug_abbrev  0x00000000       0x8f ./src/r_cg_port.o
+ .debug_aranges
+                0x00000000       0x20 ./src/r_cg_port.o
+ .debug_ranges  0x00000000       0x10 ./src/r_cg_port.o
+ .debug_line    0x00000000       0x81 ./src/r_cg_port.o
+ .debug_str     0x00000000      0x1d1 ./src/r_cg_port.o
+ .text          0x00000000        0x0 ./src/r_cg_port_user.o
+ .data          0x00000000        0x0 ./src/r_cg_port_user.o
+ .bss           0x00000000        0x0 ./src/r_cg_port_user.o
+ .debug_info    0x00000000       0x48 ./src/r_cg_port_user.o
+ .debug_abbrev  0x00000000       0x1b ./src/r_cg_port_user.o
+ .debug_aranges
+                0x00000000       0x18 ./src/r_cg_port_user.o
+ .debug_line    0x00000000       0x1d ./src/r_cg_port_user.o
+ .debug_str     0x00000000      0x19f ./src/r_cg_port_user.o
+ .comment       0x00000000       0x95 ./src/r_cg_port_user.o
+ .text          0x00000000        0x0 ./src/r_cg_timer.o
+ .data          0x00000000        0x0 ./src/r_cg_timer.o
+ .bss           0x00000000        0x0 ./src/r_cg_timer.o
+ .text.R_TAU0_Channel0_Stop
+                0x00000000       0x37 ./src/r_cg_timer.o
+ .text.R_TAU0_Channel2_Start
+                0x00000000       0x1c ./src/r_cg_timer.o
+ .text.R_TAU0_Channel2_Stop
+                0x00000000       0x1c ./src/r_cg_timer.o
+ .text.R_TAU0_Channel3_Stop
+                0x00000000       0x1c ./src/r_cg_timer.o
+ .debug_frame   0x00000000       0x84 ./src/r_cg_timer.o
+ .debug_info    0x00000000      0x400 ./src/r_cg_timer.o
+ .debug_abbrev  0x00000000       0xcd ./src/r_cg_timer.o
+ .debug_aranges
+                0x00000000       0x50 ./src/r_cg_timer.o
+ .debug_ranges  0x00000000       0x40 ./src/r_cg_timer.o
+ .debug_line    0x00000000      0x2a4 ./src/r_cg_timer.o
+ .debug_str     0x00000000      0x2e0 ./src/r_cg_timer.o
+ .text          0x00000000        0x0 ./src/r_cg_timer_user.o
+ .data          0x00000000        0x0 ./src/r_cg_timer_user.o
+ .bss           0x00000000        0x0 ./src/r_cg_timer_user.o
+ .debug_frame   0x00000000       0xe0 ./src/r_cg_timer_user.o
+ .debug_info    0x00000000      0x1dc ./src/r_cg_timer_user.o
+ .debug_abbrev  0x00000000       0xe1 ./src/r_cg_timer_user.o
+ .debug_aranges
+                0x00000000       0x38 ./src/r_cg_timer_user.o
+ .debug_ranges  0x00000000       0x28 ./src/r_cg_timer_user.o
+ .debug_line    0x00000000      0x120 ./src/r_cg_timer_user.o
+ .debug_str     0x00000000      0x262 ./src/r_cg_timer_user.o
+ .text          0x00000000        0x0 ./src/r_cg_vector_table.o
+ .data          0x00000000        0x0 ./src/r_cg_vector_table.o
+ .bss           0x00000000        0x0 ./src/r_cg_vector_table.o
+ .debug_frame   0x00000000       0x40 ./src/r_cg_vector_table.o
+ .debug_info    0x00000000      0x108 ./src/r_cg_vector_table.o
+ .debug_abbrev  0x00000000       0x7c ./src/r_cg_vector_table.o
+ .debug_aranges
+                0x00000000       0x20 ./src/r_cg_vector_table.o
+ .debug_ranges  0x00000000       0x10 ./src/r_cg_vector_table.o
+ .debug_line    0x00000000       0x68 ./src/r_cg_vector_table.o
+ .debug_str     0x00000000      0x1ec ./src/r_cg_vector_table.o
+ .text          0x00000000        0x0 ./src/r_hardware_setup.o
+ .data          0x00000000        0x0 ./src/r_hardware_setup.o
+ .bss           0x00000000        0x0 ./src/r_hardware_setup.o
+ .debug_frame   0x00000000       0x34 ./src/r_hardware_setup.o
+ .debug_info    0x00000000       0xe1 ./src/r_hardware_setup.o
+ .debug_abbrev  0x00000000       0x8d ./src/r_hardware_setup.o
+ .debug_aranges
+                0x00000000       0x28 ./src/r_hardware_setup.o
+ .debug_ranges  0x00000000       0x18 ./src/r_hardware_setup.o
+ .debug_line    0x00000000       0xd9 ./src/r_hardware_setup.o
+ .debug_str     0x00000000      0x209 ./src/r_hardware_setup.o
+ .text          0x00000000        0x0 ./src/r_main.o
+ .data          0x00000000        0x0 ./src/r_main.o
+ .bss           0x00000000        0x0 ./src/r_main.o
+ .text.R_MAIN_UserInit
+                0x00000000        0x4 ./src/r_main.o
+ .debug_frame   0x00000000       0x34 ./src/r_main.o
+ .debug_info    0x00000000      0x173 ./src/r_main.o
+ .debug_abbrev  0x00000000       0xcc ./src/r_main.o
+ .debug_aranges
+                0x00000000       0x28 ./src/r_main.o
+ .debug_ranges  0x00000000       0x18 ./src/r_main.o
+ .debug_line    0x00000000       0xf7 ./src/r_main.o
+ .debug_str     0x00000000      0x25a ./src/r_main.o
+ .data          0x00000000        0x0 ./src/r_reset_program.o
+ .bss           0x00000000        0x0 ./src/r_reset_program.o
+ .debug_line    0x00000000      0x15f ./src/r_reset_program.o
+ .debug_info    0x00000000       0x80 ./src/r_reset_program.o
+ .debug_abbrev  0x00000000       0x14 ./src/r_reset_program.o
+ .debug_aranges
+                0x00000000       0x20 ./src/r_reset_program.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+VEC              0x00000000         0x00000004
+IVEC             0x00000004         0x000000bc
+OPT              0x000000c0         0x00000004
+SEC_ID           0x000000c4         0x0000000a
+OCDSTAD          0x000000ce         0x0000000a
+OCDROM           0x00003e00         0x00000200
+ROM              0x000000d8         0x00003d28
+MIRROR           0x000f2000         0x00001fff
+RAM              0x000ff900         0x000005ff
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+
+.vec            0x00000000        0x4
+ *(.vec)
+ .vec           0x00000000        0x4 ./src/r_cg_vector_table.o
+                0x00000000                HardwareVectors
+
+.vects          0x00000004       0x7c
+ *(.vects)
+ .vects         0x00000004       0x7c ./src/r_cg_vector_table.o
+                0x00000004                Vectors
+
+.option_bytes   0x000000c0        0x4
+ *(.option_bytes)
+ .option_bytes  0x000000c0        0x4 ./src/r_cg_vector_table.o
+                0x000000c0                Option_Bytes
+
+.security_id    0x000000c4        0xa
+ *(.security_id)
+ .security_id   0x000000c4        0xa ./src/r_cg_vector_table.o
+                0x000000c4                Security_Id
+
+.lowtext        0x000000d8        0x0
+ *(.plt)
+ .plt           0x000000d8        0x0 ./src/global.o
+ *(.lowtext)
+                0x000000d8                . = ALIGN (0x2)
+
+.tors           0x000000d8        0x0
+                0x000000d8                __CTOR_LIST__ = .
+                0x000000d8                . = ALIGN (0x2)
+                0x000000d8                ___ctors = .
+ *(.ctors)
+                0x000000d8                ___ctors_end = .
+                0x000000d8                __CTOR_END__ = .
+                0x000000d8                __DTOR_LIST__ = .
+                0x000000d8                ___dtors = .
+ *(.dtors)
+                0x000000d8                ___dtors_end = .
+                0x000000d8                __DTOR_END__ = .
+                0x000000d8                _mdata = .
+
+.text           0x000000da      0x5a4
+ *(.text)
+ .text          0x000000da       0x60 ./src/r_reset_program.o
+                0x000000dc                PowerON_Reset
+ *(.text.*)
+ .text.transmit
+                0x0000013a       0x8d ./src/global.o
+                0x0000013a                transmit
+ .text.btnOpenTriggered
+                0x000001c7       0x97 ./src/global.o
+                0x000001c7                btnOpenTriggered
+ .text.btnCloseTriggered
+                0x0000025e       0x99 ./src/global.o
+                0x0000025e                btnCloseTriggered
+ .text.R_CGC_Create
+                0x000002f7       0x13 ./src/r_cg_cgc.o
+                0x000002f7                R_CGC_Create
+ .text.R_CGC_Get_ResetSource
+                0x0000030a        0x4 ./src/r_cg_cgc_user.o
+                0x0000030a                R_CGC_Get_ResetSource
+ .text.R_INTC_Create
+                0x0000030e       0x41 ./src/r_cg_intc.o
+                0x0000030e                R_INTC_Create
+ .text.R_INTC0_Start
+                0x0000034f        0x9 ./src/r_cg_intc.o
+                0x0000034f                R_INTC0_Start
+ .text.R_INTC1_Start
+                0x00000358        0x9 ./src/r_cg_intc.o
+                0x00000358                R_INTC1_Start
+ .text.r_intc0_interrupt
+                0x00000361        0xf ./src/r_cg_intc_user.o
+                0x00000361                r_intc0_interrupt
+ .text.r_intc1_interrupt
+                0x00000370        0xf ./src/r_cg_intc_user.o
+                0x00000370                r_intc1_interrupt
+ .text.R_PORT_Create
+                0x0000037f       0x10 ./src/r_cg_port.o
+                0x0000037f                R_PORT_Create
+ .text.R_TAU0_Create
+                0x0000038f      0x19f ./src/r_cg_timer.o
+                0x0000038f                R_TAU0_Create
+ .text.R_TAU0_Channel0_Start
+                0x0000052e       0x37 ./src/r_cg_timer.o
+                0x0000052e                R_TAU0_Channel0_Start
+ .text.R_TAU0_Channel3_Start
+                0x00000565       0x1c ./src/r_cg_timer.o
+                0x00000565                R_TAU0_Channel3_Start
+ .text.r_tau0_channel0_interrupt
+                0x00000581       0x22 ./src/r_cg_timer_user.o
+                0x00000581                r_tau0_channel0_interrupt
+ .text.r_tau0_channel1_interrupt
+                0x000005a3       0x22 ./src/r_cg_timer_user.o
+                0x000005a3                r_tau0_channel1_interrupt
+ .text.r_tau0_channel2_interrupt
+                0x000005c5        0xc ./src/r_cg_timer_user.o
+                0x000005c5                r_tau0_channel2_interrupt
+ .text.r_tau0_channel3_interrupt
+                0x000005d1       0x36 ./src/r_cg_timer_user.o
+                0x000005d1                r_tau0_channel3_interrupt
+ .text.R_Dummy  0x00000607        0xc ./src/r_cg_vector_table.o
+                0x00000607                R_Dummy
+ .text.R_Systeminit
+                0x00000613       0x1b ./src/r_hardware_setup.o
+                0x00000613                R_Systeminit
+ .text.HardwareSetup
+                0x0000062e        0xc ./src/r_hardware_setup.o
+                0x0000062e                HardwareSetup
+ .text.startup.main
+                0x0000063a       0x44 ./src/r_main.o
+                0x0000063a                main
+                0x0000067e                etext = .
+                0x0000067e                . = ALIGN (0x2)
+
+.init
+ *(.init)
+
+.fini
+ *(.fini)
+
+.got
+ *(.got)
+ *(.got.plt)
+
+.rodata         0x00002000        0x0
+                0x00002000                . = ALIGN (0x2)
+ *(.rodata)
+ *(.rodata.*)
+                0x00002000                _erodata = .
+
+.eh_frame_hdr
+ *(.eh_frame_hdr)
+
+.eh_frame
+ *(.eh_frame)
+
+.jcr            0x0000067e        0x0
+ *(.jcr)
+                0x0000067e                . = ALIGN (0x2)
+
+.data           0x000ff900        0x2 load address 0x000000d8
+                0x000ff900                . = ALIGN (0x2)
+                0x000ff900                _data = .
+ *(.data)
+ *(.data.*)
+ .data.frameHalfBitCounter.1642
+                0x000ff900        0x1 ./src/global.o
+ .data.fullHalfBitCounter.1641
+                0x000ff901        0x1 ./src/global.o
+                0x000ff902                . = ALIGN (0x2)
+                0x000ff902                _edata = .
+                0x00000002                PROVIDE (__romdatacopysize, SIZEOF (.data))
+
+.bss            0x000ff902        0x8 load address 0x000000da
+                0x000ff902                . = ALIGN (0x2)
+                0x000ff902                _bss = .
+ *(.bss)
+ *(.bss.**)
+                0x000ff902                . = ALIGN (0x2)
+ *(COMMON)
+ COMMON         0x000ff902        0x8 ./src/global.o
+                0x000ff902                frameBase
+                0x000ff904                msg
+                0x000ff906                modulate
+                0x000ff907                btnOpenTrigger
+                0x000ff908                tx
+                0x000ff909                btnCloseTrigger
+                0x000ff90a                . = ALIGN (0x2)
+                0x000ff90a                _ebss = .
+                0x000ff90a                _end = .
+                0x00000064                PROVIDE (stack_size, 0x64)
+
+.stack          0x000ffedc        0x0
+                0x000ffedc                _stack = .
+                0x00000001                ASSERT ((_stack > (_end + stack_size)), Error: Too much data - no room left for the stack)
+LOAD ./src/global.o
+LOAD ./src/r_cg_cgc.o
+LOAD ./src/r_cg_cgc_user.o
+LOAD ./src/r_cg_intc.o
+LOAD ./src/r_cg_intc_user.o
+LOAD ./src/r_cg_port.o
+LOAD ./src/r_cg_port_user.o
+LOAD ./src/r_cg_timer.o
+LOAD ./src/r_cg_timer_user.o
+LOAD ./src/r_cg_vector_table.o
+LOAD ./src/r_hardware_setup.o
+LOAD ./src/r_main.o
+LOAD ./src/r_reset_program.o
+START GROUP
+LOAD C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/lib/g13\liboptm.a
+LOAD C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/lib/g13\liboptc.a
+LOAD C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/lib/gcc/rl78-elf/4.9-GNURL78_v15.02/g13\libgcc.a
+END GROUP
+OUTPUT(RemoteController.x elf32-rl78)
+
+.debug_frame
+
+.debug_info
+
+.debug_abbrev
+
+.debug_aranges
+
+.debug_ranges
+
+.debug_line
+
+.debug_str
+
+.comment        0x00000000       0x94
+ .comment       0x00000000       0x94 ./src/global.o
+                                 0x95 (size before relaxing)
+ .comment       0x00000000       0x95 ./src/r_cg_cgc.o
+ .comment       0x00000000       0x95 ./src/r_cg_cgc_user.o
+ .comment       0x00000000       0x95 ./src/r_cg_intc.o
+ .comment       0x00000000       0x95 ./src/r_cg_intc_user.o
+ .comment       0x00000000       0x95 ./src/r_cg_port.o
+ .comment       0x00000000       0x95 ./src/r_cg_timer.o
+ .comment       0x00000000       0x95 ./src/r_cg_timer_user.o
+ .comment       0x00000000       0x95 ./src/r_cg_vector_table.o
+ .comment       0x00000000       0x95 ./src/r_hardware_setup.o
+ .comment       0x00000000       0x95 ./src/r_main.o

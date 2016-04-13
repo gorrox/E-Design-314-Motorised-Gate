@@ -1,0 +1,429 @@
+   1                             	r8	=	0xffef0
+   2                             	r16	=	0xffee8
+   3                             	r24	=	0xffee0
+   4                             	r9	=	0xffef1
+   5                             	r17	=	0xffee9
+   6                             	r25	=	0xffee1
+   7                             	r10	=	0xffef2
+   8                             	r18	=	0xffeea
+   9                             	r26	=	0xffee2
+  10                             	r11	=	0xffef3
+  11                             	r19	=	0xffeeb
+  12                             	r27	=	0xffee3
+  13                             	r12	=	0xffef4
+  14                             	r20	=	0xffeec
+  15                             	r28	=	0xffee4
+  16                             	r13	=	0xffef5
+  17                             	r21	=	0xffeed
+  18                             	r29	=	0xffee5
+  19                             	r14	=	0xffef6
+  20                             	r22	=	0xffeee
+  21                             	r30	=	0xffee6
+  22                             	r15	=	0xffef7
+  23                             	r23	=	0xffeef
+  24                             	r31	=	0xffee7
+  25                             	.text
+  26                             	.Ltext0:
+  27                             		.section	.text.transmit,"ax",@progbits
+  28                             		.global	_transmit
+  30                             	_transmit:
+  31                             	.LFB0:
+  32                             		.file 1 "../src/global.c"
+   1:../src/global.c **** /*
+   2:../src/global.c ****  * global.c
+   3:../src/global.c ****  *
+   4:../src/global.c ****  *  Created on: Apr 11, 2016
+   5:../src/global.c ****  *      Author: trist
+   6:../src/global.c ****  */
+   7:../src/global.c **** 
+   8:../src/global.c **** #include "global.h"
+   9:../src/global.c **** 
+  10:../src/global.c **** /*
+  11:../src/global.c ****  * Transmits an array of 14 bits via IR LED
+  12:../src/global.c ****  * Uses Manchester RC5 encoding
+  13:../src/global.c ****  */
+  14:../src/global.c **** void transmit(void)
+  15:../src/global.c **** {
+  33                             		.loc 1 15 0
+  34                             		; start of function
+  35                             		; locals: 2 bytes
+  36 0000 20 02                   		subw	sp, #2
+  37                             	.LCFI0:
+  16:../src/global.c **** 	static volatile uint8_t fullHalfBitCounter = frameHalfBitLength;
+  17:../src/global.c **** 	static volatile uint8_t frameHalfBitCounter = frameHalfBitLength;
+  18:../src/global.c **** 	volatile uint8_t bit; // buffer
+  19:../src/global.c **** 
+  20:../src/global.c **** 	if (fullHalfBitCounter) // Busy transmitting
+  38                             		.loc 1 20 0
+  39 0002 D5 00 00                		cmp0	!_fullHalfBitCounter.1641
+  40 0005 61 F8                   		 sknz
+  41 0007 EC 80 00 00             		 br	!!.L2
+  21:../src/global.c **** 	{
+  22:../src/global.c **** 		if (frameHalfBitCounter)
+  42                             		.loc 1 22 0
+  43 000b D5 00 00                		cmp0	!_frameHalfBitCounter.1642
+  44 000e 61 F8                   		 sknz
+  45 0010 EC 72 00 00             		 br	!!.L3
+  23:../src/global.c **** 		{
+  24:../src/global.c **** 			bit = (msg >> ((frameHalfBitCounter + 1)/2 -1)); //Data bit
+  46                             		.loc 1 24 0
+  47 0014 AF 00 00                		movw	ax, !_msg
+  48 0017 BD F2                   		movw	r10, ax
+  49 0019 8F 00 00                		mov	a, !_frameHalfBitCounter.1642
+  50 001c 9D F0                   		mov	r8, a
+  51 001e CD F1 00                		mov	r9, #0
+  52 0021 A6 F0                   		incw	r8
+  53 0023 AD F0                   		movw	ax, r8
+  54 0025 31 1F                   		sarw	ax, 1
+  55 0027 BD F0                   		movw	r8, ax
+  56 0029 B6 F0                   		decw	r8
+  57 002b 8D F0                   		mov	a, r8
+  58 002d 76                      		mov	l, a
+  59 002e AD F2                   		movw	ax, r10
+  60 0030 86                      		inc l
+  61 0031 96                      		dec l
+  62 0032 DD 05                   		bz $2f
+  63 0034 31 1E                   		1: shrw	ax, 1
+  64 0036 96                      		dec l
+  65 0037 DF FB                   		bnz $1b
+  66                             		2:
+  67 0039 60                      		mov	a, x
+  68 003a 98 01                   		mov	[sp+1], a
+  25:../src/global.c **** 			bit &= 0x1; //Lowest LSB
+  69                             		.loc 1 25 0
+  70 003c 5C 01                   		and	a, #1
+  71 003e 98 01                   		mov	[sp+1], a
+  26:../src/global.c **** 			modulate = (!bit ^ (frameHalfBitCounter%2));
+  72                             		.loc 1 26 0
+  73 0040 88 01                   		mov	a, [sp+1]
+  74 0042 9D F2                   		mov	r10, a
+  75 0044 8F 00 00                		mov	a, !_frameHalfBitCounter.1642
+  76 0047 5C 01                   		and	a, #1
+  77 0049 9D F1                   		mov	r9, a
+  78 004b E4 F0                   		oneb	r8
+  79 004d D4 F2                   		cmp0	r10
+  80 004f 61 F8                   		 sknz
+  81 0051 EC 57 00 00             		 br	!!.L4
+  82 0055 F4 F0                   		clrb	r8
+  83                             	.L4:
+  84 0057 8D F1                   		mov	a, r9
+  85 0059 7B F0                   		xor	a, r8
+  86 005b 9F 00 00                		mov	!_modulate, a
+  27:../src/global.c **** 			if (!modulate) P1_bit.no0 = 0;
+  87                             		.loc 1 27 0
+  88 005e D5 00 00                		cmp0	!_modulate
+  89 0061 61 E8                   		 skz
+  90 0063 EC 6B 00 00             		 br	!!.L5
+  91                             		.loc 1 27 0 is_stmt 0 discriminator 1
+  92 0067 71 08 01 FF             		clr1	!-255.0
+  93                             	.L5:
+  28:../src/global.c **** 			frameHalfBitCounter--;
+  94                             		.loc 1 28 0 is_stmt 1
+  95 006b B0 00 00                		dec	!_frameHalfBitCounter.1642
+  96 006e EC 79 00 00             		br	!!.L6
+  97                             	.L3:
+  29:../src/global.c **** 		}
+  30:../src/global.c **** 		else
+  31:../src/global.c **** 		{
+  32:../src/global.c **** 			modulate = 0;
+  98                             		.loc 1 32 0
+  99 0072 F5 00 00                		clrb	!_modulate
+  33:../src/global.c **** 			P1_bit.no0 = 0;
+ 100                             		.loc 1 33 0
+ 101 0075 71 08 01 FF             		clr1	!-255.0
+ 102                             	.L6:
+  34:../src/global.c **** 		}
+  35:../src/global.c **** 		fullHalfBitCounter--;
+ 103                             		.loc 1 35 0
+ 104 0079 B0 00 00                		dec	!_fullHalfBitCounter.1641
+ 105 007c EC 8A 00 00             		br	!!.L1
+ 106                             	.L2:
+  36:../src/global.c **** 	}
+  37:../src/global.c **** 	else // Not busy transmitting
+  38:../src/global.c **** 	{
+  39:../src/global.c **** 		// Reset
+  40:../src/global.c **** 		fullHalfBitCounter = fullHalfBitLength;
+ 107                             		.loc 1 40 0
+ 108 0080 51 80                   		mov	a, #-128
+ 109 0082 9F 00 00                		mov	!_fullHalfBitCounter.1641, a
+  41:../src/global.c **** 		frameHalfBitCounter = frameHalfBitLength;
+ 110                             		.loc 1 41 0
+ 111 0085 51 1C                   		mov	a, #28
+ 112 0087 9F 00 00                		mov	!_frameHalfBitCounter.1642, a
+ 113                             	.L1:
+  42:../src/global.c **** 		/*
+  43:../src/global.c **** 		if (!IR_BUTTON_TX)
+  44:../src/global.c **** 		{
+  45:../src/global.c **** 			ir_txMessage |= 0x800;
+  46:../src/global.c **** 		}
+  47:../src/global.c **** 		else
+  48:../src/global.c **** 		{
+  49:../src/global.c **** 			ir_txMessage = ir_txMessage_default;
+  50:../src/global.c **** 			R_TAU0_Channel3_Stop();
+  51:../src/global.c **** 			R_INTC1_Start();
+  52:../src/global.c **** 			R_INTC2_Start();
+  53:../src/global.c **** 		}
+  54:../src/global.c **** 		*/
+  55:../src/global.c **** 	}
+  56:../src/global.c **** 
+  57:../src/global.c **** }
+ 114                             		.loc 1 57 0
+ 115 008a 10 02                   		addw	sp, #2
+ 116 008c D7                      		ret
+ 117                             	.LFE0:
+ 119                             		.section	.text.btnOpenTriggered,"ax",@progbits
+ 120                             		.global	_btnOpenTriggered
+ 122                             	_btnOpenTriggered:
+ 123                             	.LFB1:
+  58:../src/global.c **** 
+  59:../src/global.c **** void btnOpenTriggered()
+  60:../src/global.c **** {
+ 124                             		.loc 1 60 0
+  61:../src/global.c **** 	if (!btnOpen && btnClose)
+ 125                             		.loc 1 61 0
+ 126 0000 8F 04 FF                		mov	a, !-252
+ 127 0003 31 1A                   		shr	a, 1
+ 128 0005 31 03 23                		bt	A.0, $.L13
+ 129                             		.loc 1 61 0 is_stmt 0 discriminator 1
+ 130 0008 8F 0D FF                		mov	a, !-243
+ 131 000b 31 7A                   		shr	a, 7
+ 132 000d 9D F0                   		mov	r8, a
+ 133 000f D4 F0                   		cmp0	r8
+ 134 0011 61 F8                   		 sknz
+ 135 0013 EC 2B 00 00             		 br	!!.L13
+  62:../src/global.c **** 	{
+  63:../src/global.c **** 		// Pressed Open alone, just open gate
+  64:../src/global.c **** 		frameBase ^= toggle; 			// Toggle Bit
+ 136                             		.loc 1 64 0 is_stmt 1
+ 137 0017 AF 00 00                		movw	ax, !_frameBase
+ 138 001a 7C 08                   		xor a, #8 
+ 139 001c 08                      		 xch a, x 
+ 140 001d 7C 00                   		 xor a, #0 
+ 141 001f 08                      		 xch a, x
+ 142 0020 BF 00 00                		movw	!_frameBase, ax
+  65:../src/global.c **** 		msg = frameBase + openCode; 	// Set transmission to Open Gate command
+ 143                             		.loc 1 65 0
+ 144 0023 AF 00 00                		movw	ax, !_frameBase
+ 145 0026 A1                      		incw	ax
+ 146 0027 EC 6B 00 00             		br	!!.L29
+ 147                             	.L13:
+  66:../src/global.c **** 		tx = 1;
+  67:../src/global.c **** 	}
+  68:../src/global.c **** 	else if (btnOpen && btnClose)
+ 148                             		.loc 1 68 0
+ 149 002b 8F 04 FF                		mov	a, !-252
+ 150 002e 31 1A                   		shr	a, 1
+ 151 0030 31 05 0F                		bf	A.0, $.L15
+ 152                             		.loc 1 68 0 is_stmt 0 discriminator 1
+ 153 0033 8F 0D FF                		mov	a, !-243
+ 154 0036 31 7A                   		shr	a, 7
+ 155 0038 9D F0                   		mov	r8, a
+ 156 003a D4 F0                   		cmp0	r8
+ 157 003c 61 E8                   		 skz
+ 158 003e EC 8C 00 00             		 br	!!.L30
+ 159                             	.L15:
+  69:../src/global.c **** 	{
+  70:../src/global.c **** 		// Let go of Open, Close is not being pressed, stop transmitting
+  71:../src/global.c **** 		tx = 0;
+  72:../src/global.c **** 		P1_bit.no0 = 0;
+  73:../src/global.c **** 	}
+  74:../src/global.c **** 	else if (!btnOpen && !btnClose)
+ 160                             		.loc 1 74 0 is_stmt 1
+ 161 0042 8F 04 FF                		mov	a, !-252
+ 162 0045 31 1A                   		shr	a, 1
+ 163 0047 31 03 2B                		bt	A.0, $.L16
+ 164                             		.loc 1 74 0 is_stmt 0 discriminator 1
+ 165 004a 8F 0D FF                		mov	a, !-243
+ 166 004d 31 7A                   		shr	a, 7
+ 167 004f 9D F0                   		mov	r8, a
+ 168 0051 D4 F0                   		cmp0	r8
+ 169 0053 61 E8                   		 skz
+ 170 0055 EC 75 00 00             		 br	!!.L16
+  75:../src/global.c **** 	{
+  76:../src/global.c **** 		// Pressed Open while Open is pressed (both)
+  77:../src/global.c **** 		frameBase ^= toggle; 			// Toggle Bit
+ 171                             		.loc 1 77 0 is_stmt 1
+ 172 0059 AF 00 00                		movw	ax, !_frameBase
+ 173 005c 7C 08                   		xor a, #8 
+ 174 005e 08                      		 xch a, x 
+ 175 005f 7C 00                   		 xor a, #0 
+ 176 0061 08                      		 xch a, x
+ 177 0062 BF 00 00                		movw	!_frameBase, ax
+  78:../src/global.c **** 		msg = frameBase + bothCode;		// Set transmission to Emergency stop command
+ 178                             		.loc 1 78 0
+ 179 0065 AF 00 00                		movw	ax, !_frameBase
+ 180 0068 04 03 00                		addw	ax, #3
+ 181                             	.L29:
+ 182 006b BF 00 00                		movw	!_msg, ax
+  79:../src/global.c **** 		tx = 1;
+ 183                             		.loc 1 79 0
+ 184 006e E5 00 00                		oneb	!_tx
+ 185 0071 EC 93 00 00             		br	!!.L14
+ 186                             	.L16:
+  80:../src/global.c **** 	}
+  81:../src/global.c **** 	else if (btnOpen && !btnClose)
+ 187                             		.loc 1 81 0
+ 188 0075 8F 04 FF                		mov	a, !-252
+ 189 0078 31 1A                   		shr	a, 1
+ 190 007a 31 05 16                		bf	A.0, $.L14
+ 191                             		.loc 1 81 0 is_stmt 0 discriminator 1
+ 192 007d 8F 0D FF                		mov	a, !-243
+ 193 0080 31 7A                   		shr	a, 7
+ 194 0082 9D F0                   		mov	r8, a
+ 195 0084 D4 F0                   		cmp0	r8
+ 196 0086 61 E8                   		 skz
+ 197 0088 EC 93 00 00             		 br	!!.L14
+ 198                             	.L30:
+  82:../src/global.c **** 	{
+  83:../src/global.c **** 		// Let go of Open while Close is pressed (Idle)
+  84:../src/global.c **** 		tx = 0;
+ 199                             		.loc 1 84 0 is_stmt 1
+ 200 008c F5 00 00                		clrb	!_tx
+  85:../src/global.c **** 		P1_bit.no0 = 0;
+ 201                             		.loc 1 85 0
+ 202 008f 71 08 01 FF             		clr1	!-255.0
+ 203                             	.L14:
+  86:../src/global.c **** 	}
+  87:../src/global.c **** 	btnOpenTrigger = 0;
+ 204                             		.loc 1 87 0
+ 205 0093 F5 00 00                		clrb	!_btnOpenTrigger
+  88:../src/global.c **** }
+ 206                             		.loc 1 88 0
+ 207 0096 D7                      		ret
+ 208                             	.LFE1:
+ 210                             		.section	.text.btnCloseTriggered,"ax",@progbits
+ 211                             		.global	_btnCloseTriggered
+ 213                             	_btnCloseTriggered:
+ 214                             	.LFB2:
+  89:../src/global.c **** 
+  90:../src/global.c **** void btnCloseTriggered()
+  91:../src/global.c **** {
+ 215                             		.loc 1 91 0
+  92:../src/global.c **** 	if (!btnClose && btnOpen)
+ 216                             		.loc 1 92 0
+ 217 0000 8F 0D FF                		mov	a, !-243
+ 218 0003 31 7A                   		shr	a, 7
+ 219 0005 9D F0                   		mov	r8, a
+ 220 0007 D4 F0                   		cmp0	r8
+ 221 0009 61 E8                   		 skz
+ 222 000b EC 2D 00 00             		 br	!!.L32
+ 223                             		.loc 1 92 0 is_stmt 0 discriminator 1
+ 224 000f 8F 04 FF                		mov	a, !-252
+ 225 0012 31 1A                   		shr	a, 1
+ 226 0014 31 05 16                		bf	A.0, $.L32
+  93:../src/global.c **** 	{
+  94:../src/global.c **** 		// Pressed Close alone, just close gate
+  95:../src/global.c **** 		frameBase ^= toggle; 			// Toggle Bit
+ 227                             		.loc 1 95 0 is_stmt 1
+ 228 0017 AF 00 00                		movw	ax, !_frameBase
+ 229 001a 7C 08                   		xor a, #8 
+ 230 001c 08                      		 xch a, x 
+ 231 001d 7C 00                   		 xor a, #0 
+ 232 001f 08                      		 xch a, x
+ 233 0020 BF 00 00                		movw	!_frameBase, ax
+  96:../src/global.c **** 		msg = frameBase + closeCode; 	// Set transmission to Close Gate command
+ 234                             		.loc 1 96 0
+ 235 0023 AF 00 00                		movw	ax, !_frameBase
+ 236 0026 04 02 00                		addw	ax, #2
+ 237 0029 EC 6D 00 00             		br	!!.L48
+ 238                             	.L32:
+  97:../src/global.c **** 		tx = 1;
+  98:../src/global.c **** 	}
+  99:../src/global.c **** 	else if (btnClose && btnOpen)
+ 239                             		.loc 1 99 0
+ 240 002d 8F 0D FF                		mov	a, !-243
+ 241 0030 31 7A                   		shr	a, 7
+ 242 0032 9D F0                   		mov	r8, a
+ 243 0034 D4 F0                   		cmp0	r8
+ 244 0036 61 F8                   		 sknz
+ 245 0038 EC 44 00 00             		 br	!!.L34
+ 246                             		.loc 1 99 0 is_stmt 0 discriminator 1
+ 247 003c 8F 04 FF                		mov	a, !-252
+ 248 003f 31 1A                   		shr	a, 1
+ 249 0041 31 03 4A                		bt	A.0, $.L49
+ 250                             	.L34:
+ 100:../src/global.c **** 	{
+ 101:../src/global.c **** 		// Let go of Close, Open is not being pressed, stop transmitting
+ 102:../src/global.c **** 		tx = 0;
+ 103:../src/global.c **** 		P1_bit.no0 = 0;
+ 104:../src/global.c **** 	}
+ 105:../src/global.c **** 	else if (!btnClose && !btnOpen)
+ 251                             		.loc 1 105 0 is_stmt 1
+ 252 0044 8F 0D FF                		mov	a, !-243
+ 253 0047 31 7A                   		shr	a, 7
+ 254 0049 9D F0                   		mov	r8, a
+ 255 004b D4 F0                   		cmp0	r8
+ 256 004d 61 E8                   		 skz
+ 257 004f EC 77 00 00             		 br	!!.L35
+ 258                             		.loc 1 105 0 is_stmt 0 discriminator 1
+ 259 0053 8F 04 FF                		mov	a, !-252
+ 260 0056 31 1A                   		shr	a, 1
+ 261 0058 31 03 1C                		bt	A.0, $.L35
+ 106:../src/global.c **** 	{
+ 107:../src/global.c **** 		// Pressed Close while Open is pressed (both)
+ 108:../src/global.c **** 		frameBase ^= toggle; 			// Toggle Bit
+ 262                             		.loc 1 108 0 is_stmt 1
+ 263 005b AF 00 00                		movw	ax, !_frameBase
+ 264 005e 7C 08                   		xor a, #8 
+ 265 0060 08                      		 xch a, x 
+ 266 0061 7C 00                   		 xor a, #0 
+ 267 0063 08                      		 xch a, x
+ 268 0064 BF 00 00                		movw	!_frameBase, ax
+ 109:../src/global.c **** 		msg = frameBase + bothCode;		// Set transmission to Emergency stop command
+ 269                             		.loc 1 109 0
+ 270 0067 AF 00 00                		movw	ax, !_frameBase
+ 271 006a 04 03 00                		addw	ax, #3
+ 272                             	.L48:
+ 273 006d BF 00 00                		movw	!_msg, ax
+ 110:../src/global.c **** 		tx = 1;
+ 274                             		.loc 1 110 0
+ 275 0070 E5 00 00                		oneb	!_tx
+ 276 0073 EC 95 00 00             		br	!!.L33
+ 277                             	.L35:
+ 111:../src/global.c **** 	}
+ 112:../src/global.c **** 	else if (btnClose && !btnOpen)
+ 278                             		.loc 1 112 0
+ 279 0077 8F 0D FF                		mov	a, !-243
+ 280 007a 31 7A                   		shr	a, 7
+ 281 007c 9D F0                   		mov	r8, a
+ 282 007e D4 F0                   		cmp0	r8
+ 283 0080 61 F8                   		 sknz
+ 284 0082 EC 95 00 00             		 br	!!.L33
+ 285                             		.loc 1 112 0 is_stmt 0 discriminator 1
+ 286 0086 8F 04 FF                		mov	a, !-252
+ 287 0089 31 1A                   		shr	a, 1
+ 288 008b 31 03 07                		bt	A.0, $.L33
+ 289                             	.L49:
+ 113:../src/global.c **** 	{
+ 114:../src/global.c **** 		// Let go of Close while Open is pressed (Idle)
+ 115:../src/global.c **** 		tx = 0;
+ 290                             		.loc 1 115 0 is_stmt 1
+ 291 008e F5 00 00                		clrb	!_tx
+ 116:../src/global.c **** 		P1_bit.no0 = 0;
+ 292                             		.loc 1 116 0
+ 293 0091 71 08 01 FF             		clr1	!-255.0
+ 294                             	.L33:
+ 117:../src/global.c **** 	}
+ 118:../src/global.c **** 	btnCloseTrigger = 0;
+ 295                             		.loc 1 118 0
+ 296 0095 F5 00 00                		clrb	!_btnCloseTrigger
+ 119:../src/global.c **** }
+ 297                             		.loc 1 119 0
+ 298 0098 D7                      		ret
+ 299                             	.LFE2:
+ 301                             		.section	.data.frameHalfBitCounter.1642,"aw",@progbits
+ 304                             	_frameHalfBitCounter.1642:
+ 305 0000 1C                      		.byte	28
+ 306                             		.section	.data.fullHalfBitCounter.1641,"aw",@progbits
+ 309                             	_fullHalfBitCounter.1641:
+ 310 0000 1C                      		.byte	28
+ 311                             		.comm	_msg,2,2
+ 312                             		.comm	_tx,1,1
+ 313                             		.comm	_modulate,1,1
+ 314                             		.comm	_frameBase,2,2
+ 315                             		.comm	_btnCloseTrigger,1,1
+ 316                             		.comm	_btnOpenTrigger,1,1
+ 363                             	.Letext0:
+ 364                             		.file 2 "../src/iodefine.h"
+ 365                             		.file 3 "../src/r_cg_macrodriver.h"
+ 366                             		.file 4 "../src/global.h"

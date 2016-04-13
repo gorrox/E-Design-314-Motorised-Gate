@@ -1,0 +1,6 @@
+16:31:54 **** Incremental Build of configuration HardwareDebug for project Test_LCD ****
+make -j4 all 
+'Build complete.'
+
+16:31:54 Build Finished. 0 errors, 0 warnings. (took 350ms)
+

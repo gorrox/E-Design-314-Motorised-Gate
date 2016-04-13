@@ -1,0 +1,79 @@
+/*
+ * global.c
+ *
+ *  Created on: Apr 11, 2016
+ *      Author: trist
+ */
+
+#include "global.h"
+
+/*
+ * Transmits an array of 14 bits via IR LED
+ * Uses Manchester RC5 encoding
+ */
+void transmit(void)
+{
+	static volatile uint8_t fullHalfBitCounter = frameHalfBitLength;
+	static volatile uint8_t frameHalfBitCounter = frameHalfBitLength;
+	volatile uint8_t bit; // buffer
+
+	if (fullHalfBitCounter) // Busy transmitting
+	{
+		if (frameHalfBitCounter)
+		{
+			bit = (msg >> ((frameHalfBitCounter + 1)/2 -1)); //Data bit
+			bit &= 0x1; //Lowest LSB
+			modulate = (!bit ^ (frameHalfBitCounter%2));
+			if (!modulate) P1_bit.no0 = 0;
+			frameHalfBitCounter--;
+		}
+		else
+		{
+			modulate = 0;
+			P1_bit.no0 = 0;
+		}
+		fullHalfBitCounter--;
+	}
+	else // Not busy transmitting
+	{
+		// Reset
+		fullHalfBitCounter = fullHalfBitLength;
+		frameHalfBitCounter = frameHalfBitLength;
+		/*
+		if (!IR_BUTTON_TX)
+		{
+			ir_txMessage |= 0x800;
+		}
+		else
+		{
+			ir_txMessage = ir_txMessage_default;
+			R_TAU0_Channel3_Stop();
+			R_INTC1_Start();
+			R_INTC2_Start();
+		}
+		*/
+	}
+
+}
+
+void btnOpenTriggered()
+{
+	if (!btnOpen)
+	{
+		frameBase ^= toggle; 			// Toggle Bit
+		msg = frameBase + openCode; 	// Set transmission to Open Gate command
+		tx = 1;
+	}
+	btnOpenTrigger = 0;
+}
+
+void btnCloseTriggered()
+{
+	if (!btnClose)
+	{
+		frameBase ^= toggle; 			// Toggle Bit
+		msg = frameBase + closeCode; 	// Set transmission to Close Gate command
+		tx = 1;
+	}
+	btnCloseTrigger = 0;
+}

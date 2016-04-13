@@ -1,0 +1,36 @@
+/*
+ * global.c
+ *
+ *  Created on: Apr 11, 2016
+ *      Author: trist
+ */
+
+#include "global.h"
+
+/*
+ * Transmits an array of 14 bits via IR LED
+ * Uses Manchester RC5 encoding
+ */
+void transmit(uint16_t msg)
+{
+	static volatile uint8_t fullHalfBitCounter = frameHalfBitLength;
+	static volatile uint8_t frameHalfBitCounter = frameHalfBitLength;
+	volatile uint8_t bit; // buffer
+	if (fullHalfBitCounter)
+	{
+		if (frameHalfBitCounter)
+		{
+			bit = (msg >> ((frameHalfBitCounter + 1)/2 -1)); //Data bit
+			bit &= 0x1; //Lowest LSB
+			modulate = (!bit ^ (frameHalfBitCounter%2));
+			frameHalfBitCounter--;
+		}
+		else
+		{
+			modulate = 0;
+		}
+		fullHalfBitCounter--;
+	}
+
+
+}

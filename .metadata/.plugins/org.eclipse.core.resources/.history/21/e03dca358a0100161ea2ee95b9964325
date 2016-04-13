@@ -1,0 +1,54 @@
+/*
+ * global.h
+ *
+ *  Created on: Apr 11, 2016
+ *      Author: trist
+ */
+
+#ifndef GLOBAL_H_
+#define GLOBAL_H_
+#include "r_cg_macrodriver.h"
+
+/*
+ * DEBUG
+ */
+#define debug_msg 0x37C0
+/*
+ * END_DEBUG
+ */
+
+#define fullHalfBitLength 128
+#define frameHalfBitLength 28
+
+//BUTTONS
+volatile uint8_t btnOpenTrigger;
+volatile uint8_t btnCloseTrigger;
+#define btnOpen P13_bit.no7
+#define btnClose P4_bit.no1
+// Student nr - code is 0x84
+volatile uint16_t frameBase;
+#define toggle 0x800 // Use to toggle the toggle bit
+#define frameBaseDef 0x32A0; //Add one of 3 codes below after toggling the toggle bit
+#define openCode 0x1
+#define closeCode 0x2
+#define bothCode 0x3
+//volatile uint8_t btnOpenPressed;	// 0 Not pressed; 1 Pressed
+//volatile uint8_t btnClosePressed;	// " "
+
+//FLAGS
+// RC5 Manchester 38Khz pulse train toggle
+volatile uint8_t modulate;
+// Flag for current transmitting action
+volatile uint8_t tx;
+
+//DATA
+// 16 bit message buffer
+volatile uint16_t msg;
+
+//FUNCTIONS
+void transmit(void);
+
+void btnOpenTriggered(void);
+void btnClosTriggered(void);
+
+#endif /* GLOBAL_H_ */

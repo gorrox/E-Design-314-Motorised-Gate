@@ -1,0 +1,179 @@
+   1                             	r8	=	0xffef0
+   2                             	r16	=	0xffee8
+   3                             	r24	=	0xffee0
+   4                             	r9	=	0xffef1
+   5                             	r17	=	0xffee9
+   6                             	r25	=	0xffee1
+   7                             	r10	=	0xffef2
+   8                             	r18	=	0xffeea
+   9                             	r26	=	0xffee2
+  10                             	r11	=	0xffef3
+  11                             	r19	=	0xffeeb
+  12                             	r27	=	0xffee3
+  13                             	r12	=	0xffef4
+  14                             	r20	=	0xffeec
+  15                             	r28	=	0xffee4
+  16                             	r13	=	0xffef5
+  17                             	r21	=	0xffeed
+  18                             	r29	=	0xffee5
+  19                             	r14	=	0xffef6
+  20                             	r22	=	0xffeee
+  21                             	r30	=	0xffee6
+  22                             	r15	=	0xffef7
+  23                             	r23	=	0xffeef
+  24                             	r31	=	0xffee7
+  25                             	.text
+  26                             	.Ltext0:
+  27                             		.global	_R_WDT_Create
+  29                             	_R_WDT_Create:
+  30                             	.LFB0:
+  31                             		.file 1 "../src/r_cg_wdt.c"
+   1:../src/r_cg_wdt.c **** /**************************************************************************************************
+   2:../src/r_cg_wdt.c **** * DISCLAIMER
+   3:../src/r_cg_wdt.c **** * This software is supplied by Renesas Electronics Corporation and is only intended for use with Re
+   4:../src/r_cg_wdt.c **** * No other uses are authorized. This software is owned by Renesas Electronics Corporation and is pr
+   5:../src/r_cg_wdt.c **** * applicable laws, including copyright laws. 
+   6:../src/r_cg_wdt.c **** * THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIESREGARDING THIS SOFTWARE, WHETHER
+   7:../src/r_cg_wdt.c **** * OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULA
+   8:../src/r_cg_wdt.c **** * NON-INFRINGEMENT.  ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED.TO THE MAXIMUM EXTENT PERMITTED N
+   9:../src/r_cg_wdt.c **** * LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES SHALL BE LIABLE 
+  10:../src/r_cg_wdt.c **** * INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS SOFTWARE, E
+  11:../src/r_cg_wdt.c **** * ITS AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+  12:../src/r_cg_wdt.c **** * Renesas reserves the right, without notice, to make changes to this software and to discontinue t
+  13:../src/r_cg_wdt.c **** * of this software. By using this software, you agree to the additional terms and conditions found 
+  14:../src/r_cg_wdt.c **** * following link:
+  15:../src/r_cg_wdt.c **** * http://www.renesas.com/disclaimer
+  16:../src/r_cg_wdt.c **** *
+  17:../src/r_cg_wdt.c **** * Copyright (C) 2011, 2015 Renesas Electronics Corporation. All rights reserved.
+  18:../src/r_cg_wdt.c **** ***************************************************************************************************
+  19:../src/r_cg_wdt.c **** 
+  20:../src/r_cg_wdt.c **** /**************************************************************************************************
+  21:../src/r_cg_wdt.c **** * File Name    : r_cg_wdt.c
+  22:../src/r_cg_wdt.c **** * Version      : CodeGenerator for RL78/G12 V2.03.02.01 [15 May 2015]
+  23:../src/r_cg_wdt.c **** * Device(s)    : R5F1026A
+  24:../src/r_cg_wdt.c **** * Tool-Chain   : GCCRL78
+  25:../src/r_cg_wdt.c **** * Description  : This file implements device driver for WDT module.
+  26:../src/r_cg_wdt.c **** * Creation Date: 4/10/2016
+  27:../src/r_cg_wdt.c **** ***************************************************************************************************
+  28:../src/r_cg_wdt.c **** 
+  29:../src/r_cg_wdt.c **** /**************************************************************************************************
+  30:../src/r_cg_wdt.c **** Includes
+  31:../src/r_cg_wdt.c **** ***************************************************************************************************
+  32:../src/r_cg_wdt.c **** #include "r_cg_macrodriver.h"
+  33:../src/r_cg_wdt.c **** #include "r_cg_wdt.h"
+  34:../src/r_cg_wdt.c **** /* Start user code for include. Do not edit comment generated here */
+  35:../src/r_cg_wdt.c **** /* End user code. Do not edit comment generated here */
+  36:../src/r_cg_wdt.c **** #include "r_cg_userdefine.h"
+  37:../src/r_cg_wdt.c **** 
+  38:../src/r_cg_wdt.c **** /**************************************************************************************************
+  39:../src/r_cg_wdt.c **** Global variables and functions
+  40:../src/r_cg_wdt.c **** ***************************************************************************************************
+  41:../src/r_cg_wdt.c **** /* Start user code for global. Do not edit comment generated here */
+  42:../src/r_cg_wdt.c **** /* End user code. Do not edit comment generated here */
+  43:../src/r_cg_wdt.c **** 
+  44:../src/r_cg_wdt.c **** /**************************************************************************************************
+  45:../src/r_cg_wdt.c **** * Function Name: R_WDT_Create
+  46:../src/r_cg_wdt.c **** * Description  : This function initializes the watchdogtimer.
+  47:../src/r_cg_wdt.c **** * Arguments    : None
+  48:../src/r_cg_wdt.c **** * Return Value : None
+  49:../src/r_cg_wdt.c **** ***************************************************************************************************
+  50:../src/r_cg_wdt.c **** void R_WDT_Create(void)
+  51:../src/r_cg_wdt.c **** {
+  32                             		.loc 1 51 0
+  52:../src/r_cg_wdt.c ****     WDTIMK = 1U;    /* disable INTWDTI interrupt */
+  33                             		.loc 1 52 0
+  34 0000 C9 F0 E4 FF             		movw	r8, #-28
+  35 0004 AD F0                   		movw	ax, r8
+  36 0006 BD F4                   		movw	r12, ax
+  37 0008 FA F4                   		movw	hl, r12
+  38 000a 8B                      		mov	a, [hl]
+  39 000b 9D F2                   		mov	r10, a
+  40 000d 6A F2 01                		or	r10, #1
+  41 0010 AD F0                   		movw	ax, r8
+  42 0012 DA F4                   		movw	bc, r12
+  43 0014 8D F2                   		mov	a, r10
+  44 0016 48 00 00                		mov	[bc], a
+  53:../src/r_cg_wdt.c ****     WDTIIF = 0U;    /* clear INTWDTI interrupt flag */
+  45                             		.loc 1 53 0
+  46 0019 C9 F0 E0 FF             		movw	r8, #-32
+  47 001d AD F0                   		movw	ax, r8
+  48 001f BD F4                   		movw	r12, ax
+  49 0021 FA F4                   		movw	hl, r12
+  50 0023 8B                      		mov	a, [hl]
+  51 0024 9D F2                   		mov	r10, a
+  52 0026 5A F2 FE                		and	r10, #-2
+  53 0029 AD F0                   		movw	ax, r8
+  54 002b DA F4                   		movw	bc, r12
+  55 002d 8D F2                   		mov	a, r10
+  56 002f 48 00 00                		mov	[bc], a
+  54:../src/r_cg_wdt.c ****     /* Set INTWDTI low priority */
+  55:../src/r_cg_wdt.c ****     WDTIPR1 = 1U;
+  57                             		.loc 1 55 0
+  58 0032 C9 F0 EC FF             		movw	r8, #-20
+  59 0036 AD F0                   		movw	ax, r8
+  60 0038 BD F4                   		movw	r12, ax
+  61 003a FA F4                   		movw	hl, r12
+  62 003c 8B                      		mov	a, [hl]
+  63 003d 9D F2                   		mov	r10, a
+  64 003f 6A F2 01                		or	r10, #1
+  65 0042 AD F0                   		movw	ax, r8
+  66 0044 DA F4                   		movw	bc, r12
+  67 0046 8D F2                   		mov	a, r10
+  68 0048 48 00 00                		mov	[bc], a
+  56:../src/r_cg_wdt.c ****     WDTIPR0 = 1U;
+  69                             		.loc 1 56 0
+  70 004b C9 F0 E8 FF             		movw	r8, #-24
+  71 004f AD F0                   		movw	ax, r8
+  72 0051 BD F4                   		movw	r12, ax
+  73 0053 FA F4                   		movw	hl, r12
+  74 0055 8B                      		mov	a, [hl]
+  75 0056 9D F2                   		mov	r10, a
+  76 0058 6A F2 01                		or	r10, #1
+  77 005b AD F0                   		movw	ax, r8
+  78 005d DA F4                   		movw	bc, r12
+  79 005f 8D F2                   		mov	a, r10
+  80 0061 48 00 00                		mov	[bc], a
+  57:../src/r_cg_wdt.c ****     WDTIMK = 0U;    /* enable INTWDTI interrupt */
+  81                             		.loc 1 57 0
+  82 0064 C9 F0 E4 FF             		movw	r8, #-28
+  83 0068 AD F0                   		movw	ax, r8
+  84 006a BD F4                   		movw	r12, ax
+  85 006c FA F4                   		movw	hl, r12
+  86 006e 8B                      		mov	a, [hl]
+  87 006f 9D F2                   		mov	r10, a
+  88 0071 5A F2 FE                		and	r10, #-2
+  89 0074 AD F0                   		movw	ax, r8
+  90 0076 DA F4                   		movw	bc, r12
+  91 0078 8D F2                   		mov	a, r10
+  92 007a 48 00 00                		mov	[bc], a
+  58:../src/r_cg_wdt.c **** }
+  93                             		.loc 1 58 0
+  94 007d D7                      		ret
+  95                             	.LFE0:
+  97                             		.global	_R_WDT_Restart
+  99                             	_R_WDT_Restart:
+ 100                             	.LFB1:
+  59:../src/r_cg_wdt.c **** 
+  60:../src/r_cg_wdt.c **** /**************************************************************************************************
+  61:../src/r_cg_wdt.c **** * Function Name: R_WDT_Restart
+  62:../src/r_cg_wdt.c **** * Description  : This function restarts the watchdog timer.
+  63:../src/r_cg_wdt.c **** * Arguments    : None
+  64:../src/r_cg_wdt.c **** * Return Value : None
+  65:../src/r_cg_wdt.c **** ***************************************************************************************************
+  66:../src/r_cg_wdt.c **** void R_WDT_Restart(void)
+  67:../src/r_cg_wdt.c **** {
+ 101                             		.loc 1 67 0
+  68:../src/r_cg_wdt.c ****     WDTE = 0xACU;     /* restart watchdog timer */
+ 102                             		.loc 1 68 0
+ 103 007e C9 F0 AB FF             		movw	r8, #-85
+ 104 0082 AD F0                   		movw	ax, r8
+ 105 0084 BD F2                   		movw	r10, ax
+ 106 0086 DA F2                   		movw	bc, r10
+ 107 0088 51 AC                   		mov	a, #-84
+ 108 008a 48 00 00                		mov	[bc], a
+  69:../src/r_cg_wdt.c **** }
+ 109                             		.loc 1 69 0
+ 110 008d D7                      		ret
+ 111                             	.LFE1:
+ 147                             	.Letext0:
+ 148                             		.file 2 "../src/iodefine.h"

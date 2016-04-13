@@ -1,0 +1,14 @@
+/*
+ * global.h
+ *
+ *  Created on: Apr 11, 2016
+ *      Author: trist
+ */
+
+#ifndef GLOBAL_H_
+#define GLOBAL_H_
+#include "r_cg_macrodriver.h"
+
+void transmit(uint8_t * message);
+
+#endif /* GLOBAL_H_ */

@@ -1,0 +1,533 @@
+   1                             	r8	=	0xffef0
+   2                             	r16	=	0xffee8
+   3                             	r24	=	0xffee0
+   4                             	r9	=	0xffef1
+   5                             	r17	=	0xffee9
+   6                             	r25	=	0xffee1
+   7                             	r10	=	0xffef2
+   8                             	r18	=	0xffeea
+   9                             	r26	=	0xffee2
+  10                             	r11	=	0xffef3
+  11                             	r19	=	0xffeeb
+  12                             	r27	=	0xffee3
+  13                             	r12	=	0xffef4
+  14                             	r20	=	0xffeec
+  15                             	r28	=	0xffee4
+  16                             	r13	=	0xffef5
+  17                             	r21	=	0xffeed
+  18                             	r29	=	0xffee5
+  19                             	r14	=	0xffef6
+  20                             	r22	=	0xffeee
+  21                             	r30	=	0xffee6
+  22                             	r15	=	0xffef7
+  23                             	r23	=	0xffeef
+  24                             	r31	=	0xffee7
+  25                             	.text
+  26                             	.Ltext0:
+  27                             		.comm	_gate_status,2,2
+  28                             		.comm	_mode,2,2
+  29                             		.comm	_uart1RxBuf,16,1
+  30                             		.comm	_uart1RxCnt,2,2
+  31                             		.comm	_uart1RxFlag,1,1
+  32                             		.comm	_uart1RxErrFlag,1,1
+  33                             		.comm	_uart1RxOvrFlag,1,1
+  34                             		.comm	_uart1TxBuf,16,1
+  35                             		.comm	_uart1TxCnt,2,2
+  36                             		.comm	_uart1TxFlag,1,1
+  37                             		.comm	_uart1Status,2,2
+  38                             		.comm	_ir_rxMessage,2,2
+  39                             		.comm	_dataReady,1,1
+  40                             		.comm	_dataPrint,1,1
+  41                             		.comm	_dataResponse,1,1
+  42                             		.global	_receive
+  44                             	_receive:
+  45                             	.LFB0:
+  46                             		.file 1 "../src/infrared.c"
+   1:../src/infrared.c **** /*
+   2:../src/infrared.c ****  * infrared.c
+   3:../src/infrared.c ****  *
+   4:../src/infrared.c ****  *  Created on: Apr 13, 2016
+   5:../src/infrared.c ****  *      Author: trist
+   6:../src/infrared.c ****  */
+   7:../src/infrared.c **** 
+   8:../src/infrared.c **** #include "infrared.h"
+   9:../src/infrared.c **** #include "lcd.h"
+  10:../src/infrared.c **** #include "r_cg_userdefine.h"
+  11:../src/infrared.c **** 
+  12:../src/infrared.c **** 
+  13:../src/infrared.c **** void receive(void)
+  14:../src/infrared.c **** {
+  47                             		.loc 1 14 0
+  48                             		; start of function
+  49                             		; push 2: r16
+  50 0000 61 EF                   		sel	rb2
+  51 0002 C1                      		push	ax ; r16
+  52                             	.LCFI0:
+  53 0003 61 CF                   		sel	rb0
+  15:../src/infrared.c **** 	static volatile uint8_t ir_14bitMessage_inQuarterBits_counter = ir_14bitMessage_inQuarterBits_tota
+  16:../src/infrared.c **** 
+  17:../src/infrared.c **** 	// this is so that the rising edge of the last bit being read
+  18:../src/infrared.c **** 	// doesn't trigger the beginning of the next bit of sampling too quickly
+  19:../src/infrared.c **** 	static volatile uint8_t ir_sampling_ticks_at_444us = ir_sampling_ticks_at_444us_total;
+  20:../src/infrared.c **** 
+  21:../src/infrared.c **** 	static volatile uint8_t double_half_bit = 0x2;
+  22:../src/infrared.c **** 	static volatile uint16_t ir_rxMessage_buffer = 0; //ir rx message buffer
+  23:../src/infrared.c **** 	//	double_half_bit = 0;
+  24:../src/infrared.c **** 
+  25:../src/infrared.c **** 	if (ir_sampling_ticks_at_444us){
+  54                             		.loc 1 25 0
+  55 0005 8F 00 00                		mov	a, !_ir_sampling_ticks_at_444us.2044
+  56 0008 9D E8                   		mov	r16, a
+  57 000a D4 E8                   		cmp0	r16
+  58 000c 61 F8                   		 sknz
+  59 000e EC 36 01 00             		 br	!!.L2
+  26:../src/infrared.c **** 		if (ir_14bitMessage_inQuarterBits_counter){
+  60                             		.loc 1 26 0
+  61 0012 8F 01 00                		mov	a, !_ir_14bitMessage_inQuarterBits_counter.2043
+  62 0015 9D E8                   		mov	r16, a
+  63 0017 D4 E8                   		cmp0	r16
+  64 0019 61 F8                   		 sknz
+  65 001b EC 26 01 00             		 br	!!.L3
+  27:../src/infrared.c **** 			// grab first half-bit
+  28:../src/infrared.c **** 			if (!((ir_14bitMessage_inQuarterBits_counter + 1) % 4)){
+  66                             		.loc 1 28 0
+  67 001f 8F 01 00                		mov	a, !_ir_14bitMessage_inQuarterBits_counter.2043
+  68 0022 9D E8                   		mov	r16, a
+  69 0024 CD E9 00                		mov	r17, #0
+  70 0027 A6 E8                   		incw	r16
+  71 0029 8D E8                   		mov	a, r16
+  72 002b 5C 03                   		and	a, #3
+  73 002d 9D F6                   		mov	r14, a
+  74 002f 8D E9                   		mov	a, r17
+  75 0031 5C 00                   		and	a, #0
+  76 0033 9D F7                   		mov	r15, a
+  77 0035 AD F6                   		movw	ax, r14
+  78 0037 44 00 00                		cmpw	ax, #0
+  79 003a 61 E8                   		 skz
+  80 003c EC 6A 00 00             		 br	!!.L4
+  29:../src/infrared.c **** 				double_half_bit = (double_half_bit | IR_RX) << 1;
+  81                             		.loc 1 29 0
+  82 0040 C9 F6 0E FF             		movw	r14, #-242
+  83 0044 AD F6                   		movw	ax, r14
+  84 0046 BD E8                   		movw	r16, ax
+  85 0048 FA E8                   		movw	hl, r16
+  86 004a 8B                      		mov	a, [hl]
+  87 004b 9D F6                   		mov	r14, a
+  88 004d 31 1A                   		shr	a, 1
+  89 004f 9D F6                   		mov	r14, a
+  90 0051 5A F6 01                		and	r14, #1
+  91 0054 8D F6                   		mov	a, r14
+  92 0056 9D F7                   		mov	r15, a
+  93 0058 8F 02 00                		mov	a, !_double_half_bit.2045
+  94 005b 9D F6                   		mov	r14, a
+  95 005d 8D F7                   		mov	a, r15
+  96 005f 6B F6                   		or	a, r14
+  97 0061 9D F6                   		mov	r14, a
+  98 0063 61 01                   		add	a, a
+  99 0065 9D F6                   		mov	r14, a
+ 100 0067 9F 02 00                		mov	!_double_half_bit.2045, a
+ 101                             	.L4:
+  30:../src/infrared.c **** 			}
+  31:../src/infrared.c **** 
+  32:../src/infrared.c **** 			// if at the end of a full bit
+  33:../src/infrared.c **** 			if (!((ir_14bitMessage_inQuarterBits_counter - 1) % 4)){
+ 102                             		.loc 1 33 0
+ 103 006a 8F 01 00                		mov	a, !_ir_14bitMessage_inQuarterBits_counter.2043
+ 104 006d 9D F6                   		mov	r14, a
+ 105 006f CD F7 00                		mov	r15, #0
+ 106 0072 B6 F6                   		decw	r14
+ 107 0074 8D F6                   		mov	a, r14
+ 108 0076 5C 03                   		and	a, #3
+ 109 0078 9D F4                   		mov	r12, a
+ 110 007a 8D F7                   		mov	a, r15
+ 111 007c 5C 00                   		and	a, #0
+ 112 007e 9D F5                   		mov	r13, a
+ 113 0080 AD F4                   		movw	ax, r12
+ 114 0082 44 00 00                		cmpw	ax, #0
+ 115 0085 61 E8                   		 skz
+ 116 0087 EC 1A 01 00             		 br	!!.L5
+  34:../src/infrared.c **** 				double_half_bit |= IR_RX;
+ 117                             		.loc 1 34 0
+ 118 008b C9 F4 0E FF             		movw	r12, #-242
+ 119 008f AD F4                   		movw	ax, r12
+ 120 0091 BD F6                   		movw	r14, ax
+ 121 0093 FA F6                   		movw	hl, r14
+ 122 0095 8B                      		mov	a, [hl]
+ 123 0096 9D F4                   		mov	r12, a
+ 124 0098 31 1A                   		shr	a, 1
+ 125 009a 9D F4                   		mov	r12, a
+ 126 009c 5A F4 01                		and	r12, #1
+ 127 009f 8D F4                   		mov	a, r12
+ 128 00a1 9D F5                   		mov	r13, a
+ 129 00a3 8F 02 00                		mov	a, !_double_half_bit.2045
+ 130 00a6 9D F4                   		mov	r12, a
+ 131 00a8 8D F5                   		mov	a, r13
+ 132 00aa 6B F4                   		or	a, r12
+ 133 00ac 9D F4                   		mov	r12, a
+ 134 00ae 9F 02 00                		mov	!_double_half_bit.2045, a
+  35:../src/infrared.c **** 				if (!double_half_bit || (double_half_bit != 0x3)){
+ 135                             		.loc 1 35 0
+ 136 00b1 8F 02 00                		mov	a, !_double_half_bit.2045
+ 137 00b4 9D F4                   		mov	r12, a
+ 138 00b6 D4 F4                   		cmp0	r12
+ 139 00b8 61 F8                   		 sknz
+ 140 00ba EC CC 00 00             		 br	!!.L6
+ 141                             		.loc 1 35 0 is_stmt 0 discriminator 1
+ 142 00be 8F 02 00                		mov	a, !_double_half_bit.2045
+ 143 00c1 9D F4                   		mov	r12, a
+ 144 00c3 4A F4 03                		cmp	r12, #3
+ 145 00c6 61 F8                   		 sknz
+ 146 00c8 EC 17 01 00             		 br	!!.L7
+ 147                             	.L6:
+  36:../src/infrared.c **** 					// if it is a 0x10 or 0x01, then take the 2nd lowest significant bit
+  37:../src/infrared.c **** 					ir_rxMessage_buffer |= ((double_half_bit & 0x2) >> 1);
+ 148                             		.loc 1 37 0 is_stmt 1
+ 149 00cc 8F 02 00                		mov	a, !_double_half_bit.2045
+ 150 00cf 9D F4                   		mov	r12, a
+ 151 00d1 CD F5 00                		mov	r13, #0
+ 152 00d4 8D F4                   		mov	a, r12
+ 153 00d6 5C 02                   		and	a, #2
+ 154 00d8 9D F2                   		mov	r10, a
+ 155 00da 8D F5                   		mov	a, r13
+ 156 00dc 5C 00                   		and	a, #0
+ 157 00de 9D F3                   		mov	r11, a
+ 158 00e0 AD F2                   		movw	ax, r10
+ 159 00e2 31 1F                   		sarw	ax, 1
+ 160 00e4 BD F2                   		movw	r10, ax
+ 161 00e6 BD F4                   		movw	r12, ax
+ 162 00e8 AF 00 00                		movw	ax, !_ir_rxMessage_buffer.2046
+ 163 00eb BD F2                   		movw	r10, ax
+ 164 00ed 8D F4                   		mov	a, r12
+ 165 00ef 6B F2                   		or	a, r10
+ 166 00f1 9D F0                   		mov	r8, a
+ 167 00f3 8D F5                   		mov	a, r13
+ 168 00f5 6B F3                   		or	a, r11
+ 169 00f7 9D F1                   		mov	r9, a
+ 170 00f9 AD F0                   		movw	ax, r8
+ 171 00fb BF 00 00                		movw	!_ir_rxMessage_buffer.2046, ax
+  38:../src/infrared.c **** 					// if it's not the last bit, make place for the next bit
+  39:../src/infrared.c **** 					if (ir_14bitMessage_inQuarterBits_counter - 1){
+ 172                             		.loc 1 39 0
+ 173 00fe 8F 01 00                		mov	a, !_ir_14bitMessage_inQuarterBits_counter.2043
+ 174 0101 9D F0                   		mov	r8, a
+ 175 0103 4A F0 01                		cmp	r8, #1
+ 176 0106 61 F8                   		 sknz
+ 177 0108 EC 17 01 00             		 br	!!.L7
+  40:../src/infrared.c **** 						ir_rxMessage_buffer <<= 1;
+ 178                             		.loc 1 40 0
+ 179 010c AF 00 00                		movw	ax, !_ir_rxMessage_buffer.2046
+ 180 010f BD F0                   		movw	r8, ax
+ 181 0111 01                      		addw	ax, ax
+ 182 0112 BD F0                   		movw	r8, ax
+ 183 0114 BF 00 00                		movw	!_ir_rxMessage_buffer.2046, ax
+ 184                             	.L7:
+  41:../src/infrared.c **** 					}
+  42:../src/infrared.c **** 				}
+  43:../src/infrared.c **** 				double_half_bit = 0;
+ 185                             		.loc 1 43 0
+ 186 0117 F5 02 00                		clrb	!_double_half_bit.2045
+ 187                             	.L5:
+  44:../src/infrared.c **** 			}
+  45:../src/infrared.c **** 			ir_14bitMessage_inQuarterBits_counter--;
+ 188                             		.loc 1 45 0
+ 189 011a 8F 01 00                		mov	a, !_ir_14bitMessage_inQuarterBits_counter.2043
+ 190 011d 9D F0                   		mov	r8, a
+ 191 011f B4 F0                   		dec	r8
+ 192 0121 8D F0                   		mov	a, r8
+ 193 0123 9F 01 00                		mov	!_ir_14bitMessage_inQuarterBits_counter.2043, a
+ 194                             	.L3:
+  46:../src/infrared.c **** 		}
+  47:../src/infrared.c **** 		ir_sampling_ticks_at_444us--;
+ 195                             		.loc 1 47 0
+ 196 0126 8F 00 00                		mov	a, !_ir_sampling_ticks_at_444us.2044
+ 197 0129 9D F0                   		mov	r8, a
+ 198 012b B4 F0                   		dec	r8
+ 199 012d 8D F0                   		mov	a, r8
+ 200 012f 9F 00 00                		mov	!_ir_sampling_ticks_at_444us.2044, a
+ 201 0132 EC 62 01 00             		br	!!.L1
+ 202                             	.L2:
+ 203                             	.LBB2:
+  48:../src/infrared.c **** 	}
+  49:../src/infrared.c **** 	else
+  50:../src/infrared.c **** 	{
+  51:../src/infrared.c **** 		ir_14bitMessage_inQuarterBits_counter = ir_14bitMessage_inQuarterBits_total;
+ 204                             		.loc 1 51 0
+ 205 0136 51 35                   		mov	a, #53
+ 206 0138 9F 01 00                		mov	!_ir_14bitMessage_inQuarterBits_counter.2043, a
+  52:../src/infrared.c **** 		ir_sampling_ticks_at_444us = ir_sampling_ticks_at_444us_total;
+ 207                             		.loc 1 52 0
+ 208 013b 51 37                   		mov	a, #55
+ 209 013d 9F 00 00                		mov	!_ir_sampling_ticks_at_444us.2044, a
+  53:../src/infrared.c **** 		ir_rxMessage = ir_rxMessage_buffer;
+ 210                             		.loc 1 53 0
+ 211 0140 AF 00 00                		movw	ax, !_ir_rxMessage_buffer.2046
+ 212 0143 BD F0                   		movw	r8, ax
+ 213 0145 BF 00 00                		movw	!_ir_rxMessage, ax
+  54:../src/infrared.c **** 		dataReady = 1;
+ 214                             		.loc 1 54 0
+ 215 0148 E5 00 00                		oneb	!_dataReady
+  55:../src/infrared.c **** 		dataResponse = 1;
+ 216                             		.loc 1 55 0
+ 217 014b E5 00 00                		oneb	!_dataResponse
+  56:../src/infrared.c **** 		dataPrint = 1;
+ 218                             		.loc 1 56 0
+ 219 014e E5 00 00                		oneb	!_dataPrint
+  57:../src/infrared.c **** 		ir_rxMessage_buffer = 0;
+ 220                             		.loc 1 57 0
+ 221 0151 F6                      		clrw	ax
+ 222 0152 BF 00 00                		movw	!_ir_rxMessage_buffer.2046, ax
+  58:../src/infrared.c **** 		double_half_bit = 0x2;
+ 223                             		.loc 1 58 0
+ 224 0155 51 02                   		mov	a, #2
+ 225 0157 9F 02 00                		mov	!_double_half_bit.2045, a
+  59:../src/infrared.c **** 		R_TAU0_Channel3_Stop();
+ 226                             		.loc 1 59 0
+ 227 015a FC 00 00 00             		call	!!%code(_R_TAU0_Channel3_Stop)
+  60:../src/infrared.c **** 		R_INTC7_Start();
+ 228                             		.loc 1 60 0
+ 229 015e FC 00 00 00             		call	!!%code(_R_INTC7_Start)
+ 230                             	.L1:
+ 231                             	.LBE2:
+  61:../src/infrared.c **** 	}
+  62:../src/infrared.c **** }
+ 232                             		.loc 1 62 0
+ 233 0162 61 EF                   		sel	rb2
+ 234 0164 C0                      		pop	ax ; r16
+ 235 0165 61 CF                   		sel	rb0
+ 236 0167 D7                      		ret
+ 237                             	.LFE0:
+ 239                             		.global	_IRcmd
+ 241                             	_IRcmd:
+ 242                             	.LFB1:
+  63:../src/infrared.c **** 
+  64:../src/infrared.c **** void IRcmd(void)
+  65:../src/infrared.c **** {
+ 243                             		.loc 1 65 0
+ 244                             		; start of function
+ 245                             		; locals: 4 bytes
+ 246                             		; outgoing: 2 bytes
+ 247 0168 20 06                   		subw	sp, #6
+ 248                             	.LCFI1:
+  66:../src/infrared.c **** 	if (dataReady && dataResponse)
+ 249                             		.loc 1 66 0
+ 250 016a 8F 00 00                		mov	a, !_dataReady
+ 251 016d 9D F0                   		mov	r8, a
+ 252 016f D4 F0                   		cmp0	r8
+ 253 0171 61 F8                   		 sknz
+ 254 0173 EC B7 02 00             		 br	!!.L9
+ 255                             		.loc 1 66 0 is_stmt 0 discriminator 1
+ 256 0177 8F 00 00                		mov	a, !_dataResponse
+ 257 017a 9D F0                   		mov	r8, a
+ 258 017c D4 F0                   		cmp0	r8
+ 259 017e 61 F8                   		 sknz
+ 260 0180 EC B7 02 00             		 br	!!.L9
+ 261                             	.LBB3:
+  67:../src/infrared.c **** 	{
+  68:../src/infrared.c **** 		uint8_t cmd = ir_rxMessage & 0x7;
+ 262                             		.loc 1 68 0 is_stmt 1
+ 263 0184 AF 00 00                		movw	ax, !_ir_rxMessage
+ 264 0187 BD F0                   		movw	r8, ax
+ 265 0189 8D F0                   		mov	a, r8
+ 266 018b 5C 07                   		and	a, #7
+ 267 018d 98 05                   		mov	[sp+5], a
+  69:../src/infrared.c **** 		uint8_t addr = (ir_rxMessage >> 3) & 0xFF;
+ 268                             		.loc 1 69 0
+ 269 018f AF 00 00                		movw	ax, !_ir_rxMessage
+ 270 0192 BD F0                   		movw	r8, ax
+ 271 0194 31 3E                   		shrw	ax, 3
+ 272 0196 BD F0                   		movw	r8, ax
+ 273 0198 8D F0                   		mov	a, r8
+ 274 019a 98 04                   		mov	[sp+4], a
+  70:../src/infrared.c **** 		uint8_t tog = (ir_rxMessage >> 11) & 0x6;
+ 275                             		.loc 1 70 0
+ 276 019c AF 00 00                		movw	ax, !_ir_rxMessage
+ 277 019f BD F0                   		movw	r8, ax
+ 278 01a1 31 BE                   		shrw	ax, 11
+ 279 01a3 BD F0                   		movw	r8, ax
+ 280 01a5 8D F0                   		mov	a, r8
+ 281 01a7 5C 06                   		and	a, #6
+ 282 01a9 98 03                   		mov	[sp+3], a
+  71:../src/infrared.c **** 
+  72:../src/infrared.c **** 		if (addr == TNELaddr)
+ 283                             		.loc 1 72 0
+ 284 01ab 88 04                   		mov	a, [sp+4]
+ 285 01ad 4C 84                   		cmp	a, #-124
+ 286 01af 61 E8                   		 skz
+ 287 01b1 EC B4 02 00             		 br	!!.L11
+  73:../src/infrared.c **** 		{
+  74:../src/infrared.c **** 			switch(cmd)
+ 288                             		.loc 1 74 0
+ 289 01b5 88 05                   		mov	a, [sp+5]
+ 290 01b7 70                      		mov	x, a 
+ 291 01b8 51 00                   		mov	a, #0
+ 292 01ba BD F0                   		movw	r8, ax
+ 293 01bc 44 02 00                		cmpw	ax, #2
+ 294 01bf 61 F8                   		 sknz
+ 295 01c1 EC 2C 02 00             		 br	!!.L12
+ 296 01c5 AD F0                   		movw	ax, r8
+ 297 01c7 44 03 00                		cmpw	ax, #3
+ 298 01ca 61 F8                   		 sknz
+ 299 01cc EC 7D 02 00             		 br	!!.L13
+ 300 01d0 AD F0                   		movw	ax, r8
+ 301 01d2 44 01 00                		cmpw	ax, #1
+ 302 01d5 61 E8                   		 skz
+ 303 01d7 EC B4 02 00             		 br	!!.L11
+ 304                             	.LBB4:
+  75:../src/infrared.c **** 			{
+  76:../src/infrared.c **** 				case 0x1: // OPEN
+  77:../src/infrared.c **** 					if (mode) echo(0x88);
+ 305                             		.loc 1 77 0
+ 306 01db AF 00 00                		movw	ax, !_mode
+ 307 01de BD F0                   		movw	r8, ax
+ 308 01e0 44 00 00                		cmpw	ax, #0
+ 309 01e3 61 F8                   		 sknz
+ 310 01e5 EC F2 01 00             		 br	!!.L15
+ 311                             		.loc 1 77 0 is_stmt 0 discriminator 1
+ 312 01e9 30 88 00                		movw	ax, #136
+ 313 01ec B8 00                   		movw	[sp], ax
+ 314 01ee FC 00 00 00             		call	!!%code(_echo)
+ 315                             	.L15:
+  78:../src/infrared.c **** 					DVR_PHASE = 0;
+ 316                             		.loc 1 78 0 is_stmt 1
+ 317 01f2 C9 F0 04 FF             		movw	r8, #-252
+ 318 01f6 AD F0                   		movw	ax, r8
+ 319 01f8 BD F4                   		movw	r12, ax
+ 320 01fa FA F4                   		movw	hl, r12
+ 321 01fc 8B                      		mov	a, [hl]
+ 322 01fd 9D F2                   		mov	r10, a
+ 323 01ff 5A F2 FD                		and	r10, #-3
+ 324 0202 AD F0                   		movw	ax, r8
+ 325 0204 DA F4                   		movw	bc, r12
+ 326 0206 8D F2                   		mov	a, r10
+ 327 0208 48 00 00                		mov	[bc], a
+  79:../src/infrared.c **** 					DVR_nSLEEP = 1;
+ 328                             		.loc 1 79 0
+ 329 020b C9 F0 04 FF             		movw	r8, #-252
+ 330 020f AD F0                   		movw	ax, r8
+ 331 0211 BD F4                   		movw	r12, ax
+ 332 0213 FA F4                   		movw	hl, r12
+ 333 0215 8B                      		mov	a, [hl]
+ 334 0216 9D F2                   		mov	r10, a
+ 335 0218 6A F2 04                		or	r10, #4
+ 336 021b AD F0                   		movw	ax, r8
+ 337 021d DA F4                   		movw	bc, r12
+ 338 021f 8D F2                   		mov	a, r10
+ 339 0221 48 00 00                		mov	[bc], a
+  80:../src/infrared.c **** 					gate_status = GS_UNKNOWN;
+ 340                             		.loc 1 80 0
+ 341 0224 F6                      		clrw	ax
+ 342 0225 BF 00 00                		movw	!_gate_status, ax
+  81:../src/infrared.c **** 					break;
+ 343                             		.loc 1 81 0
+ 344 0228 EC B4 02 00             		br	!!.L11
+ 345                             	.L12:
+  82:../src/infrared.c **** 				case 0x2: // CLOSE
+  83:../src/infrared.c **** 					if (mode) echo(0x90);
+ 346                             		.loc 1 83 0
+ 347 022c AF 00 00                		movw	ax, !_mode
+ 348 022f BD F0                   		movw	r8, ax
+ 349 0231 44 00 00                		cmpw	ax, #0
+ 350 0234 61 F8                   		 sknz
+ 351 0236 EC 43 02 00             		 br	!!.L16
+ 352                             		.loc 1 83 0 is_stmt 0 discriminator 1
+ 353 023a 30 90 00                		movw	ax, #144
+ 354 023d B8 00                   		movw	[sp], ax
+ 355 023f FC 00 00 00             		call	!!%code(_echo)
+ 356                             	.L16:
+  84:../src/infrared.c **** 					DVR_PHASE = 1;
+ 357                             		.loc 1 84 0 is_stmt 1
+ 358 0243 C9 F0 04 FF             		movw	r8, #-252
+ 359 0247 AD F0                   		movw	ax, r8
+ 360 0249 BD F4                   		movw	r12, ax
+ 361 024b FA F4                   		movw	hl, r12
+ 362 024d 8B                      		mov	a, [hl]
+ 363 024e 9D F2                   		mov	r10, a
+ 364 0250 6A F2 02                		or	r10, #2
+ 365 0253 AD F0                   		movw	ax, r8
+ 366 0255 DA F4                   		movw	bc, r12
+ 367 0257 8D F2                   		mov	a, r10
+ 368 0259 48 00 00                		mov	[bc], a
+  85:../src/infrared.c **** 					DVR_nSLEEP = 1;
+ 369                             		.loc 1 85 0
+ 370 025c C9 F0 04 FF             		movw	r8, #-252
+ 371 0260 AD F0                   		movw	ax, r8
+ 372 0262 BD F4                   		movw	r12, ax
+ 373 0264 FA F4                   		movw	hl, r12
+ 374 0266 8B                      		mov	a, [hl]
+ 375 0267 9D F2                   		mov	r10, a
+ 376 0269 6A F2 04                		or	r10, #4
+ 377 026c AD F0                   		movw	ax, r8
+ 378 026e DA F4                   		movw	bc, r12
+ 379 0270 8D F2                   		mov	a, r10
+ 380 0272 48 00 00                		mov	[bc], a
+  86:../src/infrared.c **** 					gate_status = GS_UNKNOWN;
+ 381                             		.loc 1 86 0
+ 382 0275 F6                      		clrw	ax
+ 383 0276 BF 00 00                		movw	!_gate_status, ax
+  87:../src/infrared.c **** 					break;
+ 384                             		.loc 1 87 0
+ 385 0279 EC B4 02 00             		br	!!.L11
+ 386                             	.L13:
+  88:../src/infrared.c **** 				case 0x3: //ESTOP
+  89:../src/infrared.c **** 					if (mode) echo(0x84);
+ 387                             		.loc 1 89 0
+ 388 027d AF 00 00                		movw	ax, !_mode
+ 389 0280 BD F0                   		movw	r8, ax
+ 390 0282 44 00 00                		cmpw	ax, #0
+ 391 0285 61 F8                   		 sknz
+ 392 0287 EC 94 02 00             		 br	!!.L17
+ 393                             		.loc 1 89 0 is_stmt 0 discriminator 1
+ 394 028b 30 84 00                		movw	ax, #132
+ 395 028e B8 00                   		movw	[sp], ax
+ 396 0290 FC 00 00 00             		call	!!%code(_echo)
+ 397                             	.L17:
+  90:../src/infrared.c **** 					DVR_nSLEEP = 0;
+ 398                             		.loc 1 90 0 is_stmt 1
+ 399 0294 C9 F0 04 FF             		movw	r8, #-252
+ 400 0298 AD F0                   		movw	ax, r8
+ 401 029a BD F4                   		movw	r12, ax
+ 402 029c FA F4                   		movw	hl, r12
+ 403 029e 8B                      		mov	a, [hl]
+ 404 029f 9D F2                   		mov	r10, a
+ 405 02a1 5A F2 FB                		and	r10, #-5
+ 406 02a4 AD F0                   		movw	ax, r8
+ 407 02a6 DA F4                   		movw	bc, r12
+ 408 02a8 8D F2                   		mov	a, r10
+ 409 02aa 48 00 00                		mov	[bc], a
+  91:../src/infrared.c **** 					gate_status = GS_ESTOP;
+ 410                             		.loc 1 91 0
+ 411 02ad 30 03 00                		movw	ax, #3
+ 412 02b0 BF 00 00                		movw	!_gate_status, ax
+  92:../src/infrared.c **** 					break;
+ 413                             		.loc 1 92 0
+ 414 02b3 00                      		nop
+ 415                             	.L11:
+ 416                             	.LBE4:
+  93:../src/infrared.c **** 			}
+  94:../src/infrared.c **** 		}
+  95:../src/infrared.c **** 		dataResponse = 0;
+ 417                             		.loc 1 95 0
+ 418 02b4 F5 00 00                		clrb	!_dataResponse
+ 419                             	.L9:
+ 420                             	.LBE3:
+  96:../src/infrared.c **** 	}
+  97:../src/infrared.c **** }
+ 421                             		.loc 1 97 0
+ 422 02b7 10 06                   		addw	sp, #6
+ 423 02b9 D7                      		ret
+ 424                             	.LFE1:
+ 426                             	.data
+ 429                             	_ir_sampling_ticks_at_444us.2044:
+ 430 0000 37                      		.byte	55
+ 433                             	_ir_14bitMessage_inQuarterBits_counter.2043:
+ 434 0001 35                      		.byte	53
+ 437                             	_double_half_bit.2045:
+ 438 0002 02                      		.byte	2
+ 439                             		.local	_ir_rxMessage_buffer.2046
+ 440                             		.comm	_ir_rxMessage_buffer.2046,2,2
+ 483                             	.Letext0:
+ 484                             		.file 2 "../src/iodefine.h"
+ 485                             		.file 3 "../src/r_cg_macrodriver.h"
+ 486                             		.file 4 "../src/r_cg_userdefine.h"
+ 487                             		.file 5 "../src/global.c"
+ 488                             		.file 6 "../src/infrared.h"

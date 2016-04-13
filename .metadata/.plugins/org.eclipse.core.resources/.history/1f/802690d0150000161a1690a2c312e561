@@ -1,0 +1,18 @@
+/*
+ * global.c
+ *
+ *  Created on: Apr 11, 2016
+ *      Author: trist
+ */
+
+/*
+ * Transmits an array of 14 bits via IR LED
+ * Uses Manchester RC5 encoding
+ */
+void transmit(uint8_t * message)
+{
+	for (int i = 0; i < 14; i++)
+	{
+
+	}
+}

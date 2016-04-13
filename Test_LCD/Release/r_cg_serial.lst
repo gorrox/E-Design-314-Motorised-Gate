@@ -1,0 +1,565 @@
+   1                             	r8	=	0xffef0
+   2                             	r16	=	0xffee8
+   3                             	r24	=	0xffee0
+   4                             	r9	=	0xffef1
+   5                             	r17	=	0xffee9
+   6                             	r25	=	0xffee1
+   7                             	r10	=	0xffef2
+   8                             	r18	=	0xffeea
+   9                             	r26	=	0xffee2
+  10                             	r11	=	0xffef3
+  11                             	r19	=	0xffeeb
+  12                             	r27	=	0xffee3
+  13                             	r12	=	0xffef4
+  14                             	r20	=	0xffeec
+  15                             	r28	=	0xffee4
+  16                             	r13	=	0xffef5
+  17                             	r21	=	0xffeed
+  18                             	r29	=	0xffee5
+  19                             	r14	=	0xffef6
+  20                             	r22	=	0xffeee
+  21                             	r30	=	0xffee6
+  22                             	r15	=	0xffef7
+  23                             	r23	=	0xffeef
+  24                             	r31	=	0xffee7
+  25                             	.text
+  26                             	.Ltext0:
+  27                             		.section	.text.R_UART1_Create,"ax",@progbits
+  28                             		.global	_R_UART1_Create
+  30                             	_R_UART1_Create:
+  31                             	.LFB1:
+  32                             		.file 1 "../src/r_cg_serial.c"
+   1:../src/r_cg_serial.c **** /**************************************************************************************************
+   2:../src/r_cg_serial.c **** * DISCLAIMER
+   3:../src/r_cg_serial.c **** * This software is supplied by Renesas Electronics Corporation and is only intended for use with Re
+   4:../src/r_cg_serial.c **** * No other uses are authorized. This software is owned by Renesas Electronics Corporation and is pr
+   5:../src/r_cg_serial.c **** * applicable laws, including copyright laws. 
+   6:../src/r_cg_serial.c **** * THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIESREGARDING THIS SOFTWARE, WHETHER
+   7:../src/r_cg_serial.c **** * OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULA
+   8:../src/r_cg_serial.c **** * NON-INFRINGEMENT.  ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED.TO THE MAXIMUM EXTENT PERMITTED N
+   9:../src/r_cg_serial.c **** * LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES SHALL BE LIABLE 
+  10:../src/r_cg_serial.c **** * INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS SOFTWARE, E
+  11:../src/r_cg_serial.c **** * ITS AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+  12:../src/r_cg_serial.c **** * Renesas reserves the right, without notice, to make changes to this software and to discontinue t
+  13:../src/r_cg_serial.c **** * of this software. By using this software, you agree to the additional terms and conditions found 
+  14:../src/r_cg_serial.c **** * following link:
+  15:../src/r_cg_serial.c **** * http://www.renesas.com/disclaimer
+  16:../src/r_cg_serial.c **** *
+  17:../src/r_cg_serial.c **** * Copyright (C) 2011, 2015 Renesas Electronics Corporation. All rights reserved.
+  18:../src/r_cg_serial.c **** ***************************************************************************************************
+  19:../src/r_cg_serial.c **** 
+  20:../src/r_cg_serial.c **** /**************************************************************************************************
+  21:../src/r_cg_serial.c **** * File Name    : r_cg_serial.c
+  22:../src/r_cg_serial.c **** * Version      : CodeGenerator for RL78/G14 V2.04.02.01 [15 May 2015]
+  23:../src/r_cg_serial.c **** * Device(s)    : R5F104LE
+  24:../src/r_cg_serial.c **** * Tool-Chain   : GCCRL78
+  25:../src/r_cg_serial.c **** * Description  : This file implements device driver for Serial module.
+  26:../src/r_cg_serial.c **** * Creation Date: 15-02-16
+  27:../src/r_cg_serial.c **** ***************************************************************************************************
+  28:../src/r_cg_serial.c **** 
+  29:../src/r_cg_serial.c **** /**************************************************************************************************
+  30:../src/r_cg_serial.c **** Includes
+  31:../src/r_cg_serial.c **** ***************************************************************************************************
+  32:../src/r_cg_serial.c **** #include "r_cg_macrodriver.h"
+  33:../src/r_cg_serial.c **** #include "r_cg_serial.h"
+  34:../src/r_cg_serial.c **** /* Start user code for include. Do not edit comment generated here */
+  35:../src/r_cg_serial.c **** /* End user code. Do not edit comment generated here */
+  36:../src/r_cg_serial.c **** #include "r_cg_userdefine.h"
+  37:../src/r_cg_serial.c **** 
+  38:../src/r_cg_serial.c **** /**************************************************************************************************
+  39:../src/r_cg_serial.c **** Global variables and functions
+  40:../src/r_cg_serial.c **** ***************************************************************************************************
+  41:../src/r_cg_serial.c **** volatile uint8_t * gp_uart1_tx_address;        /* uart1 transmit buffer address */
+  42:../src/r_cg_serial.c **** volatile uint16_t  g_uart1_tx_count;           /* uart1 transmit data number */
+  43:../src/r_cg_serial.c **** volatile uint8_t * gp_uart1_rx_address;        /* uart1 receive buffer address */
+  44:../src/r_cg_serial.c **** volatile uint16_t  g_uart1_rx_count;           /* uart1 receive data number */
+  45:../src/r_cg_serial.c **** volatile uint16_t  g_uart1_rx_length;          /* uart1 receive data length */
+  46:../src/r_cg_serial.c **** /* Start user code for global. Do not edit comment generated here */
+  47:../src/r_cg_serial.c **** /* End user code. Do not edit comment generated here */
+  48:../src/r_cg_serial.c **** 
+  49:../src/r_cg_serial.c **** /**************************************************************************************************
+  50:../src/r_cg_serial.c **** * Function Name: R_SAU0_Create
+  51:../src/r_cg_serial.c **** * Description  : This function initializes the SAU0 module.
+  52:../src/r_cg_serial.c **** * Arguments    : None
+  53:../src/r_cg_serial.c **** * Return Value : None
+  54:../src/r_cg_serial.c **** ***************************************************************************************************
+  55:../src/r_cg_serial.c **** void R_SAU0_Create(void)
+  56:../src/r_cg_serial.c **** {
+  57:../src/r_cg_serial.c ****     SAU0EN = 1U;    /* supply SAU0 clock */
+  58:../src/r_cg_serial.c ****     NOP();
+  59:../src/r_cg_serial.c ****     NOP();
+  60:../src/r_cg_serial.c ****     NOP();
+  61:../src/r_cg_serial.c ****     NOP();
+  62:../src/r_cg_serial.c ****     SPS0 = _0003_SAU_CK00_FCLK_3 | _0030_SAU_CK01_FCLK_3;
+  63:../src/r_cg_serial.c ****     R_UART1_Create();
+  64:../src/r_cg_serial.c **** }
+  65:../src/r_cg_serial.c **** 
+  66:../src/r_cg_serial.c **** /**************************************************************************************************
+  67:../src/r_cg_serial.c **** * Function Name: R_UART1_Create
+  68:../src/r_cg_serial.c **** * Description  : This function initializes the UART1 module.
+  69:../src/r_cg_serial.c **** * Arguments    : None
+  70:../src/r_cg_serial.c **** * Return Value : None
+  71:../src/r_cg_serial.c **** ***************************************************************************************************
+  72:../src/r_cg_serial.c **** void R_UART1_Create(void)
+  73:../src/r_cg_serial.c **** {
+  33                             		.loc 1 73 0
+  74:../src/r_cg_serial.c ****     ST0 |= _0008_SAU_CH3_STOP_TRG_ON | _0004_SAU_CH2_STOP_TRG_ON;    /* disable UART1 receive and t
+  34                             		.loc 1 74 0
+  35 0000 AF 24 01                		movw	ax, !292
+  36 0003 BD F2                   		movw	r10, ax
+  37 0005 60                      		mov	a, x
+  38 0006 6C 0C                   		or	a, #12
+  39 0008 9D F0                   		mov	r8, a
+  40 000a 8D F3                   		mov	a, r11
+  41 000c 9D F1                   		mov	r9, a
+  42 000e AD F0                   		movw	ax, r8
+  43 0010 BF 24 01                		movw	!292, ax
+  75:../src/r_cg_serial.c ****     STMK1 = 1U;    /* disable INTST1 interrupt */
+  44                             		.loc 1 75 0
+  45 0013 71 00 E6 FF             		set1	!-26.0
+  76:../src/r_cg_serial.c ****     STIF1 = 0U;    /* clear INTST1 interrupt flag */
+  46                             		.loc 1 76 0
+  47 0017 71 08 E2 FF             		clr1	!-30.0
+  77:../src/r_cg_serial.c ****     SRMK1 = 1U;    /* disable INTSR1 interrupt */
+  48                             		.loc 1 77 0
+  49 001b 71 10 E6 FF             		set1	!-26.1
+  78:../src/r_cg_serial.c ****     SRIF1 = 0U;    /* clear INTSR1 interrupt flag */
+  50                             		.loc 1 78 0
+  51 001f 71 18 E2 FF             		clr1	!-30.1
+  79:../src/r_cg_serial.c ****     SREMK1 = 1U;   /* disable INTSRE1 interrupt */
+  52                             		.loc 1 79 0
+  53 0023 71 20 E6 FF             		set1	!-26.2
+  80:../src/r_cg_serial.c ****     SREIF1 = 0U;   /* clear INTSRE1 interrupt flag */
+  54                             		.loc 1 80 0
+  55 0027 71 28 E2 FF             		clr1	!-30.2
+  81:../src/r_cg_serial.c ****     /* Set INTST1 low priority */
+  82:../src/r_cg_serial.c ****     STPR11 = 1U;
+  56                             		.loc 1 82 0
+  57 002b 71 00 EE FF             		set1	!-18.0
+  83:../src/r_cg_serial.c ****     STPR01 = 1U;
+  58                             		.loc 1 83 0
+  59 002f 71 00 EA FF             		set1	!-22.0
+  84:../src/r_cg_serial.c ****     /* Set INTSR1 low priority */
+  85:../src/r_cg_serial.c ****     SRPR11 = 1U;
+  60                             		.loc 1 85 0
+  61 0033 71 10 EE FF             		set1	!-18.1
+  86:../src/r_cg_serial.c ****     SRPR01 = 1U;
+  62                             		.loc 1 86 0
+  63 0037 71 10 EA FF             		set1	!-22.1
+  87:../src/r_cg_serial.c ****     SMR02 = _0020_SAU_SMRMN_INITIALVALUE | _0000_SAU_CLOCK_SELECT_CK00 | _0000_SAU_TRIGGER_SOFTWARE
+  64                             		.loc 1 87 0
+  65 003b 30 22 00                		movw	ax, #34
+  66 003e BF 14 01                		movw	!276, ax
+  88:../src/r_cg_serial.c ****             _0002_SAU_MODE_UART | _0000_SAU_TRANSFER_END;
+  89:../src/r_cg_serial.c ****     SCR02 = _8000_SAU_TRANSMISSION | _0000_SAU_INTSRE_MASK | _0000_SAU_PARITY_NONE | _0080_SAU_LSB 
+  67                             		.loc 1 89 0
+  68 0041 30 97 80                		movw	ax, #-32617
+  69 0044 BF 1C 01                		movw	!284, ax
+  90:../src/r_cg_serial.c ****             _0007_SAU_LENGTH_8;
+  91:../src/r_cg_serial.c ****     SDR02 = _CE00_UART1_TRANSMIT_DIVISOR;
+  70                             		.loc 1 91 0
+  71 0047 30 00 CE                		movw	ax, #-12800
+  72 004a BF 44 FF                		movw	!-188, ax
+  92:../src/r_cg_serial.c ****     NFEN0 |= _04_SAU_RXD1_FILTER_ON;
+  73                             		.loc 1 92 0
+  74 004d 71 20 70 00             		set1	!112.2
+  93:../src/r_cg_serial.c ****     SIR03 = _0004_SAU_SIRMN_FECTMN | _0002_SAU_SIRMN_PECTMN | _0001_SAU_SIRMN_OVCTMN;    /* clear e
+  75                             		.loc 1 93 0
+  76 0051 30 07 00                		movw	ax, #7
+  77 0054 BF 0E 01                		movw	!270, ax
+  94:../src/r_cg_serial.c ****     SMR03 = _0020_SAU_SMRMN_INITIALVALUE | _0000_SAU_CLOCK_SELECT_CK00 | _0100_SAU_TRIGGER_RXD | _0
+  78                             		.loc 1 94 0
+  79 0057 30 22 01                		movw	ax, #290
+  80 005a BF 16 01                		movw	!278, ax
+  95:../src/r_cg_serial.c ****             _0002_SAU_MODE_UART | _0000_SAU_TRANSFER_END;
+  96:../src/r_cg_serial.c ****     SCR03 = _4000_SAU_RECEPTION | _0000_SAU_INTSRE_MASK | _0000_SAU_PARITY_NONE | _0080_SAU_LSB | _
+  81                             		.loc 1 96 0
+  82 005d 30 97 40                		movw	ax, #16535
+  83 0060 BF 1E 01                		movw	!286, ax
+  97:../src/r_cg_serial.c ****             _0007_SAU_LENGTH_8;
+  98:../src/r_cg_serial.c ****     SDR03 = _CE00_UART1_RECEIVE_DIVISOR;
+  84                             		.loc 1 98 0
+  85 0063 30 00 CE                		movw	ax, #-12800
+  86 0066 BF 46 FF                		movw	!-186, ax
+  99:../src/r_cg_serial.c ****     SO0 |= _0004_SAU_CH2_DATA_OUTPUT_1;
+  87                             		.loc 1 99 0
+  88 0069 AF 28 01                		movw	ax, !296
+  89 006c BD F2                   		movw	r10, ax
+  90 006e 60                      		mov	a, x
+  91 006f 6C 04                   		or	a, #4
+  92 0071 9D F0                   		mov	r8, a
+  93 0073 8D F3                   		mov	a, r11
+  94 0075 9D F1                   		mov	r9, a
+  95 0077 AD F0                   		movw	ax, r8
+  96 0079 BF 28 01                		movw	!296, ax
+ 100:../src/r_cg_serial.c ****     SOL0 |= _0000_SAU_CHANNEL2_NORMAL;    /* output level normal */
+ 101:../src/r_cg_serial.c ****     SOE0 |= _0004_SAU_CH2_OUTPUT_ENABLE;    /* enable UART1 output */
+  97                             		.loc 1 101 0
+  98 007c AF 2A 01                		movw	ax, !298
+  99 007f BD F2                   		movw	r10, ax
+ 100 0081 60                      		mov	a, x
+ 101 0082 6C 04                   		or	a, #4
+ 102 0084 9D F0                   		mov	r8, a
+ 103 0086 8D F3                   		mov	a, r11
+ 104 0088 9D F1                   		mov	r9, a
+ 105 008a AD F0                   		movw	ax, r8
+ 106 008c BF 2A 01                		movw	!298, ax
+ 102:../src/r_cg_serial.c ****     /* Set RxD1 pin */
+ 103:../src/r_cg_serial.c ****     PMC0 &= 0xF7U;
+ 107                             		.loc 1 103 0
+ 108 008f 71 38 60 00             		clr1	!96.3
+ 104:../src/r_cg_serial.c ****     PM0 |= 0x08U;
+ 109                             		.loc 1 104 0
+ 110 0093 71 30 20 FF             		set1	!-224.3
+ 105:../src/r_cg_serial.c ****     /* Set TxD1 pin */
+ 106:../src/r_cg_serial.c ****     PMC0 &= 0xFBU;
+ 111                             		.loc 1 106 0
+ 112 0097 71 28 60 00             		clr1	!96.2
+ 107:../src/r_cg_serial.c ****     P0 |= 0x04U;
+ 113                             		.loc 1 107 0
+ 114 009b 71 20 00 FF             		set1	!-256.2
+ 108:../src/r_cg_serial.c ****     PM0 &= 0xFBU;
+ 115                             		.loc 1 108 0
+ 116 009f 71 28 20 FF             		clr1	!-224.2
+ 109:../src/r_cg_serial.c **** }
+ 117                             		.loc 1 109 0
+ 118 00a3 D7                      		ret
+ 119                             	.LFE1:
+ 121                             		.section	.text.R_SAU0_Create,"ax",@progbits
+ 122                             		.global	_R_SAU0_Create
+ 124                             	_R_SAU0_Create:
+ 125                             	.LFB0:
+  56:../src/r_cg_serial.c ****     SAU0EN = 1U;    /* supply SAU0 clock */
+ 126                             		.loc 1 56 0
+  57:../src/r_cg_serial.c ****     NOP();
+ 127                             		.loc 1 57 0
+ 128 0000 71 20 F0 00             		set1	!240.2
+  58:../src/r_cg_serial.c ****     NOP();
+ 129                             		.loc 1 58 0
+ 130                             	 ; 58 "../src/r_cg_serial.c" 1
+ 131 0004 00                      		nop
+ 132                             	 ; 0 "" 2
+  59:../src/r_cg_serial.c ****     NOP();
+ 133                             		.loc 1 59 0
+ 134                             	 ; 59 "../src/r_cg_serial.c" 1
+ 135 0005 00                      		nop
+ 136                             	 ; 0 "" 2
+  60:../src/r_cg_serial.c ****     NOP();
+ 137                             		.loc 1 60 0
+ 138                             	 ; 60 "../src/r_cg_serial.c" 1
+ 139 0006 00                      		nop
+ 140                             	 ; 0 "" 2
+  61:../src/r_cg_serial.c ****     SPS0 = _0003_SAU_CK00_FCLK_3 | _0030_SAU_CK01_FCLK_3;
+ 141                             		.loc 1 61 0
+ 142                             	 ; 61 "../src/r_cg_serial.c" 1
+ 143 0007 00                      		nop
+ 144                             	 ; 0 "" 2
+  62:../src/r_cg_serial.c ****     R_UART1_Create();
+ 145                             		.loc 1 62 0
+ 146 0008 30 33 00                		movw	ax, #51
+ 147 000b BF 26 01                		movw	!294, ax
+  63:../src/r_cg_serial.c **** }
+ 148                             		.loc 1 63 0
+ 149 000e FC 00 00 00             		call	!!%code(_R_UART1_Create)
+ 150                             	.LVL0:
+  64:../src/r_cg_serial.c **** 
+ 151                             		.loc 1 64 0
+ 152 0012 D7                      		ret
+ 153                             	.LFE0:
+ 155                             		.section	.text.R_UART1_Start,"ax",@progbits
+ 156                             		.global	_R_UART1_Start
+ 158                             	_R_UART1_Start:
+ 159                             	.LFB2:
+ 110:../src/r_cg_serial.c **** 
+ 111:../src/r_cg_serial.c **** /**************************************************************************************************
+ 112:../src/r_cg_serial.c **** * Function Name: R_UART1_Start
+ 113:../src/r_cg_serial.c **** * Description  : This function starts the UART1 module operation.
+ 114:../src/r_cg_serial.c **** * Arguments    : None
+ 115:../src/r_cg_serial.c **** * Return Value : None
+ 116:../src/r_cg_serial.c **** ***************************************************************************************************
+ 117:../src/r_cg_serial.c **** void R_UART1_Start(void)
+ 118:../src/r_cg_serial.c **** {
+ 160                             		.loc 1 118 0
+ 119:../src/r_cg_serial.c ****     SO0 |= _0004_SAU_CH2_DATA_OUTPUT_1;    /* output level normal */
+ 161                             		.loc 1 119 0
+ 162 0000 AF 28 01                		movw	ax, !296
+ 163 0003 BD F2                   		movw	r10, ax
+ 164 0005 60                      		mov	a, x
+ 165 0006 6C 04                   		or	a, #4
+ 166 0008 9D F0                   		mov	r8, a
+ 167 000a 8D F3                   		mov	a, r11
+ 168 000c 9D F1                   		mov	r9, a
+ 169 000e AD F0                   		movw	ax, r8
+ 170 0010 BF 28 01                		movw	!296, ax
+ 120:../src/r_cg_serial.c ****     SOE0 |= _0004_SAU_CH2_OUTPUT_ENABLE;    /* enable UART1 output */
+ 171                             		.loc 1 120 0
+ 172 0013 AF 2A 01                		movw	ax, !298
+ 173 0016 BD F2                   		movw	r10, ax
+ 174 0018 60                      		mov	a, x
+ 175 0019 6C 04                   		or	a, #4
+ 176 001b 9D F0                   		mov	r8, a
+ 177 001d 8D F3                   		mov	a, r11
+ 178 001f 9D F1                   		mov	r9, a
+ 179 0021 AD F0                   		movw	ax, r8
+ 180 0023 BF 2A 01                		movw	!298, ax
+ 121:../src/r_cg_serial.c ****     SS0 |= _0008_SAU_CH3_START_TRG_ON | _0004_SAU_CH2_START_TRG_ON;    /* enable UART1 receive and 
+ 181                             		.loc 1 121 0
+ 182 0026 AF 22 01                		movw	ax, !290
+ 183 0029 BD F2                   		movw	r10, ax
+ 184 002b 60                      		mov	a, x
+ 185 002c 6C 0C                   		or	a, #12
+ 186 002e 9D F0                   		mov	r8, a
+ 187 0030 8D F3                   		mov	a, r11
+ 188 0032 9D F1                   		mov	r9, a
+ 189 0034 AD F0                   		movw	ax, r8
+ 190 0036 BF 22 01                		movw	!290, ax
+ 122:../src/r_cg_serial.c ****     STIF1 = 0U;    /* clear INTST1 interrupt flag */
+ 191                             		.loc 1 122 0
+ 192 0039 71 08 E2 FF             		clr1	!-30.0
+ 123:../src/r_cg_serial.c ****     SRIF1 = 0U;    /* clear INTSR1 interrupt flag */
+ 193                             		.loc 1 123 0
+ 194 003d 71 18 E2 FF             		clr1	!-30.1
+ 124:../src/r_cg_serial.c ****     STMK1 = 0U;    /* enable INTST1 interrupt */
+ 195                             		.loc 1 124 0
+ 196 0041 71 08 E6 FF             		clr1	!-26.0
+ 125:../src/r_cg_serial.c ****     SRMK1 = 0U;    /* enable INTSR1 interrupt */
+ 197                             		.loc 1 125 0
+ 198 0045 71 18 E6 FF             		clr1	!-26.1
+ 126:../src/r_cg_serial.c **** }
+ 199                             		.loc 1 126 0
+ 200 0049 D7                      		ret
+ 201                             	.LFE2:
+ 203                             		.section	.text.R_UART1_Stop,"ax",@progbits
+ 204                             		.global	_R_UART1_Stop
+ 206                             	_R_UART1_Stop:
+ 207                             	.LFB3:
+ 127:../src/r_cg_serial.c **** 
+ 128:../src/r_cg_serial.c **** /**************************************************************************************************
+ 129:../src/r_cg_serial.c **** * Function Name: R_UART1_Stop
+ 130:../src/r_cg_serial.c **** * Description  : This function stops the UART1 module operation.
+ 131:../src/r_cg_serial.c **** * Arguments    : None
+ 132:../src/r_cg_serial.c **** * Return Value : None
+ 133:../src/r_cg_serial.c **** ***************************************************************************************************
+ 134:../src/r_cg_serial.c **** void R_UART1_Stop(void)
+ 135:../src/r_cg_serial.c **** {
+ 208                             		.loc 1 135 0
+ 136:../src/r_cg_serial.c ****     STMK1 = 1U;    /* disable INTST1 interrupt */
+ 209                             		.loc 1 136 0
+ 210 0000 71 00 E6 FF             		set1	!-26.0
+ 137:../src/r_cg_serial.c ****     SRMK1 = 1U;    /* disable INTSR1 interrupt */
+ 211                             		.loc 1 137 0
+ 212 0004 71 10 E6 FF             		set1	!-26.1
+ 138:../src/r_cg_serial.c ****     ST0 |= _0008_SAU_CH3_STOP_TRG_ON | _0004_SAU_CH2_STOP_TRG_ON;    /* disable UART1 receive and t
+ 213                             		.loc 1 138 0
+ 214 0008 AF 24 01                		movw	ax, !292
+ 215 000b BD F2                   		movw	r10, ax
+ 216 000d 60                      		mov	a, x
+ 217 000e 6C 0C                   		or	a, #12
+ 218 0010 9D F0                   		mov	r8, a
+ 219 0012 8D F3                   		mov	a, r11
+ 220 0014 9D F1                   		mov	r9, a
+ 221 0016 AD F0                   		movw	ax, r8
+ 222 0018 BF 24 01                		movw	!292, ax
+ 139:../src/r_cg_serial.c ****     SOE0 &= ~_0004_SAU_CH2_OUTPUT_ENABLE;    /* disable UART1 output */
+ 223                             		.loc 1 139 0
+ 224 001b AF 2A 01                		movw	ax, !298
+ 225 001e BD F2                   		movw	r10, ax
+ 226 0020 60                      		mov	a, x
+ 227 0021 5C FB                   		and	a, #-5
+ 228 0023 9D F0                   		mov	r8, a
+ 229 0025 8D F3                   		mov	a, r11
+ 230 0027 9D F1                   		mov	r9, a
+ 231 0029 AD F0                   		movw	ax, r8
+ 232 002b BF 2A 01                		movw	!298, ax
+ 140:../src/r_cg_serial.c ****     STIF1 = 0U;    /* clear INTST1 interrupt flag */
+ 233                             		.loc 1 140 0
+ 234 002e 71 08 E2 FF             		clr1	!-30.0
+ 141:../src/r_cg_serial.c ****     SRIF1 = 0U;    /* clear INTSR1 interrupt flag */
+ 235                             		.loc 1 141 0
+ 236 0032 71 18 E2 FF             		clr1	!-30.1
+ 142:../src/r_cg_serial.c ****    
+ 143:../src/r_cg_serial.c **** }
+ 237                             		.loc 1 143 0
+ 238 0036 D7                      		ret
+ 239                             	.LFE3:
+ 241                             		.section	.text.R_UART1_Receive,"ax",@progbits
+ 242                             		.global	_R_UART1_Receive
+ 244                             	_R_UART1_Receive:
+ 245                             	.LFB4:
+ 144:../src/r_cg_serial.c **** 
+ 145:../src/r_cg_serial.c **** /**************************************************************************************************
+ 146:../src/r_cg_serial.c **** * Function Name: R_UART1_Receive
+ 147:../src/r_cg_serial.c **** * Description  : This function receives UART1 data.
+ 148:../src/r_cg_serial.c **** * Arguments    : rx_buf -
+ 149:../src/r_cg_serial.c **** *                    receive buffer pointer
+ 150:../src/r_cg_serial.c **** *                rx_num -
+ 151:../src/r_cg_serial.c **** *                    buffer size
+ 152:../src/r_cg_serial.c **** * Return Value : status -
+ 153:../src/r_cg_serial.c **** *                    MD_OK or MD_ARGERROR
+ 154:../src/r_cg_serial.c **** ***************************************************************************************************
+ 155:../src/r_cg_serial.c **** MD_STATUS R_UART1_Receive(uint8_t * const rx_buf, uint16_t rx_num)
+ 156:../src/r_cg_serial.c **** {
+ 246                             		.loc 1 156 0
+ 247                             		; start of function
+ 248                             		; locals: 2 bytes
+ 249                             	.LVL1:
+ 250 0000 20 02                   		subw	sp, #2
+ 251                             	.LCFI0:
+ 252 0002 A8 08                   		movw	ax, [sp+8]
+ 253 0004 BD F0                   		movw	r8, ax
+ 254                             	.LVL2:
+ 157:../src/r_cg_serial.c ****     MD_STATUS status = MD_OK;
+ 158:../src/r_cg_serial.c **** 
+ 159:../src/r_cg_serial.c ****     if (rx_num < 1U)
+ 255                             		.loc 1 159 0
+ 256 0006 44 00 00                		cmpw	ax, #0
+ 257 0009 61 F8                   		 sknz
+ 258 000b EC 22 00 00             		 br	!!.L7
+ 160:../src/r_cg_serial.c ****     {
+ 161:../src/r_cg_serial.c ****         status = MD_ARGERROR;
+ 162:../src/r_cg_serial.c ****     }
+ 163:../src/r_cg_serial.c ****     else
+ 164:../src/r_cg_serial.c ****     {
+ 165:../src/r_cg_serial.c ****         g_uart1_rx_count = 0U;
+ 259                             		.loc 1 165 0
+ 260 000f F6                      		clrw	ax
+ 261 0010 BF 00 00                		movw	!_g_uart1_rx_count, ax
+ 166:../src/r_cg_serial.c ****         g_uart1_rx_length = rx_num;
+ 262                             		.loc 1 166 0
+ 263 0013 AD F0                   		movw	ax, r8
+ 264 0015 BF 00 00                		movw	!_g_uart1_rx_length, ax
+ 167:../src/r_cg_serial.c ****         gp_uart1_rx_address = rx_buf;
+ 265                             		.loc 1 167 0
+ 266 0018 A8 06                   		movw	ax, [sp+6]
+ 267 001a BF 00 00                		movw	!_gp_uart1_rx_address, ax
+ 157:../src/r_cg_serial.c **** 
+ 268                             		.loc 1 157 0
+ 269 001d F6                      		clrw	ax
+ 270 001e EC 25 00 00             		br	!!.L8
+ 271                             	.LVL3:
+ 272                             	.L7:
+ 161:../src/r_cg_serial.c ****     }
+ 273                             		.loc 1 161 0
+ 274 0022 30 81 00                		movw	ax, #129
+ 275                             	.LVL4:
+ 276                             	.L8:
+ 168:../src/r_cg_serial.c ****     }
+ 169:../src/r_cg_serial.c **** 
+ 170:../src/r_cg_serial.c ****     return (status);
+ 171:../src/r_cg_serial.c **** }
+ 277                             		.loc 1 171 0
+ 278 0025 B8 00                   		movw	[sp], ax
+ 279 0027 BD F0                   		movw	r8, ax
+ 280                             	.LVL5:
+ 281 0029 10 02                   		addw	sp, #2
+ 282 002b D7                      		ret
+ 283                             	.LFE4:
+ 285                             		.section	.text.R_UART1_Send,"ax",@progbits
+ 286                             		.global	_R_UART1_Send
+ 288                             	_R_UART1_Send:
+ 289                             	.LFB5:
+ 172:../src/r_cg_serial.c **** 
+ 173:../src/r_cg_serial.c **** /**************************************************************************************************
+ 174:../src/r_cg_serial.c **** * Function Name: R_UART1_Send
+ 175:../src/r_cg_serial.c **** * Description  : This function sends UART1 data.
+ 176:../src/r_cg_serial.c **** * Arguments    : tx_buf -
+ 177:../src/r_cg_serial.c **** *                    transfer buffer pointer
+ 178:../src/r_cg_serial.c **** *                tx_num -
+ 179:../src/r_cg_serial.c **** *                    buffer size
+ 180:../src/r_cg_serial.c **** * Return Value : status -
+ 181:../src/r_cg_serial.c **** *                    MD_OK or MD_ARGERROR
+ 182:../src/r_cg_serial.c **** ***************************************************************************************************
+ 183:../src/r_cg_serial.c **** MD_STATUS R_UART1_Send(uint8_t * const tx_buf, uint16_t tx_num)
+ 184:../src/r_cg_serial.c **** {
+ 290                             		.loc 1 184 0
+ 291                             		; start of function
+ 292                             		; locals: 2 bytes
+ 293                             	.LVL6:
+ 294 0000 20 02                   		subw	sp, #2
+ 295                             	.LCFI1:
+ 296 0002 A8 06                   		movw	ax, [sp+6]
+ 297 0004 BD F0                   		movw	r8, ax
+ 298 0006 A8 08                   		movw	ax, [sp+8]
+ 299 0008 BD F2                   		movw	r10, ax
+ 300                             	.LVL7:
+ 185:../src/r_cg_serial.c ****     MD_STATUS status = MD_OK;
+ 186:../src/r_cg_serial.c **** 
+ 187:../src/r_cg_serial.c ****     if (tx_num < 1U)
+ 301                             		.loc 1 187 0
+ 302 000a 44 00 00                		cmpw	ax, #0
+ 303 000d 61 F8                   		 sknz
+ 304 000f EC 37 00 00             		 br	!!.L12
+ 188:../src/r_cg_serial.c ****     {
+ 189:../src/r_cg_serial.c ****         status = MD_ARGERROR;
+ 190:../src/r_cg_serial.c ****     }
+ 191:../src/r_cg_serial.c ****     else
+ 192:../src/r_cg_serial.c ****     {
+ 193:../src/r_cg_serial.c ****         gp_uart1_tx_address = tx_buf;
+ 305                             		.loc 1 193 0
+ 306 0013 AD F0                   		movw	ax, r8
+ 307 0015 BF 00 00                		movw	!_gp_uart1_tx_address, ax
+ 194:../src/r_cg_serial.c ****         g_uart1_tx_count = tx_num;
+ 308                             		.loc 1 194 0
+ 309 0018 AD F2                   		movw	ax, r10
+ 310 001a BF 00 00                		movw	!_g_uart1_tx_count, ax
+ 195:../src/r_cg_serial.c ****         STMK1 = 1U;    /* disable INTST1 interrupt */
+ 311                             		.loc 1 195 0
+ 312 001d 71 00 E6 FF             		set1	!-26.0
+ 196:../src/r_cg_serial.c ****         TXD1 = *gp_uart1_tx_address;
+ 313                             		.loc 1 196 0
+ 314 0021 AD F0                   		movw	ax, r8
+ 315 0023 16                      		movw	hl, ax
+ 316 0024 8B                      		mov	a, [hl]
+ 317 0025 9F 44 FF                		mov	!-188, a
+ 318                             	.LVL8:
+ 197:../src/r_cg_serial.c ****         gp_uart1_tx_address++;
+ 319                             		.loc 1 197 0
+ 320 0028 A2 00 00                		incw	!_gp_uart1_tx_address
+ 198:../src/r_cg_serial.c ****         g_uart1_tx_count--;
+ 321                             		.loc 1 198 0
+ 322 002b B2 00 00                		decw	!_g_uart1_tx_count
+ 199:../src/r_cg_serial.c ****         STMK1 = 0U;    /* enable INTST1 interrupt */
+ 323                             		.loc 1 199 0
+ 324 002e 71 08 E6 FF             		clr1	!-26.0
+ 185:../src/r_cg_serial.c **** 
+ 325                             		.loc 1 185 0
+ 326 0032 F6                      		clrw	ax
+ 327                             	.LVL9:
+ 328 0033 EC 3A 00 00             		br	!!.L13
+ 329                             	.LVL10:
+ 330                             	.L12:
+ 189:../src/r_cg_serial.c ****     }
+ 331                             		.loc 1 189 0
+ 332 0037 30 81 00                		movw	ax, #129
+ 333                             	.LVL11:
+ 334                             	.L13:
+ 200:../src/r_cg_serial.c ****     }
+ 201:../src/r_cg_serial.c **** 
+ 202:../src/r_cg_serial.c ****     return (status);
+ 203:../src/r_cg_serial.c **** }
+ 335                             		.loc 1 203 0
+ 336 003a B8 00                   		movw	[sp], ax
+ 337 003c BD F0                   		movw	r8, ax
+ 338                             	.LVL12:
+ 339 003e 10 02                   		addw	sp, #2
+ 340 0040 D7                      		ret
+ 341                             	.LFE5:
+ 343                             		.comm	_g_uart1_rx_length,2,2
+ 344                             		.comm	_g_uart1_rx_count,2,2
+ 345                             		.comm	_gp_uart1_rx_address,2,2
+ 346                             		.comm	_g_uart1_tx_count,2,2
+ 347                             		.comm	_gp_uart1_tx_address,2,2
+ 348                             		.comm	_uart1Status,2,2
+ 349                             		.comm	_uart1TxFlag,1,1
+ 350                             		.comm	_uart1TxCnt,2,2
+ 351                             		.comm	_uart1TxBuf,16,1
+ 352                             		.comm	_uart1RxOvrFlag,1,1
+ 353                             		.comm	_uart1RxErrFlag,1,1
+ 354                             		.comm	_uart1RxFlag,1,1
+ 355                             		.comm	_uart1RxCnt,2,2
+ 356                             		.comm	_uart1RxBuf,16,1
+ 431                             	.Letext0:
+ 432                             		.file 2 "../src/iodefine.h"
+ 433                             		.file 3 "../src/iodefine_ext.h"
+ 434                             		.file 4 "../src/r_cg_macrodriver.h"
+ 435                             		.file 5 "../src/my_globals.c"

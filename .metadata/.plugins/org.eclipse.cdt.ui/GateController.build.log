@@ -1,0 +1,22 @@
+01:33:34 **** Incremental Build of configuration HardwareDebug for project GateController ****
+make -j4 all 
+'Scanning and building file: ../src/r_main.c'
+'Invoking: Scanner and Compiler'
+rl78-elf-gcc -MM -MP -MF "src/r_main.d" -MT"src/r_main.o" -MT"src/r_main.d" -x c   -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g "../src/r_main.c"
+rl78-elf-gcc -c -x c  -Wa,-adlhn="r_main.lst" -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g -o "src/r_main.o" "../src/r_main.c"
+'Finished scanning and building: ../src/r_main.c'
+
+'Invoking: Linker'
+'Building target:'
+rl78-elf-ld -o "GateController.x" -T"C:\Users\trist\e2_studio\workspace\GateController\HardwareDebug\GateController_HardwareDebug_auto.gsi" @"C:\Users\trist\e2_studio\workspace\GateController\HardwareDebug\LinkerSubCommand.tmp"    -M=GateController.map -L"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/lib/gcc/rl78-elf/4.9-GNURL78_v15.02/g14" -L"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/lib/g14" --start-group -loptm -loptc -lgcc --end-group -e_PowerON_Reset
+'Finished building:'
+
+'Invoking: Objcopy'
+'Building target:'
+rl78-elf-objcopy -O srec   GateController.x "GateController.mot"
+'Finished building target:'
+
+'Build complete.'
+
+01:33:35 Build Finished. 0 errors, 0 warnings. (took 1s.262ms)
+
