@@ -34,45 +34,46 @@
   34                             		.comm	_uart1TxBuf,16,1
   35                             		.comm	_uart1TxCnt,2,2
   36                             		.comm	_uart1TxFlag,1,1
-  37                             		.comm	_uart1Status,2,2
-  38                             		.comm	_ir_rxMessage,2,2
-  39                             		.comm	_dataReady,1,1
-  40                             		.comm	_dataPrint,1,1
-  41                             		.comm	_dataResponse,1,1
-  42                             		.comm	_myBuffer,40,1
-  43                             		.global	_myCounter
-  44                             	.bss
-  45                             		.balign 2
-  48                             	_myCounter:
-  49 0000 00 00                   		.zero	2
-  50                             		.comm	_pwm_counter,2,2
-  51                             		.section	.rodata
-  52                             	.LC0:
-  53 0000 54 65 73 74 20 6D 6F 64 		.string	"Test mode"
-  53      65 00 
-  54                             	.LC1:
-  55 000a 4E 6F 72 6D 61 6C 20 6D 		.string	"Normal mode"
-  55      6F 64 65 00 
-  56                             	.LC2:
-  57 0016 47 61 74 65 20 6F 70 65 		.string	"Gate opening..."
-  57      6E 69 6E 67 2E 2E 2E 00 
-  58                             	.LC3:
-  59 0026 47 61 74 65 20 63 6C 6F 		.string	"Gate closing..."
-  59      73 69 6E 67 2E 2E 2E 00 
-  60                             	.LC4:
-  61 0036 4F 70 65 6E 65 64 00    		.string	"Opened"
-  62                             	.LC5:
-  63 003d 43 6C 6F 73 65 64 00    		.string	"Closed"
-  64                             	.LC6:
-  65 0044 55 6E 6B 6E 6F 77 6E 00 		.string	"Unknown"
-  66                             	.LC7:
-  67 004c 45 6D 65 72 67 65 6E 63 		.string	"Emergency stop"
-  67      79 20 73 74 6F 70 00 
-  68                             	.text
-  69                             		.global	_main
-  71                             	_main:
-  72                             	.LFB0:
-  73                             		.file 1 "../src/r_main.c"
+  37                             		.comm	_time_now,7,1
+  38                             		.comm	_uart1Status,2,2
+  39                             		.comm	_ir_rxMessage,2,2
+  40                             		.comm	_dataReady,1,1
+  41                             		.comm	_dataPrint,1,1
+  42                             		.comm	_dataResponse,1,1
+  43                             		.comm	_myBuffer,16,1
+  44                             		.global	_myCounter
+  45                             	.bss
+  46                             		.balign 2
+  49                             	_myCounter:
+  50 0000 00 00                   		.zero	2
+  51                             		.comm	_pwm_counter,2,2
+  52                             		.section	.rodata
+  53                             	.LC0:
+  54 0000 54 65 73 74 20 6D 6F 64 		.string	"Test mode"
+  54      65 00 
+  55                             	.LC1:
+  56 000a 4E 6F 72 6D 61 6C 20 6D 		.string	"Normal mode"
+  56      6F 64 65 00 
+  57                             	.LC2:
+  58 0016 47 61 74 65 20 6F 70 65 		.string	"Gate opening..."
+  58      6E 69 6E 67 2E 2E 2E 00 
+  59                             	.LC3:
+  60 0026 47 61 74 65 20 63 6C 6F 		.string	"Gate closing..."
+  60      73 69 6E 67 2E 2E 2E 00 
+  61                             	.LC4:
+  62 0036 4F 70 65 6E 65 64 00    		.string	"Opened"
+  63                             	.LC5:
+  64 003d 43 6C 6F 73 65 64 00    		.string	"Closed"
+  65                             	.LC6:
+  66 0044 55 6E 6B 6E 6F 77 6E 00 		.string	"Unknown"
+  67                             	.LC7:
+  68 004c 45 6D 65 72 67 65 6E 63 		.string	"Emergency stop"
+  68      79 20 73 74 6F 70 00 
+  69                             	.text
+  70                             		.global	_main
+  72                             	_main:
+  73                             	.LFB0:
+  74                             		.file 1 "../src/r_main.c"
    1:../src/r_main.c **** /**************************************************************************************************
    2:../src/r_main.c **** * DISCLAIMER
    3:../src/r_main.c **** * This software is supplied by Renesas Electronics Corporation and is only intended for use with Re
@@ -98,7 +99,7 @@
   23:../src/r_main.c **** * Device(s)    : R5F104LE
   24:../src/r_main.c **** * Tool-Chain   : GCCRL78
   25:../src/r_main.c **** * Description  : This file implements main function.
-  26:../src/r_main.c **** * Creation Date: 4/13/2016
+  26:../src/r_main.c **** * Creation Date: 5/2/2016
   27:../src/r_main.c **** ***************************************************************************************************
   28:../src/r_main.c **** 
   29:../src/r_main.c **** /**************************************************************************************************
@@ -111,1512 +112,2161 @@
   36:../src/r_main.c **** #include "r_cg_serial.h"
   37:../src/r_main.c **** #include "r_cg_adc.h"
   38:../src/r_main.c **** #include "r_cg_timer.h"
-  39:../src/r_main.c **** #include "r_cg_pclbuz.h"
-  40:../src/r_main.c **** /* Start user code for include. Do not edit comment generated here */
-  41:../src/r_main.c **** #include "lcd.h"
-  42:../src/r_main.c **** #include "string.h"
-  43:../src/r_main.c **** #include "infrared.h"
-  44:../src/r_main.c **** /* End user code. Do not edit comment generated here */
-  45:../src/r_main.c **** #include "r_cg_userdefine.h"
-  46:../src/r_main.c **** 
-  47:../src/r_main.c **** /**************************************************************************************************
-  48:../src/r_main.c **** Global variables and functions
-  49:../src/r_main.c **** ***************************************************************************************************
-  50:../src/r_main.c **** /* Start user code for global. Do not edit comment generated here */
-  51:../src/r_main.c **** extern uint8_t uart1RxBuf[RX_BUF_LEN];				// UART1 receive buffer
-  52:../src/r_main.c **** extern uint16_t uart1RxCnt;						// UART1 receive counter
-  53:../src/r_main.c **** extern uint8_t uart1RxFlag;						// UART1 receive flag
-  54:../src/r_main.c **** extern uint8_t uart1RxErrFlag; 					// UART1 Receive Error Flag
-  55:../src/r_main.c **** extern uint8_t uart1RxOvrFlag; 					// UART1 Receive Overrun Flag
-  56:../src/r_main.c **** 
-  57:../src/r_main.c **** extern uint8_t uart1TxBuf[TX_BUF_LEN];				// UART1 Transmit buffer
-  58:../src/r_main.c **** extern uint16_t uart1TxCnt;						// UART1 Transmit counter
-  59:../src/r_main.c **** extern uint8_t uart1TxFlag;						// UART1 Transmit flag
-  60:../src/r_main.c **** 
-  61:../src/r_main.c **** extern MD_STATUS uart1Status;
-  62:../src/r_main.c **** 
-  63:../src/r_main.c **** extern uint8_t timer_interrupt;
-  64:../src/r_main.c **** extern pwm_edge;
-  65:../src/r_main.c **** extern switch_edge;
-  66:../src/r_main.c **** 
-  67:../src/r_main.c **** //int mode = 0; // 0 for normal mode, 1 for test mode
-  68:../src/r_main.c **** //int pwm_flag = 0;
-  69:../src/r_main.c **** char myBuffer[40];
-  70:../src/r_main.c **** int myCounter = 0;
-  71:../src/r_main.c **** //int motorCounter = 0;
-  72:../src/r_main.c **** //int welcome = 1;
-  73:../src/r_main.c **** 
-  74:../src/r_main.c **** uint16_t pwm_counter;
+  39:../src/r_main.c **** #include "r_cg_rtc.h"
+  40:../src/r_main.c **** #include "r_cg_pclbuz.h"
+  41:../src/r_main.c **** /* Start user code for include. Do not edit comment generated here */
+  42:../src/r_main.c **** #include "lcd.h"
+  43:../src/r_main.c **** #include "string.h"
+  44:../src/r_main.c **** #include "infrared.h"
+  45:../src/r_main.c **** /* End user code. Do not edit comment generated here */
+  46:../src/r_main.c **** #include "r_cg_userdefine.h"
+  47:../src/r_main.c **** 
+  48:../src/r_main.c **** /**************************************************************************************************
+  49:../src/r_main.c **** Global variables and functions
+  50:../src/r_main.c **** ***************************************************************************************************
+  51:../src/r_main.c **** /* Start user code for global. Do not edit comment generated here */
+  52:../src/r_main.c **** extern uint8_t uart1RxBuf[RX_BUF_LEN];				// UART1 receive buffer
+  53:../src/r_main.c **** extern uint16_t uart1RxCnt;						// UART1 receive counter
+  54:../src/r_main.c **** extern uint8_t uart1RxFlag;						// UART1 receive flag
+  55:../src/r_main.c **** extern uint8_t uart1RxErrFlag; 					// UART1 Receive Error Flag
+  56:../src/r_main.c **** extern uint8_t uart1RxOvrFlag; 					// UART1 Receive Overrun Flag
+  57:../src/r_main.c **** 
+  58:../src/r_main.c **** extern uint8_t uart1TxBuf[TX_BUF_LEN];				// UART1 Transmit buffer
+  59:../src/r_main.c **** extern uint16_t uart1TxCnt;						// UART1 Transmit counter
+  60:../src/r_main.c **** extern uint8_t uart1TxFlag;						// UART1 Transmit flag
+  61:../src/r_main.c **** 
+  62:../src/r_main.c **** extern MD_STATUS uart1Status;
+  63:../src/r_main.c **** 
+  64:../src/r_main.c **** extern volatile uint8_t timer_interrupt;
+  65:../src/r_main.c **** extern volatile uint8_t pwm_edge;
+  66:../src/r_main.c **** extern volatile uint8_t switch_edge;
+  67:../src/r_main.c **** extern volatile uint8_t check_btns;
+  68:../src/r_main.c **** 
+  69:../src/r_main.c **** //int mode = 0; // 0 for normal mode, 1 for test mode
+  70:../src/r_main.c **** //int pwm_flag = 0;
+  71:../src/r_main.c **** char myBuffer[RX_BUF_LEN];
+  72:../src/r_main.c **** int myCounter = 0;
+  73:../src/r_main.c **** //int motorCounter = 0;
+  74:../src/r_main.c **** //int welcome = 1;
   75:../src/r_main.c **** 
-  76:../src/r_main.c **** void displayCharLCD(char c);
-  77:../src/r_main.c **** void welcome(void);
-  78:../src/r_main.c **** void msDelay(int t);
-  79:../src/r_main.c **** void echo(uint8_t hex);
-  80:../src/r_main.c **** void pwm(int cycles_per_second, int divisor);
-  81:../src/r_main.c **** void mtrBtn();
-  82:../src/r_main.c **** /* End user code. Do not edit comment generated here */
-  83:../src/r_main.c **** void R_MAIN_UserInit(void);
-  84:../src/r_main.c **** 
-  85:../src/r_main.c **** /**************************************************************************************************
-  86:../src/r_main.c **** * Function Name: main
-  87:../src/r_main.c **** * Description  : This function implements main function.
-  88:../src/r_main.c **** * Arguments    : None
-  89:../src/r_main.c **** * Return Value : None
-  90:../src/r_main.c **** ***************************************************************************************************
-  91:../src/r_main.c **** void main(void)
-  92:../src/r_main.c **** {
-  74                             		.loc 1 92 0
-  75                             		; start of function
-  76                             		; locals: 32 bytes
-  77                             		; outgoing: 4 bytes
-  78 0000 20 24                   		subw	sp, #36
-  79                             	.LCFI0:
-  93:../src/r_main.c ****     R_MAIN_UserInit();
-  80                             		.loc 1 93 0
-  81 0002 FC 00 00 00             		call	!!%code(_R_MAIN_UserInit)
-  94:../src/r_main.c ****     /* Start user code. Do not edit comment generated here */
-  95:../src/r_main.c ****     uart1RxBuf[0] = 'r'; 								//Init to non-arbitrary
-  82                             		.loc 1 95 0
-  83 0006 51 72                   		mov	a, #114
-  84 0008 9F 00 00                		mov	!_uart1RxBuf, a
-  96:../src/r_main.c ****     uart1Status = R_UART1_Receive(&uart1RxBuf[0],1); 	//Prime UART to receive
-  85                             		.loc 1 96 0
-  86 000b 30 00 00                		movw	ax, #_uart1RxBuf
-  87 000e B8 00                   		movw	[sp], ax
-  88 0010 E6                      		onew	ax
-  89 0011 B8 02                   		movw	[sp+2], ax
-  90 0013 FC 00 00 00             		call	!!%code(_R_UART1_Receive)
-  91 0017 AD F0                   		movw	ax, r8
-  92 0019 BF 00 00                		movw	!_uart1Status, ax
-  97:../src/r_main.c ****     //PM7&=0x7F;
-  98:../src/r_main.c ****     ir_rxMessage = 0x0000;
-  93                             		.loc 1 98 0
-  94 001c F6                      		clrw	ax
-  95 001d BF 00 00                		movw	!_ir_rxMessage, ax
-  96                             	.L29:
-  99:../src/r_main.c ****     while (1U)
- 100:../src/r_main.c ****     {
- 101:../src/r_main.c **** 
- 102:../src/r_main.c ****     	mtrBtn();			//Switch pressed
-  97                             		.loc 1 102 0
-  98 0020 FC 00 00 00             		call	!!%code(_mtrBtn)
- 103:../src/r_main.c ****     	IRcmd();
-  99                             		.loc 1 103 0
- 100 0024 FC 00 00 00             		call	!!%code(_IRcmd)
- 104:../src/r_main.c ****     	if (dataReady && dataPrint)
- 101                             		.loc 1 104 0
- 102 0028 8F 00 00                		mov	a, !_dataReady
- 103 002b 9D F0                   		mov	r8, a
- 104 002d D4 F0                   		cmp0	r8
- 105 002f 61 F8                   		 sknz
- 106 0031 EC 78 00 00             		 br	!!.L2
- 107                             		.loc 1 104 0 is_stmt 0 discriminator 1
- 108 0035 8F 00 00                		mov	a, !_dataPrint
- 109 0038 9D F0                   		mov	r8, a
- 110 003a D4 F0                   		cmp0	r8
- 111 003c 61 F8                   		 sknz
- 112 003e EC 78 00 00             		 br	!!.L2
- 113                             	.LBB2:
- 105:../src/r_main.c **** 		{
- 106:../src/r_main.c **** 			uint8_t ascii_word[16];
- 107:../src/r_main.c **** 			word_to_ascii(ir_rxMessage, ascii_word);
- 114                             		.loc 1 107 0 is_stmt 1
- 115 0042 AF 00 00                		movw	ax, !_ir_rxMessage
- 116 0045 BD F0                   		movw	r8, ax
- 117 0047 B8 00                   		movw	[sp], ax
- 118 0049 C9 F0 24 00             		movw	r8, #36
- 119 004d AE F8                   		movw	ax, sp
- 120 004f BD F0                   		movw	r8, ax
- 121 0051 04 24 00                		addw	ax, #36
- 122 0054 BD F0                   		movw	r8, ax
- 123 0056 04 E0 FF                		addw	ax, #-32
- 124 0059 B8 02                   		movw	[sp+2], ax
- 125 005b FC 00 00 00             		call	!!%code(_word_to_ascii)
- 108:../src/r_main.c **** 			print_lcd(ascii_word);
- 126                             		.loc 1 108 0
- 127 005f C9 F4 24 00             		movw	r12, #36
- 128 0063 AE F8                   		movw	ax, sp
- 129 0065 BD F4                   		movw	r12, ax
- 130 0067 04 24 00                		addw	ax, #36
- 131 006a BD F4                   		movw	r12, ax
- 132 006c 04 E0 FF                		addw	ax, #-32
- 133 006f B8 00                   		movw	[sp], ax
- 134 0071 FC 00 00 00             		call	!!%code(_print_lcd)
- 109:../src/r_main.c **** 			dataPrint = 0;
- 135                             		.loc 1 109 0
- 136 0075 F5 00 00                		clrb	!_dataPrint
- 137                             	.L2:
- 138                             	.LBE2:
- 110:../src/r_main.c **** 		}
- 111:../src/r_main.c ****         if (uart1RxFlag)	//Input received
- 139                             		.loc 1 111 0
- 140 0078 8F 00 00                		mov	a, !_uart1RxFlag
- 141 007b 9D F0                   		mov	r8, a
- 142 007d D4 F0                   		cmp0	r8
- 143 007f 61 F8                   		 sknz
- 144 0081 EC 44 04 00             		 br	!!.L3
- 112:../src/r_main.c ****         {
- 113:../src/r_main.c ****         	uart1RxFlag = 0U;
- 145                             		.loc 1 113 0
- 146 0085 F5 00 00                		clrb	!_uart1RxFlag
- 114:../src/r_main.c **** 
- 115:../src/r_main.c **** 			if(uart1RxBuf[0] == 0x81)		//TEST MODE
- 147                             		.loc 1 115 0
- 148 0088 8F 00 00                		mov	a, !_uart1RxBuf
- 149 008b 9D F0                   		mov	r8, a
- 150 008d 4A F0 81                		cmp	r8, #-127
- 151 0090 61 E8                   		 skz
- 152 0092 EC AF 00 00             		 br	!!.L4
- 116:../src/r_main.c **** 			{
- 117:../src/r_main.c **** 				mode = 1;
- 153                             		.loc 1 117 0
- 154 0096 E6                      		onew	ax
- 155 0097 BF 00 00                		movw	!_mode, ax
- 118:../src/r_main.c **** 				echo(0x81);
- 156                             		.loc 1 118 0
- 157 009a 51 81                   		mov	a, #-127
- 158 009c 98 00                   		mov	[sp], a
- 159 009e FC 00 00 00             		call	!!%code(_echo)
- 119:../src/r_main.c **** 				print_lcd("Test mode");
- 160                             		.loc 1 119 0
- 161 00a2 30 00 00                		movw	ax, #.LC0
- 162 00a5 B8 00                   		movw	[sp], ax
- 163 00a7 FC 00 00 00             		call	!!%code(_print_lcd)
- 164 00ab EC 33 04 00             		br	!!.L5
- 165                             	.L4:
- 120:../src/r_main.c **** 			}
- 121:../src/r_main.c **** 
- 122:../src/r_main.c **** 			else if(uart1RxBuf[0] == 0x80)	//NORMAL MODE
- 166                             		.loc 1 122 0
- 167 00af 8F 00 00                		mov	a, !_uart1RxBuf
- 168 00b2 9D F0                   		mov	r8, a
- 169 00b4 4A F0 80                		cmp	r8, #-128
- 170 00b7 61 E8                   		 skz
- 171 00b9 EC D6 00 00             		 br	!!.L6
- 123:../src/r_main.c **** 			{
- 124:../src/r_main.c **** 				mode = 0;
- 172                             		.loc 1 124 0
- 173 00bd F6                      		clrw	ax
- 174 00be BF 00 00                		movw	!_mode, ax
- 125:../src/r_main.c **** 				echo(0x80);
- 175                             		.loc 1 125 0
- 176 00c1 51 80                   		mov	a, #-128
- 177 00c3 98 00                   		mov	[sp], a
- 178 00c5 FC 00 00 00             		call	!!%code(_echo)
- 126:../src/r_main.c **** 				print_lcd("Normal mode");
- 179                             		.loc 1 126 0
- 180 00c9 30 0A 00                		movw	ax, #.LC1
- 181 00cc B8 00                   		movw	[sp], ax
- 182 00ce FC 00 00 00             		call	!!%code(_print_lcd)
- 183 00d2 EC 33 04 00             		br	!!.L5
- 184                             	.L6:
- 127:../src/r_main.c **** 			}
- 128:../src/r_main.c **** 
- 129:../src/r_main.c **** 			else if(uart1RxBuf[0] == 0xF0)	//BUZZER ON
- 185                             		.loc 1 129 0
- 186 00d6 8F 00 00                		mov	a, !_uart1RxBuf
- 187 00d9 9D F0                   		mov	r8, a
- 188 00db 4A F0 F0                		cmp	r8, #-16
- 189 00de 61 E8                   		 skz
- 190 00e0 EC F4 00 00             		 br	!!.L7
- 130:../src/r_main.c **** 			{
- 131:../src/r_main.c **** 				echo(0xF0);
- 191                             		.loc 1 131 0
- 192 00e4 51 F0                   		mov	a, #-16
- 193 00e6 98 00                   		mov	[sp], a
- 194 00e8 FC 00 00 00             		call	!!%code(_echo)
- 132:../src/r_main.c **** 				R_PCLBUZ0_Start();
- 195                             		.loc 1 132 0
- 196 00ec FC 00 00 00             		call	!!%code(_R_PCLBUZ0_Start)
- 197 00f0 EC 33 04 00             		br	!!.L5
- 198                             	.L7:
- 133:../src/r_main.c **** 			}
- 134:../src/r_main.c **** 
- 135:../src/r_main.c **** 			else if(uart1RxBuf[0] == 0xF1)	//BUZZER OFF
- 199                             		.loc 1 135 0
- 200 00f4 8F 00 00                		mov	a, !_uart1RxBuf
- 201 00f7 9D F0                   		mov	r8, a
- 202 00f9 4A F0 F1                		cmp	r8, #-15
- 203 00fc 61 E8                   		 skz
- 204 00fe EC 12 01 00             		 br	!!.L8
- 136:../src/r_main.c **** 			{
- 137:../src/r_main.c **** 				echo(0xF1);
- 205                             		.loc 1 137 0
- 206 0102 51 F1                   		mov	a, #-15
- 207 0104 98 00                   		mov	[sp], a
- 208 0106 FC 00 00 00             		call	!!%code(_echo)
- 138:../src/r_main.c **** 				R_PCLBUZ0_Stop();
- 209                             		.loc 1 138 0
- 210 010a FC 00 00 00             		call	!!%code(_R_PCLBUZ0_Stop)
- 211 010e EC 33 04 00             		br	!!.L5
- 212                             	.L8:
- 139:../src/r_main.c **** 			}
- 140:../src/r_main.c **** 
- 141:../src/r_main.c **** 			else if(uart1RxBuf[0] == 0xF9)	//OPEN GATE
- 213                             		.loc 1 141 0
- 214 0112 8F 00 00                		mov	a, !_uart1RxBuf
- 215 0115 9D F0                   		mov	r8, a
- 216 0117 4A F0 F9                		cmp	r8, #-7
- 217 011a 61 E8                   		 skz
- 218 011c EC 6B 01 00             		 br	!!.L9
- 142:../src/r_main.c **** 			{
- 143:../src/r_main.c **** 				echo(0xF9);
- 219                             		.loc 1 143 0
- 220 0120 51 F9                   		mov	a, #-7
- 221 0122 98 00                   		mov	[sp], a
- 222 0124 FC 00 00 00             		call	!!%code(_echo)
- 144:../src/r_main.c **** 				DVR_PHASE = 0;
- 223                             		.loc 1 144 0
- 224 0128 C9 F0 04 FF             		movw	r8, #-252
- 225 012c AD F0                   		movw	ax, r8
- 226 012e BD F4                   		movw	r12, ax
- 227 0130 FA F4                   		movw	hl, r12
- 228 0132 8B                      		mov	a, [hl]
- 229 0133 9D F2                   		mov	r10, a
- 230 0135 5A F2 FD                		and	r10, #-3
- 231 0138 AD F0                   		movw	ax, r8
- 232 013a DA F4                   		movw	bc, r12
- 233 013c 8D F2                   		mov	a, r10
- 234 013e 48 00 00                		mov	[bc], a
- 145:../src/r_main.c **** 				DVR_nSLEEP = 1;
- 235                             		.loc 1 145 0
- 236 0141 C9 F0 04 FF             		movw	r8, #-252
- 237 0145 AD F0                   		movw	ax, r8
- 238 0147 BD F4                   		movw	r12, ax
- 239 0149 FA F4                   		movw	hl, r12
- 240 014b 8B                      		mov	a, [hl]
- 241 014c 9D F2                   		mov	r10, a
- 242 014e 6A F2 04                		or	r10, #4
- 243 0151 AD F0                   		movw	ax, r8
- 244 0153 DA F4                   		movw	bc, r12
- 245 0155 8D F2                   		mov	a, r10
- 246 0157 48 00 00                		mov	[bc], a
- 146:../src/r_main.c **** 				gate_status = GS_UNKNOWN;
- 247                             		.loc 1 146 0
- 248 015a F6                      		clrw	ax
- 249 015b BF 00 00                		movw	!_gate_status, ax
- 147:../src/r_main.c **** 				print_lcd("Gate opening...");
- 250                             		.loc 1 147 0
- 251 015e 30 16 00                		movw	ax, #.LC2
- 252 0161 B8 00                   		movw	[sp], ax
- 253 0163 FC 00 00 00             		call	!!%code(_print_lcd)
- 254 0167 EC 33 04 00             		br	!!.L5
- 255                             	.L9:
- 148:../src/r_main.c **** 			}
- 149:../src/r_main.c **** 
- 150:../src/r_main.c **** 			else if(uart1RxBuf[0] == 0xF8)	//CLOSE GATE
- 256                             		.loc 1 150 0
- 257 016b 8F 00 00                		mov	a, !_uart1RxBuf
- 258 016e 9D F0                   		mov	r8, a
- 259 0170 4A F0 F8                		cmp	r8, #-8
- 260 0173 61 E8                   		 skz
- 261 0175 EC C4 01 00             		 br	!!.L10
- 151:../src/r_main.c **** 			{
- 152:../src/r_main.c **** 				echo(0xF8);
- 262                             		.loc 1 152 0
- 263 0179 51 F8                   		mov	a, #-8
- 264 017b 98 00                   		mov	[sp], a
- 265 017d FC 00 00 00             		call	!!%code(_echo)
- 153:../src/r_main.c **** 				DVR_PHASE = 1;
- 266                             		.loc 1 153 0
- 267 0181 C9 F0 04 FF             		movw	r8, #-252
- 268 0185 AD F0                   		movw	ax, r8
- 269 0187 BD F4                   		movw	r12, ax
- 270 0189 FA F4                   		movw	hl, r12
- 271 018b 8B                      		mov	a, [hl]
- 272 018c 9D F2                   		mov	r10, a
- 273 018e 6A F2 02                		or	r10, #2
- 274 0191 AD F0                   		movw	ax, r8
- 275 0193 DA F4                   		movw	bc, r12
- 276 0195 8D F2                   		mov	a, r10
- 277 0197 48 00 00                		mov	[bc], a
- 154:../src/r_main.c **** 				DVR_nSLEEP = 1;
- 278                             		.loc 1 154 0
- 279 019a C9 F0 04 FF             		movw	r8, #-252
- 280 019e AD F0                   		movw	ax, r8
- 281 01a0 BD F4                   		movw	r12, ax
- 282 01a2 FA F4                   		movw	hl, r12
- 283 01a4 8B                      		mov	a, [hl]
- 284 01a5 9D F2                   		mov	r10, a
- 285 01a7 6A F2 04                		or	r10, #4
- 286 01aa AD F0                   		movw	ax, r8
- 287 01ac DA F4                   		movw	bc, r12
- 288 01ae 8D F2                   		mov	a, r10
- 289 01b0 48 00 00                		mov	[bc], a
- 155:../src/r_main.c **** 				gate_status = GS_UNKNOWN;
- 290                             		.loc 1 155 0
- 291 01b3 F6                      		clrw	ax
- 292 01b4 BF 00 00                		movw	!_gate_status, ax
- 156:../src/r_main.c **** 				print_lcd("Gate closing...");
- 293                             		.loc 1 156 0
- 294 01b7 30 26 00                		movw	ax, #.LC3
- 295 01ba B8 00                   		movw	[sp], ax
- 296 01bc FC 00 00 00             		call	!!%code(_print_lcd)
- 297 01c0 EC 33 04 00             		br	!!.L5
- 298                             	.L10:
- 157:../src/r_main.c **** 			}
- 158:../src/r_main.c **** 
- 159:../src/r_main.c **** 			else if(uart1RxBuf[0] == 0xF7)	//READ CURRENT
- 299                             		.loc 1 159 0
- 300 01c4 8F 00 00                		mov	a, !_uart1RxBuf
- 301 01c7 9D F0                   		mov	r8, a
- 302 01c9 4A F0 F7                		cmp	r8, #-9
- 303 01cc 61 E8                   		 skz
- 304 01ce EC DE 01 00             		 br	!!.L11
- 160:../src/r_main.c **** 			{
- 161:../src/r_main.c **** 				echo(0xF7);
- 305                             		.loc 1 161 0
- 306 01d2 51 F7                   		mov	a, #-9
- 307 01d4 98 00                   		mov	[sp], a
- 308 01d6 FC 00 00 00             		call	!!%code(_echo)
- 309 01da EC 33 04 00             		br	!!.L5
- 310                             	.L11:
- 162:../src/r_main.c **** 				//TODO
- 163:../src/r_main.c **** 			}
- 164:../src/r_main.c **** 
- 165:../src/r_main.c **** 			else if(uart1RxBuf[0] == 0xFF)	//READ STATUS
- 311                             		.loc 1 165 0
- 312 01de 8F 00 00                		mov	a, !_uart1RxBuf
- 313 01e1 9D F0                   		mov	r8, a
- 314 01e3 4A F0 FF                		cmp	r8, #-1
- 315 01e6 61 E8                   		 skz
- 316 01e8 EC 8E 02 00             		 br	!!.L12
- 166:../src/r_main.c **** 			{
- 167:../src/r_main.c **** 				echo(0xFF);
- 317                             		.loc 1 167 0
- 318 01ec 51 FF                   		mov	a, #-1
- 319 01ee 98 00                   		mov	[sp], a
- 320 01f0 FC 00 00 00             		call	!!%code(_echo)
- 168:../src/r_main.c **** 				msDelay(10);
- 321                             		.loc 1 168 0
- 322 01f4 30 0A 00                		movw	ax, #10
- 323 01f7 B8 00                   		movw	[sp], ax
- 324 01f9 FC 00 00 00             		call	!!%code(_msDelay)
- 169:../src/r_main.c **** 				switch(gate_status)
- 325                             		.loc 1 169 0
- 326 01fd AF 00 00                		movw	ax, !_gate_status
- 327 0200 BD F0                   		movw	r8, ax
- 328 0202 44 01 00                		cmpw	ax, #1
- 329 0205 61 F8                   		 sknz
- 330 0207 EC 41 02 00             		 br	!!.L14
- 331 020b AD F0                   		movw	ax, r8
- 332 020d 44 01 00                		cmpw	ax, #1
- 333 0210 71 FF                   		 xor1	CY, a.7
- 334 0212 61 F3                   		 sknh
- 335 0214 EC 27 02 00             		 br	!!.L15
- 336 0218 AD F0                   		movw	ax, r8
- 337 021a 44 00 00                		cmpw	ax, #0
- 338 021d 61 F8                   		 sknz
- 339 021f EC 6B 02 00             		 br	!!.L16
- 340 0223 EC 33 04 00             		br	!!.L5
- 341                             	.L15:
- 342 0227 AD F0                   		movw	ax, r8
- 343 0229 44 02 00                		cmpw	ax, #2
- 344 022c 61 F8                   		 sknz
- 345 022e EC 56 02 00             		 br	!!.L17
- 346 0232 AD F0                   		movw	ax, r8
- 347 0234 44 03 00                		cmpw	ax, #3
- 348 0237 61 F8                   		 sknz
- 349 0239 EC 80 02 00             		 br	!!.L18
- 350 023d EC 33 04 00             		br	!!.L5
- 351                             	.L14:
- 170:../src/r_main.c **** 				{
- 171:../src/r_main.c **** 					case GS_OPENED:
- 172:../src/r_main.c **** 						echo(0x82);
- 352                             		.loc 1 172 0
- 353 0241 51 82                   		mov	a, #-126
- 354 0243 98 00                   		mov	[sp], a
- 355 0245 FC 00 00 00             		call	!!%code(_echo)
- 173:../src/r_main.c **** 						print_lcd("Opened");
- 356                             		.loc 1 173 0
- 357 0249 30 36 00                		movw	ax, #.LC4
- 358 024c B8 00                   		movw	[sp], ax
- 359 024e FC 00 00 00             		call	!!%code(_print_lcd)
- 174:../src/r_main.c **** 						break;
- 360                             		.loc 1 174 0
- 361 0252 EC 8A 02 00             		br	!!.L13
- 362                             	.L17:
- 175:../src/r_main.c **** 					case GS_CLOSED:
- 176:../src/r_main.c **** 						echo(0x81);
- 363                             		.loc 1 176 0
- 364 0256 51 81                   		mov	a, #-127
- 365 0258 98 00                   		mov	[sp], a
- 366 025a FC 00 00 00             		call	!!%code(_echo)
- 177:../src/r_main.c **** 						print_lcd("Closed");
- 367                             		.loc 1 177 0
- 368 025e 30 3D 00                		movw	ax, #.LC5
- 369 0261 B8 00                   		movw	[sp], ax
- 370 0263 FC 00 00 00             		call	!!%code(_print_lcd)
- 178:../src/r_main.c **** 						break;
- 371                             		.loc 1 178 0
- 372 0267 EC 8A 02 00             		br	!!.L13
- 373                             	.L16:
- 179:../src/r_main.c **** 					case GS_UNKNOWN:
- 180:../src/r_main.c **** 						echo(0x84);
- 374                             		.loc 1 180 0
- 375 026b 51 84                   		mov	a, #-124
- 376 026d 98 00                   		mov	[sp], a
- 377 026f FC 00 00 00             		call	!!%code(_echo)
- 181:../src/r_main.c **** 						print_lcd("Unknown");
- 378                             		.loc 1 181 0
- 379 0273 30 44 00                		movw	ax, #.LC6
- 380 0276 B8 00                   		movw	[sp], ax
- 381 0278 FC 00 00 00             		call	!!%code(_print_lcd)
+  76:../src/r_main.c **** uint16_t pwm_counter;
+  77:../src/r_main.c **** 
+  78:../src/r_main.c **** void displayCharLCD(char c);
+  79:../src/r_main.c **** void welcome(void);
+  80:../src/r_main.c **** void msDelay(int t);
+  81:../src/r_main.c **** void echo(uint8_t hex);
+  82:../src/r_main.c **** void pwm(int cycles_per_second, int divisor);
+  83:../src/r_main.c **** void mtrBtn();
+  84:../src/r_main.c **** uint8_t toHex(uint8_t decimal);
+  85:../src/r_main.c **** uint8_t toBCD(uint8_t hex);
+  86:../src/r_main.c **** /* End user code. Do not edit comment generated here */
+  87:../src/r_main.c **** void R_MAIN_UserInit(void);
+  88:../src/r_main.c **** 
+  89:../src/r_main.c **** /**************************************************************************************************
+  90:../src/r_main.c **** * Function Name: main
+  91:../src/r_main.c **** * Description  : This function implements main function.
+  92:../src/r_main.c **** * Arguments    : None
+  93:../src/r_main.c **** * Return Value : None
+  94:../src/r_main.c **** ***************************************************************************************************
+  95:../src/r_main.c **** void main(void)
+  96:../src/r_main.c **** {
+  75                             		.loc 1 96 0
+  76                             		; start of function
+  77                             		; locals: 36 bytes
+  78                             		; outgoing: 8 bytes
+  79 0000 20 2C                   		subw	sp, #44
+  80                             	.LCFI0:
+  97:../src/r_main.c ****     R_MAIN_UserInit();
+  81                             		.loc 1 97 0
+  82 0002 FC 00 00 00             		call	!!%code(_R_MAIN_UserInit)
+  98:../src/r_main.c ****     /* Start user code. Do not edit comment generated here */
+  99:../src/r_main.c ****     uart1RxBuf[0] = 'r'; 								//Init to non-arbitrary
+  83                             		.loc 1 99 0
+  84 0006 51 72                   		mov	a, #114
+  85 0008 9F 00 00                		mov	!_uart1RxBuf, a
+ 100:../src/r_main.c ****     uart1Status = R_UART1_Receive(&uart1RxBuf[0],1); 	//Prime UART to receive
+  86                             		.loc 1 100 0
+  87 000b 30 00 00                		movw	ax, #_uart1RxBuf
+  88 000e B8 00                   		movw	[sp], ax
+  89 0010 E6                      		onew	ax
+  90 0011 B8 02                   		movw	[sp+2], ax
+  91 0013 FC 00 00 00             		call	!!%code(_R_UART1_Receive)
+  92 0017 AD F0                   		movw	ax, r8
+  93 0019 BF 00 00                		movw	!_uart1Status, ax
+ 101:../src/r_main.c ****     //PM7&=0x7F;
+ 102:../src/r_main.c ****     ir_rxMessage = 0x0000;
+  94                             		.loc 1 102 0
+  95 001c F6                      		clrw	ax
+  96 001d BF 00 00                		movw	!_ir_rxMessage, ax
+  97                             	.L35:
+  98                             	.LBB2:
+ 103:../src/r_main.c ****     while (1U)
+ 104:../src/r_main.c ****     {
+ 105:../src/r_main.c ****     	mtrBtn();			//Check and react: switch pressed
+  99                             		.loc 1 105 0
+ 100 0020 FC 00 00 00             		call	!!%code(_mtrBtn)
+ 106:../src/r_main.c **** 
+ 107:../src/r_main.c ****     	boardBtn();			//Check and react: board buttons
+ 101                             		.loc 1 107 0
+ 102 0024 FC 00 00 00             		call	!!%code(_boardBtn)
+ 108:../src/r_main.c **** 
+ 109:../src/r_main.c ****     	IRcmd();			//Check and react: IR command
+ 103                             		.loc 1 109 0
+ 104 0028 FC 00 00 00             		call	!!%code(_IRcmd)
+ 110:../src/r_main.c **** 
+ 111:../src/r_main.c ****     	if (dataReady && dataPrint)	//Check and react: print to LCD
+ 105                             		.loc 1 111 0
+ 106 002c 8F 00 00                		mov	a, !_dataReady
+ 107 002f 9D F0                   		mov	r8, a
+ 108 0031 D4 F0                   		cmp0	r8
+ 109 0033 61 F8                   		 sknz
+ 110 0035 EC 7C 00 00             		 br	!!.L2
+ 111                             		.loc 1 111 0 is_stmt 0 discriminator 1
+ 112 0039 8F 00 00                		mov	a, !_dataPrint
+ 113 003c 9D F0                   		mov	r8, a
+ 114 003e D4 F0                   		cmp0	r8
+ 115 0040 61 F8                   		 sknz
+ 116 0042 EC 7C 00 00             		 br	!!.L2
+ 117                             	.LBB3:
+ 112:../src/r_main.c **** 		{
+ 113:../src/r_main.c **** 			uint8_t ascii_word[16];
+ 114:../src/r_main.c **** 			word_to_ascii(ir_rxMessage, ascii_word);
+ 118                             		.loc 1 114 0 is_stmt 1
+ 119 0046 AF 00 00                		movw	ax, !_ir_rxMessage
+ 120 0049 BD F0                   		movw	r8, ax
+ 121 004b B8 00                   		movw	[sp], ax
+ 122 004d C9 F0 2C 00             		movw	r8, #44
+ 123 0051 AE F8                   		movw	ax, sp
+ 124 0053 BD F0                   		movw	r8, ax
+ 125 0055 04 2C 00                		addw	ax, #44
+ 126 0058 BD F0                   		movw	r8, ax
+ 127 005a 04 DC FF                		addw	ax, #-36
+ 128 005d B8 02                   		movw	[sp+2], ax
+ 129 005f FC 00 00 00             		call	!!%code(_word_to_ascii)
+ 115:../src/r_main.c **** 			print_lcd(ascii_word);
+ 130                             		.loc 1 115 0
+ 131 0063 C9 F2 2C 00             		movw	r10, #44
+ 132 0067 AE F8                   		movw	ax, sp
+ 133 0069 BD F2                   		movw	r10, ax
+ 134 006b 04 2C 00                		addw	ax, #44
+ 135 006e BD F2                   		movw	r10, ax
+ 136 0070 04 DC FF                		addw	ax, #-36
+ 137 0073 B8 00                   		movw	[sp], ax
+ 138 0075 FC 00 00 00             		call	!!%code(_print_lcd)
+ 116:../src/r_main.c **** 			dataPrint = 0;
+ 139                             		.loc 1 116 0
+ 140 0079 F5 00 00                		clrb	!_dataPrint
+ 141                             	.L2:
+ 142                             	.LBE3:
+ 117:../src/r_main.c **** 		}
+ 118:../src/r_main.c **** 
+ 119:../src/r_main.c ****         if (uart1RxFlag)	//Input received
+ 143                             		.loc 1 119 0
+ 144 007c 8F 00 00                		mov	a, !_uart1RxFlag
+ 145 007f 9D F0                   		mov	r8, a
+ 146 0081 D4 F0                   		cmp0	r8
+ 147 0083 61 F8                   		 sknz
+ 148 0085 EC 0F 06 00             		 br	!!.L3
+ 120:../src/r_main.c ****         {
+ 121:../src/r_main.c ****         	uart1RxFlag = 0U;
+ 149                             		.loc 1 121 0
+ 150 0089 F5 00 00                		clrb	!_uart1RxFlag
+ 122:../src/r_main.c **** 
+ 123:../src/r_main.c **** 			if(uart1RxBuf[0] == 0x81)		//TEST MODE
+ 151                             		.loc 1 123 0
+ 152 008c 8F 00 00                		mov	a, !_uart1RxBuf
+ 153 008f 9D F0                   		mov	r8, a
+ 154 0091 4A F0 81                		cmp	r8, #-127
+ 155 0094 61 E8                   		 skz
+ 156 0096 EC B3 00 00             		 br	!!.L4
+ 124:../src/r_main.c **** 			{
+ 125:../src/r_main.c **** 				mode = 1;
+ 157                             		.loc 1 125 0
+ 158 009a E6                      		onew	ax
+ 159 009b BF 00 00                		movw	!_mode, ax
+ 126:../src/r_main.c **** 				echo(0x81);
+ 160                             		.loc 1 126 0
+ 161 009e 51 81                   		mov	a, #-127
+ 162 00a0 98 00                   		mov	[sp], a
+ 163 00a2 FC 00 00 00             		call	!!%code(_echo)
+ 127:../src/r_main.c **** 				print_lcd("Test mode");
+ 164                             		.loc 1 127 0
+ 165 00a6 30 00 00                		movw	ax, #.LC0
+ 166 00a9 B8 00                   		movw	[sp], ax
+ 167 00ab FC 00 00 00             		call	!!%code(_print_lcd)
+ 168 00af EC FE 05 00             		br	!!.L5
+ 169                             	.L4:
+ 128:../src/r_main.c **** 			}
+ 129:../src/r_main.c **** 
+ 130:../src/r_main.c **** 			else if(uart1RxBuf[0] == 0x80)	//NORMAL MODE
+ 170                             		.loc 1 130 0
+ 171 00b3 8F 00 00                		mov	a, !_uart1RxBuf
+ 172 00b6 9D F0                   		mov	r8, a
+ 173 00b8 4A F0 80                		cmp	r8, #-128
+ 174 00bb 61 E8                   		 skz
+ 175 00bd EC DA 00 00             		 br	!!.L6
+ 131:../src/r_main.c **** 			{
+ 132:../src/r_main.c **** 				mode = 0;
+ 176                             		.loc 1 132 0
+ 177 00c1 F6                      		clrw	ax
+ 178 00c2 BF 00 00                		movw	!_mode, ax
+ 133:../src/r_main.c **** 				echo(0x80);
+ 179                             		.loc 1 133 0
+ 180 00c5 51 80                   		mov	a, #-128
+ 181 00c7 98 00                   		mov	[sp], a
+ 182 00c9 FC 00 00 00             		call	!!%code(_echo)
+ 134:../src/r_main.c **** 				print_lcd("Normal mode");
+ 183                             		.loc 1 134 0
+ 184 00cd 30 0A 00                		movw	ax, #.LC1
+ 185 00d0 B8 00                   		movw	[sp], ax
+ 186 00d2 FC 00 00 00             		call	!!%code(_print_lcd)
+ 187 00d6 EC FE 05 00             		br	!!.L5
+ 188                             	.L6:
+ 135:../src/r_main.c **** 			}
+ 136:../src/r_main.c **** 
+ 137:../src/r_main.c **** 			else if(uart1RxBuf[0] == 0xF0)	//BUZZER ON
+ 189                             		.loc 1 137 0
+ 190 00da 8F 00 00                		mov	a, !_uart1RxBuf
+ 191 00dd 9D F0                   		mov	r8, a
+ 192 00df 4A F0 F0                		cmp	r8, #-16
+ 193 00e2 61 E8                   		 skz
+ 194 00e4 EC F8 00 00             		 br	!!.L7
+ 138:../src/r_main.c **** 			{
+ 139:../src/r_main.c **** 				echo(0xF0);
+ 195                             		.loc 1 139 0
+ 196 00e8 51 F0                   		mov	a, #-16
+ 197 00ea 98 00                   		mov	[sp], a
+ 198 00ec FC 00 00 00             		call	!!%code(_echo)
+ 140:../src/r_main.c **** 				R_PCLBUZ0_Start();
+ 199                             		.loc 1 140 0
+ 200 00f0 FC 00 00 00             		call	!!%code(_R_PCLBUZ0_Start)
+ 201 00f4 EC FE 05 00             		br	!!.L5
+ 202                             	.L7:
+ 141:../src/r_main.c **** 			}
+ 142:../src/r_main.c **** 
+ 143:../src/r_main.c **** 			else if(uart1RxBuf[0] == 0xF1)	//BUZZER OFF
+ 203                             		.loc 1 143 0
+ 204 00f8 8F 00 00                		mov	a, !_uart1RxBuf
+ 205 00fb 9D F0                   		mov	r8, a
+ 206 00fd 4A F0 F1                		cmp	r8, #-15
+ 207 0100 61 E8                   		 skz
+ 208 0102 EC 16 01 00             		 br	!!.L8
+ 144:../src/r_main.c **** 			{
+ 145:../src/r_main.c **** 				echo(0xF1);
+ 209                             		.loc 1 145 0
+ 210 0106 51 F1                   		mov	a, #-15
+ 211 0108 98 00                   		mov	[sp], a
+ 212 010a FC 00 00 00             		call	!!%code(_echo)
+ 146:../src/r_main.c **** 				R_PCLBUZ0_Stop();
+ 213                             		.loc 1 146 0
+ 214 010e FC 00 00 00             		call	!!%code(_R_PCLBUZ0_Stop)
+ 215 0112 EC FE 05 00             		br	!!.L5
+ 216                             	.L8:
+ 147:../src/r_main.c **** 			}
+ 148:../src/r_main.c **** 
+ 149:../src/r_main.c **** 			else if(uart1RxBuf[0] == 0xF9)	//OPEN GATE
+ 217                             		.loc 1 149 0
+ 218 0116 8F 00 00                		mov	a, !_uart1RxBuf
+ 219 0119 9D F0                   		mov	r8, a
+ 220 011b 4A F0 F9                		cmp	r8, #-7
+ 221 011e 61 E8                   		 skz
+ 222 0120 EC 6F 01 00             		 br	!!.L9
+ 150:../src/r_main.c **** 			{
+ 151:../src/r_main.c **** 				echo(0xF9);
+ 223                             		.loc 1 151 0
+ 224 0124 51 F9                   		mov	a, #-7
+ 225 0126 98 00                   		mov	[sp], a
+ 226 0128 FC 00 00 00             		call	!!%code(_echo)
+ 152:../src/r_main.c **** 				DVR_PHASE = 0;
+ 227                             		.loc 1 152 0
+ 228 012c C9 F0 04 FF             		movw	r8, #-252
+ 229 0130 AD F0                   		movw	ax, r8
+ 230 0132 BD F4                   		movw	r12, ax
+ 231 0134 FA F4                   		movw	hl, r12
+ 232 0136 8B                      		mov	a, [hl]
+ 233 0137 9D F2                   		mov	r10, a
+ 234 0139 5A F2 FD                		and	r10, #-3
+ 235 013c AD F0                   		movw	ax, r8
+ 236 013e DA F4                   		movw	bc, r12
+ 237 0140 8D F2                   		mov	a, r10
+ 238 0142 48 00 00                		mov	[bc], a
+ 153:../src/r_main.c **** 				DVR_nSLEEP = 1;
+ 239                             		.loc 1 153 0
+ 240 0145 C9 F0 04 FF             		movw	r8, #-252
+ 241 0149 AD F0                   		movw	ax, r8
+ 242 014b BD F4                   		movw	r12, ax
+ 243 014d FA F4                   		movw	hl, r12
+ 244 014f 8B                      		mov	a, [hl]
+ 245 0150 9D F2                   		mov	r10, a
+ 246 0152 6A F2 04                		or	r10, #4
+ 247 0155 AD F0                   		movw	ax, r8
+ 248 0157 DA F4                   		movw	bc, r12
+ 249 0159 8D F2                   		mov	a, r10
+ 250 015b 48 00 00                		mov	[bc], a
+ 154:../src/r_main.c **** 				gate_status = GS_UNKNOWN;
+ 251                             		.loc 1 154 0
+ 252 015e F6                      		clrw	ax
+ 253 015f BF 00 00                		movw	!_gate_status, ax
+ 155:../src/r_main.c **** 				print_lcd("Gate opening...");
+ 254                             		.loc 1 155 0
+ 255 0162 30 16 00                		movw	ax, #.LC2
+ 256 0165 B8 00                   		movw	[sp], ax
+ 257 0167 FC 00 00 00             		call	!!%code(_print_lcd)
+ 258 016b EC FE 05 00             		br	!!.L5
+ 259                             	.L9:
+ 156:../src/r_main.c **** 			}
+ 157:../src/r_main.c **** 
+ 158:../src/r_main.c **** 			else if(uart1RxBuf[0] == 0xF8)	//CLOSE GATE
+ 260                             		.loc 1 158 0
+ 261 016f 8F 00 00                		mov	a, !_uart1RxBuf
+ 262 0172 9D F0                   		mov	r8, a
+ 263 0174 4A F0 F8                		cmp	r8, #-8
+ 264 0177 61 E8                   		 skz
+ 265 0179 EC C8 01 00             		 br	!!.L10
+ 159:../src/r_main.c **** 			{
+ 160:../src/r_main.c **** 				echo(0xF8);
+ 266                             		.loc 1 160 0
+ 267 017d 51 F8                   		mov	a, #-8
+ 268 017f 98 00                   		mov	[sp], a
+ 269 0181 FC 00 00 00             		call	!!%code(_echo)
+ 161:../src/r_main.c **** 				DVR_PHASE = 1;
+ 270                             		.loc 1 161 0
+ 271 0185 C9 F0 04 FF             		movw	r8, #-252
+ 272 0189 AD F0                   		movw	ax, r8
+ 273 018b BD F4                   		movw	r12, ax
+ 274 018d FA F4                   		movw	hl, r12
+ 275 018f 8B                      		mov	a, [hl]
+ 276 0190 9D F2                   		mov	r10, a
+ 277 0192 6A F2 02                		or	r10, #2
+ 278 0195 AD F0                   		movw	ax, r8
+ 279 0197 DA F4                   		movw	bc, r12
+ 280 0199 8D F2                   		mov	a, r10
+ 281 019b 48 00 00                		mov	[bc], a
+ 162:../src/r_main.c **** 				DVR_nSLEEP = 1;
+ 282                             		.loc 1 162 0
+ 283 019e C9 F0 04 FF             		movw	r8, #-252
+ 284 01a2 AD F0                   		movw	ax, r8
+ 285 01a4 BD F4                   		movw	r12, ax
+ 286 01a6 FA F4                   		movw	hl, r12
+ 287 01a8 8B                      		mov	a, [hl]
+ 288 01a9 9D F2                   		mov	r10, a
+ 289 01ab 6A F2 04                		or	r10, #4
+ 290 01ae AD F0                   		movw	ax, r8
+ 291 01b0 DA F4                   		movw	bc, r12
+ 292 01b2 8D F2                   		mov	a, r10
+ 293 01b4 48 00 00                		mov	[bc], a
+ 163:../src/r_main.c **** 				gate_status = GS_UNKNOWN;
+ 294                             		.loc 1 163 0
+ 295 01b7 F6                      		clrw	ax
+ 296 01b8 BF 00 00                		movw	!_gate_status, ax
+ 164:../src/r_main.c **** 				print_lcd("Gate closing...");
+ 297                             		.loc 1 164 0
+ 298 01bb 30 26 00                		movw	ax, #.LC3
+ 299 01be B8 00                   		movw	[sp], ax
+ 300 01c0 FC 00 00 00             		call	!!%code(_print_lcd)
+ 301 01c4 EC FE 05 00             		br	!!.L5
+ 302                             	.L10:
+ 165:../src/r_main.c **** 			}
+ 166:../src/r_main.c **** 
+ 167:../src/r_main.c **** 			else if(uart1RxBuf[0] == 0xF7)	//READ CURRENT
+ 303                             		.loc 1 167 0
+ 304 01c8 8F 00 00                		mov	a, !_uart1RxBuf
+ 305 01cb 9D F0                   		mov	r8, a
+ 306 01cd 4A F0 F7                		cmp	r8, #-9
+ 307 01d0 61 E8                   		 skz
+ 308 01d2 EC E2 01 00             		 br	!!.L11
+ 168:../src/r_main.c **** 			{
+ 169:../src/r_main.c **** 				echo(0xF7);
+ 309                             		.loc 1 169 0
+ 310 01d6 51 F7                   		mov	a, #-9
+ 311 01d8 98 00                   		mov	[sp], a
+ 312 01da FC 00 00 00             		call	!!%code(_echo)
+ 313 01de EC FE 05 00             		br	!!.L5
+ 314                             	.L11:
+ 170:../src/r_main.c **** 				//TODO
+ 171:../src/r_main.c **** 			}
+ 172:../src/r_main.c **** 
+ 173:../src/r_main.c **** 			else if(uart1RxBuf[0] == 0xFF)	//READ STATUS
+ 315                             		.loc 1 173 0
+ 316 01e2 8F 00 00                		mov	a, !_uart1RxBuf
+ 317 01e5 9D F0                   		mov	r8, a
+ 318 01e7 4A F0 FF                		cmp	r8, #-1
+ 319 01ea 61 E8                   		 skz
+ 320 01ec EC 92 02 00             		 br	!!.L12
+ 174:../src/r_main.c **** 			{
+ 175:../src/r_main.c **** 				echo(0xFF);
+ 321                             		.loc 1 175 0
+ 322 01f0 51 FF                   		mov	a, #-1
+ 323 01f2 98 00                   		mov	[sp], a
+ 324 01f4 FC 00 00 00             		call	!!%code(_echo)
+ 176:../src/r_main.c **** 				msDelay(10);
+ 325                             		.loc 1 176 0
+ 326 01f8 30 0A 00                		movw	ax, #10
+ 327 01fb B8 00                   		movw	[sp], ax
+ 328 01fd FC 00 00 00             		call	!!%code(_msDelay)
+ 177:../src/r_main.c **** 				switch(gate_status)
+ 329                             		.loc 1 177 0
+ 330 0201 AF 00 00                		movw	ax, !_gate_status
+ 331 0204 BD F0                   		movw	r8, ax
+ 332 0206 44 01 00                		cmpw	ax, #1
+ 333 0209 61 F8                   		 sknz
+ 334 020b EC 45 02 00             		 br	!!.L14
+ 335 020f AD F0                   		movw	ax, r8
+ 336 0211 44 01 00                		cmpw	ax, #1
+ 337 0214 71 FF                   		 xor1	CY, a.7
+ 338 0216 61 F3                   		 sknh
+ 339 0218 EC 2B 02 00             		 br	!!.L15
+ 340 021c AD F0                   		movw	ax, r8
+ 341 021e 44 00 00                		cmpw	ax, #0
+ 342 0221 61 F8                   		 sknz
+ 343 0223 EC 6F 02 00             		 br	!!.L16
+ 344 0227 EC FE 05 00             		br	!!.L5
+ 345                             	.L15:
+ 346 022b AD F0                   		movw	ax, r8
+ 347 022d 44 02 00                		cmpw	ax, #2
+ 348 0230 61 F8                   		 sknz
+ 349 0232 EC 5A 02 00             		 br	!!.L17
+ 350 0236 AD F0                   		movw	ax, r8
+ 351 0238 44 03 00                		cmpw	ax, #3
+ 352 023b 61 F8                   		 sknz
+ 353 023d EC 84 02 00             		 br	!!.L18
+ 354 0241 EC FE 05 00             		br	!!.L5
+ 355                             	.L14:
+ 178:../src/r_main.c **** 				{
+ 179:../src/r_main.c **** 					case GS_OPENED:
+ 180:../src/r_main.c **** 						echo(0x82);
+ 356                             		.loc 1 180 0
+ 357 0245 51 82                   		mov	a, #-126
+ 358 0247 98 00                   		mov	[sp], a
+ 359 0249 FC 00 00 00             		call	!!%code(_echo)
+ 181:../src/r_main.c **** 						print_lcd("Opened");
+ 360                             		.loc 1 181 0
+ 361 024d 30 36 00                		movw	ax, #.LC4
+ 362 0250 B8 00                   		movw	[sp], ax
+ 363 0252 FC 00 00 00             		call	!!%code(_print_lcd)
  182:../src/r_main.c **** 						break;
- 382                             		.loc 1 182 0
- 383 027c EC 8A 02 00             		br	!!.L13
- 384                             	.L18:
- 183:../src/r_main.c **** 					case GS_ESTOP:
- 184:../src/r_main.c **** 						//echo(0x84);
- 185:../src/r_main.c **** 						print_lcd("Emergency stop");
- 385                             		.loc 1 185 0
- 386 0280 30 4C 00                		movw	ax, #.LC7
- 387 0283 B8 00                   		movw	[sp], ax
- 388 0285 FC 00 00 00             		call	!!%code(_print_lcd)
+ 364                             		.loc 1 182 0
+ 365 0256 EC 8E 02 00             		br	!!.L13
+ 366                             	.L17:
+ 183:../src/r_main.c **** 					case GS_CLOSED:
+ 184:../src/r_main.c **** 						echo(0x81);
+ 367                             		.loc 1 184 0
+ 368 025a 51 81                   		mov	a, #-127
+ 369 025c 98 00                   		mov	[sp], a
+ 370 025e FC 00 00 00             		call	!!%code(_echo)
+ 185:../src/r_main.c **** 						print_lcd("Closed");
+ 371                             		.loc 1 185 0
+ 372 0262 30 3D 00                		movw	ax, #.LC5
+ 373 0265 B8 00                   		movw	[sp], ax
+ 374 0267 FC 00 00 00             		call	!!%code(_print_lcd)
  186:../src/r_main.c **** 						break;
- 389                             		.loc 1 186 0
- 390 0289 00                      		nop
- 391                             	.L13:
- 392 028a EC 33 04 00             		br	!!.L5
- 393                             	.L12:
- 187:../src/r_main.c **** 				}
- 188:../src/r_main.c **** 			}
- 189:../src/r_main.c **** 
- 190:../src/r_main.c **** 			else if (uart1RxBuf[0] == 0xFC)	//READ IR CMD
- 394                             		.loc 1 190 0
- 395 028e 8F 00 00                		mov	a, !_uart1RxBuf
- 396 0291 9D F0                   		mov	r8, a
- 397 0293 4A F0 FC                		cmp	r8, #-4
- 398 0296 61 E8                   		 skz
- 399 0298 EC F5 02 00             		 br	!!.L19
- 400                             	.LBB3:
- 191:../src/r_main.c **** 			{
- 192:../src/r_main.c **** 				echo(0xFC);
- 401                             		.loc 1 192 0
- 402 029c 51 FC                   		mov	a, #-4
- 403 029e 98 00                   		mov	[sp], a
- 404 02a0 FC 00 00 00             		call	!!%code(_echo)
- 193:../src/r_main.c **** 				msDelay(10);
- 405                             		.loc 1 193 0
- 406 02a4 30 0A 00                		movw	ax, #10
- 407 02a7 B8 00                   		movw	[sp], ax
- 408 02a9 FC 00 00 00             		call	!!%code(_msDelay)
- 194:../src/r_main.c **** 				//Wait for complete message?
- 195:../src/r_main.c **** 				//echo(ir_rxMessage);
- 196:../src/r_main.c **** 				uint8_t cmd = ir_rxMessage & 0x7;
- 409                             		.loc 1 196 0
- 410 02ad AF 00 00                		movw	ax, !_ir_rxMessage
- 411 02b0 BD F0                   		movw	r8, ax
- 412 02b2 8D F0                   		mov	a, r8
- 413 02b4 5C 07                   		and	a, #7
- 414 02b6 98 1B                   		mov	[sp+27], a
- 197:../src/r_main.c **** 				uint8_t addr = (ir_rxMessage >> 3) & 0xFF;
- 415                             		.loc 1 197 0
- 416 02b8 AF 00 00                		movw	ax, !_ir_rxMessage
- 417 02bb BD F0                   		movw	r8, ax
- 418 02bd 31 3E                   		shrw	ax, 3
- 419 02bf BD F0                   		movw	r8, ax
- 420 02c1 8D F0                   		mov	a, r8
- 421 02c3 98 1A                   		mov	[sp+26], a
- 198:../src/r_main.c **** 				uint8_t tog = (ir_rxMessage >> 11) & 0x6;
- 422                             		.loc 1 198 0
- 423 02c5 AF 00 00                		movw	ax, !_ir_rxMessage
- 424 02c8 BD F0                   		movw	r8, ax
- 425 02ca 31 BE                   		shrw	ax, 11
- 426 02cc BD F0                   		movw	r8, ax
- 427 02ce 8D F0                   		mov	a, r8
- 428 02d0 5C 06                   		and	a, #6
- 429 02d2 98 19                   		mov	[sp+25], a
- 199:../src/r_main.c **** 
- 200:../src/r_main.c **** 				echo(addr);
- 430                             		.loc 1 200 0
- 431 02d4 88 1A                   		mov	a, [sp+26]
- 432 02d6 9D F0                   		mov	r8, a
- 433 02d8 98 00                   		mov	[sp], a
- 434 02da FC 00 00 00             		call	!!%code(_echo)
- 201:../src/r_main.c **** 				echo((tog<<6) + cmd);
- 435                             		.loc 1 201 0
- 436 02de 88 19                   		mov	a, [sp+25]
- 437 02e0 31 69                   		shl	a, 6
- 438 02e2 9D F0                   		mov	r8, a
- 439 02e4 76                      		mov	l, a
- 440 02e5 88 1B                   		mov	a, [sp+27]
- 441 02e7 61 0E                   		add	a, l
- 442 02e9 9D F0                   		mov	r8, a
- 443 02eb 98 00                   		mov	[sp], a
- 444 02ed FC 00 00 00             		call	!!%code(_echo)
- 445                             	.LBE3:
- 446 02f1 EC 33 04 00             		br	!!.L5
- 447                             	.L19:
- 202:../src/r_main.c **** 			}
- 203:../src/r_main.c **** 
- 204:../src/r_main.c **** 			//Buffer not full and input is not a command
- 205:../src/r_main.c **** 			else if((myCounter < 40)&&(uart1RxBuf[0] < 0x7F))
- 448                             		.loc 1 205 0
- 449 02f5 AF 00 00                		movw	ax, !_myCounter
- 450 02f8 BD F0                   		movw	r8, ax
- 451 02fa 44 27 00                		cmpw	ax, #39
- 452 02fd 71 FF                   		 xor1	CY, a.7
- 453 02ff 61 F3                   		 sknh
- 454 0301 EC 32 03 00             		 br	!!.L20
- 455                             		.loc 1 205 0 is_stmt 0 discriminator 1
- 456 0305 8F 00 00                		mov	a, !_uart1RxBuf
- 457 0308 9D F0                   		mov	r8, a
- 458 030a 4A F0 7E                		cmp	r8, #126
- 459 030d 61 F3                   		 sknh
- 460 030f EC 32 03 00             		 br	!!.L20
- 206:../src/r_main.c **** 			{
- 207:../src/r_main.c **** 				myBuffer[myCounter] = uart1RxBuf[0];
- 461                             		.loc 1 207 0 is_stmt 1
- 462 0313 AF 00 00                		movw	ax, !_myCounter
- 463 0316 BD F0                   		movw	r8, ax
- 464 0318 8F 00 00                		mov	a, !_uart1RxBuf
- 465 031b 9D F2                   		mov	r10, a
- 466 031d DA F0                   		movw	bc, r8
- 467 031f 48 00 00                		mov	_myBuffer[bc], a
- 208:../src/r_main.c **** 				myCounter++;
- 468                             		.loc 1 208 0
- 469 0322 AF 00 00                		movw	ax, !_myCounter
- 470 0325 BD F0                   		movw	r8, ax
- 471 0327 A6 F0                   		incw	r8
- 472 0329 AD F0                   		movw	ax, r8
- 473 032b BF 00 00                		movw	!_myCounter, ax
- 474 032e EC 33 04 00             		br	!!.L5
- 475                             	.L20:
- 209:../src/r_main.c **** 			}
- 210:../src/r_main.c **** 			//'Display to LCD' is activated during Test Mode
- 211:../src/r_main.c **** 			else if((mode == 1)&&(uart1RxBuf[0] == 0xF4))
- 476                             		.loc 1 211 0
- 477 0332 AF 00 00                		movw	ax, !_mode
- 478 0335 BD F0                   		movw	r8, ax
- 479 0337 44 01 00                		cmpw	ax, #1
- 480 033a 61 E8                   		 skz
- 481 033c EC 33 04 00             		 br	!!.L5
- 482                             		.loc 1 211 0 is_stmt 0 discriminator 1
- 483 0340 8F 00 00                		mov	a, !_uart1RxBuf
- 484 0343 9D F0                   		mov	r8, a
- 485 0345 4A F0 F4                		cmp	r8, #-12
- 486 0348 61 E8                   		 skz
- 487 034a EC 33 04 00             		 br	!!.L5
- 488                             	.LBB4:
- 212:../src/r_main.c **** 			{
- 213:../src/r_main.c **** 				echo(0xF4);
- 489                             		.loc 1 213 0 is_stmt 1
- 490 034e 51 F4                   		mov	a, #-12
- 491 0350 98 00                   		mov	[sp], a
- 492 0352 FC 00 00 00             		call	!!%code(_echo)
- 214:../src/r_main.c **** 				initLcd();
- 493                             		.loc 1 214 0
- 494 0356 FC 00 00 00             		call	!!%code(_initLcd)
- 215:../src/r_main.c **** 				int display_x = 0;
- 495                             		.loc 1 215 0
- 496 035a F6                      		clrw	ax
- 497 035b B8 22                   		movw	[sp+34], ax
- 216:../src/r_main.c **** 				int display_y = 0;
- 498                             		.loc 1 216 0
- 499 035d F6                      		clrw	ax
- 500 035e B8 20                   		movw	[sp+32], ax
- 217:../src/r_main.c **** 				int display_scroll = 0;
- 501                             		.loc 1 217 0
- 502 0360 F6                      		clrw	ax
- 503 0361 B8 1E                   		movw	[sp+30], ax
- 218:../src/r_main.c **** 				int display_length = 16;
- 504                             		.loc 1 218 0
- 505 0363 30 10 00                		movw	ax, #16
- 506 0366 B8 16                   		movw	[sp+22], ax
- 219:../src/r_main.c **** 				int display_loop = 1;
- 507                             		.loc 1 219 0
- 508 0368 E6                      		onew	ax
- 509 0369 B8 14                   		movw	[sp+20], ax
- 220:../src/r_main.c **** 				int overflow;
- 221:../src/r_main.c **** 
- 222:../src/r_main.c **** 				//Determine overflow
- 223:../src/r_main.c **** 				if (myCounter > 15) {
- 510                             		.loc 1 223 0
- 511 036b AF 00 00                		movw	ax, !_myCounter
- 512 036e BD F0                   		movw	r8, ax
- 513 0370 44 0F 00                		cmpw	ax, #15
- 514 0373 71 FF                   		 xor1	CY, a.7
- 515 0375 61 E3                   		 skh
- 516 0377 EC 89 03 00             		 br	!!.L21
- 224:../src/r_main.c **** 					overflow = myCounter - 15;
- 517                             		.loc 1 224 0
- 518 037b AF 00 00                		movw	ax, !_myCounter
- 519 037e BD F0                   		movw	r8, ax
- 520 0380 04 F1 FF                		addw	ax, #-15
- 521 0383 B8 1C                   		movw	[sp+28], ax
- 522 0385 EC 8C 03 00             		br	!!.L22
- 523                             	.L21:
- 225:../src/r_main.c **** 				}
- 226:../src/r_main.c **** 				else {
- 227:../src/r_main.c **** 					overflow = 1;
- 524                             		.loc 1 227 0
- 525 0389 E6                      		onew	ax
- 526 038a B8 1C                   		movw	[sp+28], ax
- 527                             	.L22:
- 228:../src/r_main.c **** 				}
- 229:../src/r_main.c **** 
- 230:../src/r_main.c **** 				//For LCD index i
- 231:../src/r_main.c **** 				for(display_y = 0 ; display_y < overflow ; display_y++)
- 528                             		.loc 1 231 0
- 529 038c F6                      		clrw	ax
- 530 038d B8 20                   		movw	[sp+32], ax
- 531 038f EC 1C 04 00             		br	!!.L23
- 532                             	.L27:
- 232:../src/r_main.c **** 				{
- 233:../src/r_main.c **** 					//For message character j
- 234:../src/r_main.c **** 					for (display_x = 0 ; display_x < myCounter ; display_x++)
- 533                             		.loc 1 234 0
- 534 0393 F6                      		clrw	ax
- 535 0394 B8 22                   		movw	[sp+34], ax
- 536 0396 EC E1 03 00             		br	!!.L24
- 537                             	.L26:
- 235:../src/r_main.c **** 					{
- 236:../src/r_main.c **** 						writeByteLcd(1U, myBuffer[(display_x+display_scroll)]);
- 538                             		.loc 1 236 0
- 539 039a A8 1E                   		movw	ax, [sp+30]
- 540 039c 16                      		movw	hl, ax
- 541 039d A8 22                   		movw	ax, [sp+34]
- 542 039f 07                      		addw	ax, hl
- 543 03a0 BD F0                   		movw	r8, ax
- 544 03a2 04 00 00                		addw	ax, #_myBuffer
- 545 03a5 16                      		movw	hl, ax
- 546 03a6 8B                      		mov	a, [hl]
- 547 03a7 9D F0                   		mov	r8, a
- 548 03a9 E1                      		oneb	a
- 549 03aa 98 00                   		mov	[sp], a
- 550 03ac 8D F0                   		mov	a, r8
- 551 03ae 98 02                   		mov	[sp+2], a
- 552 03b0 FC 00 00 00             		call	!!%code(_writeByteLcd)
- 237:../src/r_main.c **** 						delayNoInt(3250);
- 553                             		.loc 1 237 0
- 554 03b4 30 B2 0C                		movw	ax, #3250
- 555 03b7 B8 00                   		movw	[sp], ax
- 556 03b9 FC 00 00 00             		call	!!%code(_delayNoInt)
- 238:../src/r_main.c **** 						if (display_x == 7){
- 557                             		.loc 1 238 0
- 558 03bd A8 22                   		movw	ax, [sp+34]
- 559 03bf 44 07 00                		cmpw	ax, #7
- 560 03c2 61 E8                   		 skz
- 561 03c4 EC DC 03 00             		 br	!!.L25
- 239:../src/r_main.c **** 							writeByteLcd(0U, LCD_HOME_L2);
- 562                             		.loc 1 239 0
- 563 03c8 F1                      		clrb	a
- 564 03c9 98 00                   		mov	[sp], a
- 565 03cb 51 C0                   		mov	a, #-64
- 566 03cd 98 02                   		mov	[sp+2], a
- 567 03cf FC 00 00 00             		call	!!%code(_writeByteLcd)
- 240:../src/r_main.c **** 							delayNoInt(100);
- 568                             		.loc 1 240 0
- 569 03d3 30 64 00                		movw	ax, #100
- 570 03d6 B8 00                   		movw	[sp], ax
- 571 03d8 FC 00 00 00             		call	!!%code(_delayNoInt)
- 572                             	.L25:
- 234:../src/r_main.c **** 					{
- 573                             		.loc 1 234 0 discriminator 2
- 574 03dc A8 22                   		movw	ax, [sp+34]
- 575 03de A1                      		incw	ax
- 576 03df B8 22                   		movw	[sp+34], ax
- 577                             	.L24:
- 234:../src/r_main.c **** 					{
- 578                             		.loc 1 234 0 is_stmt 0 discriminator 1
- 579 03e1 AF 00 00                		movw	ax, !_myCounter
- 580 03e4 BD F0                   		movw	r8, ax
- 581 03e6 A8 22                   		movw	ax, [sp+34]
- 582 03e8 46 F0                   		cmpw	ax, r8
- 583 03ea 71 FF                   		 xor1	CY, a.7
- 584 03ec 71 77 F1                		 xor1	CY, r9.7
- 585 03ef 61 D8                   		 sknc
- 586 03f1 EC 9A 03 00             		 br	!!.L26
- 241:../src/r_main.c **** 						}
- 242:../src/r_main.c **** 					}
- 243:../src/r_main.c **** 					display_scroll++;
- 587                             		.loc 1 243 0 is_stmt 1 discriminator 2
- 588 03f5 A8 1E                   		movw	ax, [sp+30]
- 589 03f7 A1                      		incw	ax
- 590 03f8 B8 1E                   		movw	[sp+30], ax
- 244:../src/r_main.c **** 					writeByteLcd(0U, LCD_HOME_L1);
- 591                             		.loc 1 244 0 discriminator 2
- 592 03fa F1                      		clrb	a
- 593 03fb 98 00                   		mov	[sp], a
- 594 03fd 51 80                   		mov	a, #-128
- 595 03ff 98 02                   		mov	[sp+2], a
- 596 0401 FC 00 00 00             		call	!!%code(_writeByteLcd)
- 245:../src/r_main.c **** 					delayNoInt(100);
- 597                             		.loc 1 245 0 discriminator 2
- 598 0405 30 64 00                		movw	ax, #100
- 599 0408 B8 00                   		movw	[sp], ax
- 600 040a FC 00 00 00             		call	!!%code(_delayNoInt)
- 246:../src/r_main.c **** 					msDelay(350);
- 601                             		.loc 1 246 0 discriminator 2
- 602 040e 30 5E 01                		movw	ax, #350
- 603 0411 B8 00                   		movw	[sp], ax
- 604 0413 FC 00 00 00             		call	!!%code(_msDelay)
- 231:../src/r_main.c **** 				{
- 605                             		.loc 1 231 0 discriminator 2
- 606 0417 A8 20                   		movw	ax, [sp+32]
- 607 0419 A1                      		incw	ax
- 608 041a B8 20                   		movw	[sp+32], ax
- 609                             	.L23:
- 231:../src/r_main.c **** 				{
- 610                             		.loc 1 231 0 is_stmt 0 discriminator 1
- 611 041c A8 1C                   		movw	ax, [sp+28]
- 612 041e BD F0                   		movw	r8, ax
- 613 0420 A8 20                   		movw	ax, [sp+32]
- 614 0422 46 F0                   		cmpw	ax, r8
- 615 0424 71 FF                   		 xor1	CY, a.7
- 616 0426 71 77 F1                		 xor1	CY, r9.7
- 617 0429 61 D8                   		 sknc
- 618 042b EC 93 03 00             		 br	!!.L27
- 247:../src/r_main.c **** 				}
- 248:../src/r_main.c **** 				myCounter = 0;
- 619                             		.loc 1 248 0 is_stmt 1
- 620 042f F6                      		clrw	ax
- 621 0430 BF 00 00                		movw	!_myCounter, ax
- 622                             	.L5:
- 623                             	.LBE4:
- 249:../src/r_main.c **** 			}
- 250:../src/r_main.c **** 
- 251:../src/r_main.c **** 			uart1Status = R_UART1_Receive(uart1RxBuf,1);			// Prime UART2 Rx
- 624                             		.loc 1 251 0
- 625 0433 30 00 00                		movw	ax, #_uart1RxBuf
- 626 0436 B8 00                   		movw	[sp], ax
- 627 0438 E6                      		onew	ax
- 628 0439 B8 02                   		movw	[sp+2], ax
- 629 043b FC 00 00 00             		call	!!%code(_R_UART1_Receive)
- 630 043f AD F0                   		movw	ax, r8
- 631 0441 BF 00 00                		movw	!_uart1Status, ax
- 632                             	.L3:
- 252:../src/r_main.c ****         }
- 253:../src/r_main.c **** 
- 254:../src/r_main.c ****         if (uart1TxFlag)	//Output sent
- 633                             		.loc 1 254 0
- 634 0444 8F 00 00                		mov	a, !_uart1TxFlag
- 635 0447 9D F0                   		mov	r8, a
- 636 0449 D4 F0                   		cmp0	r8
- 637 044b 61 F8                   		 sknz
- 638 044d EC 54 04 00             		 br	!!.L28
- 255:../src/r_main.c ****         {
- 256:../src/r_main.c ****         	uart1TxFlag = 0U; //Clear Tx flag
- 639                             		.loc 1 256 0
- 640 0451 F5 00 00                		clrb	!_uart1TxFlag
- 641                             	.L28:
- 257:../src/r_main.c ****         }
- 258:../src/r_main.c **** 
- 259:../src/r_main.c ****         pwm(100, 25); 		//PWM always running, motor toggled by DVR_nSLEEP
- 642                             		.loc 1 259 0
- 643 0454 30 64 00                		movw	ax, #100
- 644 0457 B8 00                   		movw	[sp], ax
- 645 0459 30 19 00                		movw	ax, #25
- 646 045c B8 02                   		movw	[sp+2], ax
- 647 045e FC 00 00 00             		call	!!%code(_pwm)
- 260:../src/r_main.c **** 
- 261:../src/r_main.c ****     }
- 648                             		.loc 1 261 0
- 649 0462 EC 20 00 00             		br	!!.L29
- 650                             	.LFE0:
- 652                             		.global	_R_MAIN_UserInit
- 654                             	_R_MAIN_UserInit:
- 655                             	.LFB1:
- 262:../src/r_main.c ****     /* End user code. Do not edit comment generated here */
- 263:../src/r_main.c **** }
- 264:../src/r_main.c **** 
- 265:../src/r_main.c **** 
- 266:../src/r_main.c **** /**************************************************************************************************
- 267:../src/r_main.c **** * Function Name: R_MAIN_UserInit
- 268:../src/r_main.c **** * Description  : This function adds user code before implementing main function.
- 269:../src/r_main.c **** * Arguments    : None
- 270:../src/r_main.c **** * Return Value : None
- 271:../src/r_main.c **** ***************************************************************************************************
- 272:../src/r_main.c **** void R_MAIN_UserInit(void)
- 273:../src/r_main.c **** {
- 656                             		.loc 1 273 0
- 657                             		; start of function
- 658                             		; outgoing: 2 bytes
- 659 0466 20 02                   		subw	sp, #2
- 660                             	.LCFI1:
- 274:../src/r_main.c ****     /* Start user code. Do not edit comment generated here */
- 275:../src/r_main.c **** 	//Open connections
- 276:../src/r_main.c **** 	EI();
- 661                             		.loc 1 276 0
- 662                             	 ; 276 "../src/r_main.c" 1
- 663 0468 71 7A FA                		ei
- 664                             	 ; 0 "" 2
- 277:../src/r_main.c **** 	//R_SAU0_Create();
- 278:../src/r_main.c **** 	//R_UART1_Create();
- 279:../src/r_main.c **** 	R_UART1_Start();
- 665                             		.loc 1 279 0
- 666 046b FC 00 00 00             		call	!!%code(_R_UART1_Start)
- 280:../src/r_main.c **** 	//R_TAU0_Create();
- 281:../src/r_main.c **** 	R_TAU0_Channel0_Start();
- 667                             		.loc 1 281 0
- 668 046f FC 00 00 00             		call	!!%code(_R_TAU0_Channel0_Start)
- 282:../src/r_main.c **** 	R_TAU0_Channel2_Start();
- 669                             		.loc 1 282 0
- 670 0473 FC 00 00 00             		call	!!%code(_R_TAU0_Channel2_Start)
- 283:../src/r_main.c **** 
- 284:../src/r_main.c **** 	//R_TMR_RD0_Create();
- 285:../src/r_main.c **** 	R_TMR_RD0_Start();
- 671                             		.loc 1 285 0
- 672 0477 FC 00 00 00             		call	!!%code(_R_TMR_RD0_Start)
- 286:../src/r_main.c **** 
- 287:../src/r_main.c **** 	//R_PCLBUZ0_Create();
- 288:../src/r_main.c **** 
- 289:../src/r_main.c **** 	dataPrint = 1;
- 673                             		.loc 1 289 0
- 674 047b E5 00 00                		oneb	!_dataPrint
- 290:../src/r_main.c **** 	dataResponse = 1;
- 675                             		.loc 1 290 0
- 676 047e E5 00 00                		oneb	!_dataResponse
- 291:../src/r_main.c **** 	dataReady = 0;
- 677                             		.loc 1 291 0
- 678 0481 F5 00 00                		clrb	!_dataReady
- 292:../src/r_main.c **** 	R_INTC7_Start();
- 679                             		.loc 1 292 0
- 680 0484 FC 00 00 00             		call	!!%code(_R_INTC7_Start)
- 293:../src/r_main.c **** 
- 294:../src/r_main.c **** 	//Init flags
- 295:../src/r_main.c **** 	uart1RxFlag = 0U;
- 681                             		.loc 1 295 0
- 682 0488 F5 00 00                		clrb	!_uart1RxFlag
- 296:../src/r_main.c **** 	uart1TxFlag = 0U;
- 683                             		.loc 1 296 0
- 684 048b F5 00 00                		clrb	!_uart1TxFlag
- 297:../src/r_main.c **** 
- 298:../src/r_main.c **** 	//Welcome user
- 299:../src/r_main.c **** 	initLcd();
- 685                             		.loc 1 299 0
- 686 048e FC 00 00 00             		call	!!%code(_initLcd)
- 300:../src/r_main.c **** 	welcome();
- 687                             		.loc 1 300 0
- 688 0492 FC 00 00 00             		call	!!%code(_welcome)
- 301:../src/r_main.c **** 	initLcd();
- 689                             		.loc 1 301 0
- 690 0496 FC 00 00 00             		call	!!%code(_initLcd)
- 302:../src/r_main.c **** 
- 303:../src/r_main.c **** 	gate_status = GS_UNKNOWN;
- 691                             		.loc 1 303 0
- 692 049a F6                      		clrw	ax
- 693 049b BF 00 00                		movw	!_gate_status, ax
- 304:../src/r_main.c **** 	//Start in Normal mode
- 305:../src/r_main.c **** 	mode = 0;
- 694                             		.loc 1 305 0
- 695 049e F6                      		clrw	ax
- 696 049f BF 00 00                		movw	!_mode, ax
- 306:../src/r_main.c **** 	echo(0x80);
- 697                             		.loc 1 306 0
- 698 04a2 51 80                   		mov	a, #-128
- 699 04a4 98 00                   		mov	[sp], a
- 700 04a6 FC 00 00 00             		call	!!%code(_echo)
- 307:../src/r_main.c **** 	delayNoInt(100);
- 701                             		.loc 1 307 0
- 702 04aa 30 64 00                		movw	ax, #100
- 703 04ad B8 00                   		movw	[sp], ax
- 704 04af FC 00 00 00             		call	!!%code(_delayNoInt)
- 308:../src/r_main.c **** 	uart1TxFlag = 0U; // clear tx flag
- 705                             		.loc 1 308 0
- 706 04b3 F5 00 00                		clrb	!_uart1TxFlag
- 309:../src/r_main.c **** 	print_lcd("Normal mode");
- 707                             		.loc 1 309 0
- 708 04b6 30 0A 00                		movw	ax, #.LC1
- 709 04b9 B8 00                   		movw	[sp], ax
- 710 04bb FC 00 00 00             		call	!!%code(_print_lcd)
+ 375                             		.loc 1 186 0
+ 376 026b EC 8E 02 00             		br	!!.L13
+ 377                             	.L16:
+ 187:../src/r_main.c **** 					case GS_UNKNOWN:
+ 188:../src/r_main.c **** 						echo(0x84);
+ 378                             		.loc 1 188 0
+ 379 026f 51 84                   		mov	a, #-124
+ 380 0271 98 00                   		mov	[sp], a
+ 381 0273 FC 00 00 00             		call	!!%code(_echo)
+ 189:../src/r_main.c **** 						print_lcd("Unknown");
+ 382                             		.loc 1 189 0
+ 383 0277 30 44 00                		movw	ax, #.LC6
+ 384 027a B8 00                   		movw	[sp], ax
+ 385 027c FC 00 00 00             		call	!!%code(_print_lcd)
+ 190:../src/r_main.c **** 						break;
+ 386                             		.loc 1 190 0
+ 387 0280 EC 8E 02 00             		br	!!.L13
+ 388                             	.L18:
+ 191:../src/r_main.c **** 					case GS_ESTOP:
+ 192:../src/r_main.c **** 						//echo(0x84);
+ 193:../src/r_main.c **** 						print_lcd("Emergency stop");
+ 389                             		.loc 1 193 0
+ 390 0284 30 4C 00                		movw	ax, #.LC7
+ 391 0287 B8 00                   		movw	[sp], ax
+ 392 0289 FC 00 00 00             		call	!!%code(_print_lcd)
+ 194:../src/r_main.c **** 						break;
+ 393                             		.loc 1 194 0
+ 394 028d 00                      		nop
+ 395                             	.L13:
+ 396 028e EC FE 05 00             		br	!!.L5
+ 397                             	.L12:
+ 195:../src/r_main.c **** 				}
+ 196:../src/r_main.c **** 			}
+ 197:../src/r_main.c **** 
+ 198:../src/r_main.c **** 			else if (uart1RxBuf[0] == 0xFC)	//READ IR CMD
+ 398                             		.loc 1 198 0
+ 399 0292 8F 00 00                		mov	a, !_uart1RxBuf
+ 400 0295 9D F0                   		mov	r8, a
+ 401 0297 4A F0 FC                		cmp	r8, #-4
+ 402 029a 61 E8                   		 skz
+ 403 029c EC 07 03 00             		 br	!!.L19
+ 404                             	.LBB4:
+ 199:../src/r_main.c **** 			{
+ 200:../src/r_main.c **** 				echo(0xFC);
+ 405                             		.loc 1 200 0
+ 406 02a0 51 FC                   		mov	a, #-4
+ 407 02a2 98 00                   		mov	[sp], a
+ 408 02a4 FC 00 00 00             		call	!!%code(_echo)
+ 201:../src/r_main.c **** 				msDelay(10);
+ 409                             		.loc 1 201 0
+ 410 02a8 30 0A 00                		movw	ax, #10
+ 411 02ab B8 00                   		movw	[sp], ax
+ 412 02ad FC 00 00 00             		call	!!%code(_msDelay)
+ 202:../src/r_main.c **** 				//Wait for complete message?
+ 203:../src/r_main.c **** 				//echo(ir_rxMessage);
+ 204:../src/r_main.c **** 				uint8_t cmd = ir_rxMessage & 0x7;
+ 413                             		.loc 1 204 0
+ 414 02b1 AF 00 00                		movw	ax, !_ir_rxMessage
+ 415 02b4 BD F0                   		movw	r8, ax
+ 416 02b6 8D F0                   		mov	a, r8
+ 417 02b8 5C 07                   		and	a, #7
+ 418 02ba 98 1F                   		mov	[sp+31], a
+ 205:../src/r_main.c **** 				uint8_t addr = (ir_rxMessage >> 3) & 0xFF;
+ 419                             		.loc 1 205 0
+ 420 02bc AF 00 00                		movw	ax, !_ir_rxMessage
+ 421 02bf BD F0                   		movw	r8, ax
+ 422 02c1 31 3E                   		shrw	ax, 3
+ 423 02c3 BD F0                   		movw	r8, ax
+ 424 02c5 8D F0                   		mov	a, r8
+ 425 02c7 98 1E                   		mov	[sp+30], a
+ 206:../src/r_main.c **** 				uint8_t tog = (ir_rxMessage >> 11) & 0x6;
+ 426                             		.loc 1 206 0
+ 427 02c9 AF 00 00                		movw	ax, !_ir_rxMessage
+ 428 02cc BD F0                   		movw	r8, ax
+ 429 02ce 31 BE                   		shrw	ax, 11
+ 430 02d0 BD F0                   		movw	r8, ax
+ 431 02d2 8D F0                   		mov	a, r8
+ 432 02d4 5C 06                   		and	a, #6
+ 433 02d6 98 1D                   		mov	[sp+29], a
+ 207:../src/r_main.c **** 				echoData(addr, ((tog<<6) + cmd));
+ 434                             		.loc 1 207 0
+ 435 02d8 88 1E                   		mov	a, [sp+30]
+ 436 02da 70                      		mov	x, a 
+ 437 02db 51 00                   		mov	a, #0
+ 438 02dd BD F2                   		movw	r10, ax
+ 439 02df 88 1D                   		mov	a, [sp+29]
+ 440 02e1 70                      		mov	x, a 
+ 441 02e2 51 00                   		mov	a, #0
+ 442 02e4 BD F0                   		movw	r8, ax
+ 443 02e6 31 6D                   		shlw	ax, 6
+ 444 02e8 BD F4                   		movw	r12, ax
+ 445 02ea 88 1F                   		mov	a, [sp+31]
+ 446 02ec 70                      		mov	x, a 
+ 447 02ed 51 00                   		mov	a, #0
+ 448 02ef BD F0                   		movw	r8, ax
+ 449 02f1 AD F4                   		movw	ax, r12
+ 450 02f3 06 F0                   		addw	ax, r8
+ 451 02f5 BD F0                   		movw	r8, ax
+ 452 02f7 AD F2                   		movw	ax, r10
+ 453 02f9 B8 00                   		movw	[sp], ax
+ 454 02fb AD F0                   		movw	ax, r8
+ 455 02fd B8 02                   		movw	[sp+2], ax
+ 456 02ff FC 00 00 00             		call	!!%code(_echoData)
+ 457                             	.LBE4:
+ 458 0303 EC FE 05 00             		br	!!.L5
+ 459                             	.L19:
+ 208:../src/r_main.c **** 				//echo(addr);
+ 209:../src/r_main.c **** 				//echo((tog<<6) + cmd);
+ 210:../src/r_main.c **** 			}
+ 211:../src/r_main.c **** 
+ 212:../src/r_main.c **** 			else if (uart1RxBuf[0] == 0xF2) //SET RTC TO PREV 5 BYTES
+ 460                             		.loc 1 212 0
+ 461 0307 8F 00 00                		mov	a, !_uart1RxBuf
+ 462 030a 9D F0                   		mov	r8, a
+ 463 030c 4A F0 F2                		cmp	r8, #-14
+ 464 030f 61 E8                   		 skz
+ 465 0311 EC 16 04 00             		 br	!!.L20
+ 466                             	.LBB5:
+ 213:../src/r_main.c **** 			{
+ 214:../src/r_main.c **** 				echo(0xF2);
+ 467                             		.loc 1 214 0
+ 468 0315 51 F2                   		mov	a, #-14
+ 469 0317 98 00                   		mov	[sp], a
+ 470 0319 FC 00 00 00             		call	!!%code(_echo)
+ 215:../src/r_main.c **** 				time_now.sec = toBCD(myBuffer[myCounter - 1]);
+ 471                             		.loc 1 215 0
+ 472 031d AF 00 00                		movw	ax, !_myCounter
+ 473 0320 BD F0                   		movw	r8, ax
+ 474 0322 B6 F0                   		decw	r8
+ 475 0324 AD F0                   		movw	ax, r8
+ 476 0326 04 00 00                		addw	ax, #_myBuffer
+ 477 0329 16                      		movw	hl, ax
+ 478 032a 8B                      		mov	a, [hl]
+ 479 032b 9D F0                   		mov	r8, a
+ 480 032d 98 00                   		mov	[sp], a
+ 481 032f FC 00 00 00             		call	!!%code(_toBCD)
+ 482 0333 8D F0                   		mov	a, r8
+ 483 0335 9F 00 00                		mov	!_time_now, a
+ 216:../src/r_main.c **** 				time_now.min = toBCD(myBuffer[myCounter - 2]);
+ 484                             		.loc 1 216 0
+ 485 0338 AF 00 00                		movw	ax, !_myCounter
+ 486 033b BD F0                   		movw	r8, ax
+ 487 033d B6 F0                   		decw	r8 
+ 488 033f B6 F0                   		decw	r8
+ 489 0341 AD F0                   		movw	ax, r8
+ 490 0343 04 00 00                		addw	ax, #_myBuffer
+ 491 0346 16                      		movw	hl, ax
+ 492 0347 8B                      		mov	a, [hl]
+ 493 0348 9D F0                   		mov	r8, a
+ 494 034a 98 00                   		mov	[sp], a
+ 495 034c FC 00 00 00             		call	!!%code(_toBCD)
+ 496 0350 8D F0                   		mov	a, r8
+ 497 0352 9F 00 00                		mov	!_time_now+1, a
+ 217:../src/r_main.c **** 				time_now.hour = toBCD(myBuffer[myCounter - 3]);
+ 498                             		.loc 1 217 0
+ 499 0355 AF 00 00                		movw	ax, !_myCounter
+ 500 0358 BD F0                   		movw	r8, ax
+ 501 035a 04 FD FF                		addw	ax, #-3
+ 502 035d BD F0                   		movw	r8, ax
+ 503 035f 04 00 00                		addw	ax, #_myBuffer
+ 504 0362 16                      		movw	hl, ax
+ 505 0363 8B                      		mov	a, [hl]
+ 506 0364 9D F0                   		mov	r8, a
+ 507 0366 98 00                   		mov	[sp], a
+ 508 0368 FC 00 00 00             		call	!!%code(_toBCD)
+ 509 036c 8D F0                   		mov	a, r8
+ 510 036e 9F 00 00                		mov	!_time_now+2, a
+ 218:../src/r_main.c **** 				time_now.day = toBCD(myBuffer[myCounter - 4]);
+ 511                             		.loc 1 218 0
+ 512 0371 AF 00 00                		movw	ax, !_myCounter
+ 513 0374 BD F0                   		movw	r8, ax
+ 514 0376 04 FC FF                		addw	ax, #-4
+ 515 0379 BD F0                   		movw	r8, ax
+ 516 037b 04 00 00                		addw	ax, #_myBuffer
+ 517 037e 16                      		movw	hl, ax
+ 518 037f 8B                      		mov	a, [hl]
+ 519 0380 9D F0                   		mov	r8, a
+ 520 0382 98 00                   		mov	[sp], a
+ 521 0384 FC 00 00 00             		call	!!%code(_toBCD)
+ 522 0388 8D F0                   		mov	a, r8
+ 523 038a 9F 00 00                		mov	!_time_now+3, a
+ 219:../src/r_main.c **** 				time_now.month = toBCD(myBuffer[myCounter - 5]);
+ 524                             		.loc 1 219 0
+ 525 038d AF 00 00                		movw	ax, !_myCounter
+ 526 0390 BD F0                   		movw	r8, ax
+ 527 0392 04 FB FF                		addw	ax, #-5
+ 528 0395 BD F0                   		movw	r8, ax
+ 529 0397 04 00 00                		addw	ax, #_myBuffer
+ 530 039a 16                      		movw	hl, ax
+ 531 039b 8B                      		mov	a, [hl]
+ 532 039c 9D F0                   		mov	r8, a
+ 533 039e 98 00                   		mov	[sp], a
+ 534 03a0 FC 00 00 00             		call	!!%code(_toBCD)
+ 535 03a4 8D F0                   		mov	a, r8
+ 536 03a6 9F 00 00                		mov	!_time_now+5, a
+ 220:../src/r_main.c **** 				R_RTC_Stop();
+ 537                             		.loc 1 220 0
+ 538 03a9 FC 00 00 00             		call	!!%code(_R_RTC_Stop)
+ 221:../src/r_main.c **** 				R_RTC_Set_CounterValue(time_now);
+ 539                             		.loc 1 221 0
+ 540 03ad 8F 00 00                		mov	a, !_time_now
+ 541 03b0 9D F0                   		mov	r8, a
+ 542 03b2 98 00                   		mov	[sp], a
+ 543 03b4 8F 00 00                		mov	a, !_time_now+1
+ 544 03b7 9D F0                   		mov	r8, a
+ 545 03b9 98 01                   		mov	[sp+1], a
+ 546 03bb 8F 00 00                		mov	a, !_time_now+2
+ 547 03be 9D F0                   		mov	r8, a
+ 548 03c0 98 02                   		mov	[sp+2], a
+ 549 03c2 8F 00 00                		mov	a, !_time_now+3
+ 550 03c5 9D F0                   		mov	r8, a
+ 551 03c7 98 03                   		mov	[sp+3], a
+ 552 03c9 8F 00 00                		mov	a, !_time_now+4
+ 553 03cc 9D F0                   		mov	r8, a
+ 554 03ce 98 04                   		mov	[sp+4], a
+ 555 03d0 8F 00 00                		mov	a, !_time_now+5
+ 556 03d3 9D F0                   		mov	r8, a
+ 557 03d5 98 05                   		mov	[sp+5], a
+ 558 03d7 8F 00 00                		mov	a, !_time_now+6
+ 559 03da 9D F0                   		mov	r8, a
+ 560 03dc 98 06                   		mov	[sp+6], a
+ 561 03de FC 00 00 00             		call	!!%code(_R_RTC_Set_CounterValue)
+ 222:../src/r_main.c **** 				R_RTC_Start();
+ 562                             		.loc 1 222 0
+ 563 03e2 FC 00 00 00             		call	!!%code(_R_RTC_Start)
+ 223:../src/r_main.c **** 				int i;
+ 224:../src/r_main.c **** 				for (i = 0; i < RX_BUF_LEN; i++)
+ 564                             		.loc 1 224 0
+ 565 03e6 F6                      		clrw	ax
+ 566 03e7 B8 2A                   		movw	[sp+42], ax
+ 567 03e9 EC 01 04 00             		br	!!.L21
+ 568                             	.L22:
+ 225:../src/r_main.c **** 				{
+ 226:../src/r_main.c **** 					myBuffer[i] = 0x0;
+ 569                             		.loc 1 226 0 discriminator 3
+ 570 03ed A8 2A                   		movw	ax, [sp+42]
+ 571 03ef 04 00 00                		addw	ax, #_myBuffer
+ 572 03f2 BD F0                   		movw	r8, ax
+ 573 03f4 BD F2                   		movw	r10, ax
+ 574 03f6 DA F2                   		movw	bc, r10
+ 575 03f8 F1                      		clrb	a
+ 576 03f9 48 00 00                		mov	[bc], a
+ 224:../src/r_main.c **** 				{
+ 577                             		.loc 1 224 0 discriminator 3
+ 578 03fc A8 2A                   		movw	ax, [sp+42]
+ 579 03fe A1                      		incw	ax
+ 580 03ff B8 2A                   		movw	[sp+42], ax
+ 581                             	.L21:
+ 224:../src/r_main.c **** 				{
+ 582                             		.loc 1 224 0 is_stmt 0 discriminator 1
+ 583 0401 A8 2A                   		movw	ax, [sp+42]
+ 584 0403 44 0F 00                		cmpw	ax, #15
+ 585 0406 71 FF                   		 xor1	CY, a.7
+ 586 0408 61 E3                   		 skh
+ 587 040a EC ED 03 00             		 br	!!.L22
+ 227:../src/r_main.c **** 				}
+ 228:../src/r_main.c **** 				myCounter = 0;
+ 588                             		.loc 1 228 0 is_stmt 1
+ 589 040e F6                      		clrw	ax
+ 590 040f BF 00 00                		movw	!_myCounter, ax
+ 591                             	.LBE5:
+ 592 0412 EC FE 05 00             		br	!!.L5
+ 593                             	.L20:
+ 229:../src/r_main.c **** 			}
+ 230:../src/r_main.c **** 
+ 231:../src/r_main.c **** 			else if (uart1RxBuf[0] == 0xF3) //SEND RTC VIA UART
+ 594                             		.loc 1 231 0
+ 595 0416 8F 00 00                		mov	a, !_uart1RxBuf
+ 596 0419 9D F0                   		mov	r8, a
+ 597 041b 4A F0 F3                		cmp	r8, #-13
+ 598 041e 61 E8                   		 skz
+ 599 0420 EC C0 04 00             		 br	!!.L23
+ 600                             	.LBB6:
+ 232:../src/r_main.c **** 			{
+ 233:../src/r_main.c **** 				int i;
+ 234:../src/r_main.c **** 				for (i = 0; i < RX_BUF_LEN; i++)
+ 601                             		.loc 1 234 0
+ 602 0424 F6                      		clrw	ax
+ 603 0425 B8 28                   		movw	[sp+40], ax
+ 604 0427 EC 3F 04 00             		br	!!.L24
+ 605                             	.L25:
+ 235:../src/r_main.c **** 				{
+ 236:../src/r_main.c **** 					myBuffer[i] = 0x0;
+ 606                             		.loc 1 236 0 discriminator 3
+ 607 042b A8 28                   		movw	ax, [sp+40]
+ 608 042d 04 00 00                		addw	ax, #_myBuffer
+ 609 0430 BD F0                   		movw	r8, ax
+ 610 0432 BD F4                   		movw	r12, ax
+ 611 0434 DA F4                   		movw	bc, r12
+ 612 0436 F1                      		clrb	a
+ 613 0437 48 00 00                		mov	[bc], a
+ 234:../src/r_main.c **** 				{
+ 614                             		.loc 1 234 0 discriminator 3
+ 615 043a A8 28                   		movw	ax, [sp+40]
+ 616 043c A1                      		incw	ax
+ 617 043d B8 28                   		movw	[sp+40], ax
+ 618                             	.L24:
+ 234:../src/r_main.c **** 				{
+ 619                             		.loc 1 234 0 is_stmt 0 discriminator 1
+ 620 043f A8 28                   		movw	ax, [sp+40]
+ 621 0441 44 0F 00                		cmpw	ax, #15
+ 622 0444 71 FF                   		 xor1	CY, a.7
+ 623 0446 61 E3                   		 skh
+ 624 0448 EC 2B 04 00             		 br	!!.L25
+ 237:../src/r_main.c **** 				}
+ 238:../src/r_main.c **** 				myCounter = 0;
+ 625                             		.loc 1 238 0 is_stmt 1
+ 626 044c F6                      		clrw	ax
+ 627 044d BF 00 00                		movw	!_myCounter, ax
+ 239:../src/r_main.c **** 				R_RTC_Get_CounterValue(&time_now);
+ 628                             		.loc 1 239 0
+ 629 0450 30 00 00                		movw	ax, #_time_now
+ 630 0453 B8 00                   		movw	[sp], ax
+ 631 0455 FC 00 00 00             		call	!!%code(_R_RTC_Get_CounterValue)
+ 240:../src/r_main.c **** 				myBuffer[0] = 0xF3;
+ 632                             		.loc 1 240 0
+ 633 0459 51 F3                   		mov	a, #-13
+ 634 045b 9F 00 00                		mov	!_myBuffer, a
+ 241:../src/r_main.c **** 				myBuffer[1] = toHex(time_now.month);
+ 635                             		.loc 1 241 0
+ 636 045e 8F 00 00                		mov	a, !_time_now+5
+ 637 0461 9D F0                   		mov	r8, a
+ 638 0463 98 00                   		mov	[sp], a
+ 639 0465 FC 00 00 00             		call	!!%code(_toHex)
+ 640 0469 8D F0                   		mov	a, r8
+ 641 046b 9F 00 00                		mov	!_myBuffer+1, a
+ 242:../src/r_main.c **** 				myBuffer[2] = toHex(time_now.day);
+ 642                             		.loc 1 242 0
+ 643 046e 8F 00 00                		mov	a, !_time_now+3
+ 644 0471 9D F0                   		mov	r8, a
+ 645 0473 98 00                   		mov	[sp], a
+ 646 0475 FC 00 00 00             		call	!!%code(_toHex)
+ 647 0479 8D F0                   		mov	a, r8
+ 648 047b 9F 00 00                		mov	!_myBuffer+2, a
+ 243:../src/r_main.c **** 				myBuffer[3] = toHex(time_now.hour);
+ 649                             		.loc 1 243 0
+ 650 047e 8F 00 00                		mov	a, !_time_now+2
+ 651 0481 9D F0                   		mov	r8, a
+ 652 0483 98 00                   		mov	[sp], a
+ 653 0485 FC 00 00 00             		call	!!%code(_toHex)
+ 654 0489 8D F0                   		mov	a, r8
+ 655 048b 9F 00 00                		mov	!_myBuffer+3, a
+ 244:../src/r_main.c **** 				myBuffer[4] = toHex(time_now.min);
+ 656                             		.loc 1 244 0
+ 657 048e 8F 00 00                		mov	a, !_time_now+1
+ 658 0491 9D F0                   		mov	r8, a
+ 659 0493 98 00                   		mov	[sp], a
+ 660 0495 FC 00 00 00             		call	!!%code(_toHex)
+ 661 0499 8D F0                   		mov	a, r8
+ 662 049b 9F 00 00                		mov	!_myBuffer+4, a
+ 245:../src/r_main.c **** 				myBuffer[5] = toHex(time_now.sec);
+ 663                             		.loc 1 245 0
+ 664 049e 8F 00 00                		mov	a, !_time_now
+ 665 04a1 9D F0                   		mov	r8, a
+ 666 04a3 98 00                   		mov	[sp], a
+ 667 04a5 FC 00 00 00             		call	!!%code(_toHex)
+ 668 04a9 8D F0                   		mov	a, r8
+ 669 04ab 9F 00 00                		mov	!_myBuffer+5, a
+ 246:../src/r_main.c **** 
+ 247:../src/r_main.c **** 				R_UART1_Send(myBuffer, 6);
+ 670                             		.loc 1 247 0
+ 671 04ae 30 00 00                		movw	ax, #_myBuffer
+ 672 04b1 B8 00                   		movw	[sp], ax
+ 673 04b3 30 06 00                		movw	ax, #6
+ 674 04b6 B8 02                   		movw	[sp+2], ax
+ 675 04b8 FC 00 00 00             		call	!!%code(_R_UART1_Send)
+ 676                             	.LBE6:
+ 677 04bc EC FE 05 00             		br	!!.L5
+ 678                             	.L23:
+ 248:../src/r_main.c **** 			}
+ 249:../src/r_main.c **** 
+ 250:../src/r_main.c **** 			//Buffer not full and input is not a command
+ 251:../src/r_main.c **** 			else if((myCounter < RX_BUF_LEN)&&(uart1RxBuf[0] < 0x7F))
+ 679                             		.loc 1 251 0
+ 680 04c0 AF 00 00                		movw	ax, !_myCounter
+ 681 04c3 BD F0                   		movw	r8, ax
+ 682 04c5 44 0F 00                		cmpw	ax, #15
+ 683 04c8 71 FF                   		 xor1	CY, a.7
+ 684 04ca 61 F3                   		 sknh
+ 685 04cc EC FD 04 00             		 br	!!.L26
+ 686                             		.loc 1 251 0 is_stmt 0 discriminator 1
+ 687 04d0 8F 00 00                		mov	a, !_uart1RxBuf
+ 688 04d3 9D F0                   		mov	r8, a
+ 689 04d5 4A F0 7E                		cmp	r8, #126
+ 690 04d8 61 F3                   		 sknh
+ 691 04da EC FD 04 00             		 br	!!.L26
+ 252:../src/r_main.c **** 			{
+ 253:../src/r_main.c **** 				myBuffer[myCounter] = uart1RxBuf[0];
+ 692                             		.loc 1 253 0 is_stmt 1
+ 693 04de AF 00 00                		movw	ax, !_myCounter
+ 694 04e1 BD F0                   		movw	r8, ax
+ 695 04e3 8F 00 00                		mov	a, !_uart1RxBuf
+ 696 04e6 9D F2                   		mov	r10, a
+ 697 04e8 DA F0                   		movw	bc, r8
+ 698 04ea 48 00 00                		mov	_myBuffer[bc], a
+ 254:../src/r_main.c **** 				myCounter++;
+ 699                             		.loc 1 254 0
+ 700 04ed AF 00 00                		movw	ax, !_myCounter
+ 701 04f0 BD F0                   		movw	r8, ax
+ 702 04f2 A6 F0                   		incw	r8
+ 703 04f4 AD F0                   		movw	ax, r8
+ 704 04f6 BF 00 00                		movw	!_myCounter, ax
+ 705 04f9 EC FE 05 00             		br	!!.L5
+ 706                             	.L26:
+ 255:../src/r_main.c **** 			}
+ 256:../src/r_main.c **** 			//'Display to LCD' is activated during Test Mode
+ 257:../src/r_main.c **** 			else if((mode == 1)&&(uart1RxBuf[0] == 0xF4))
+ 707                             		.loc 1 257 0
+ 708 04fd AF 00 00                		movw	ax, !_mode
+ 709 0500 BD F0                   		movw	r8, ax
+ 710 0502 44 01 00                		cmpw	ax, #1
+ 711 0505 61 E8                   		 skz
+ 712 0507 EC FE 05 00             		 br	!!.L5
+ 713                             		.loc 1 257 0 is_stmt 0 discriminator 1
+ 714 050b 8F 00 00                		mov	a, !_uart1RxBuf
+ 715 050e 9D F0                   		mov	r8, a
+ 716 0510 4A F0 F4                		cmp	r8, #-12
+ 717 0513 61 E8                   		 skz
+ 718 0515 EC FE 05 00             		 br	!!.L5
+ 719                             	.LBB7:
+ 258:../src/r_main.c **** 			{
+ 259:../src/r_main.c **** 				echo(0xF4);
+ 720                             		.loc 1 259 0 is_stmt 1
+ 721 0519 51 F4                   		mov	a, #-12
+ 722 051b 98 00                   		mov	[sp], a
+ 723 051d FC 00 00 00             		call	!!%code(_echo)
+ 260:../src/r_main.c **** 				initLcd();
+ 724                             		.loc 1 260 0
+ 725 0521 FC 00 00 00             		call	!!%code(_initLcd)
+ 261:../src/r_main.c **** 				int display_x = 0;
+ 726                             		.loc 1 261 0
+ 727 0525 F6                      		clrw	ax
+ 728 0526 B8 26                   		movw	[sp+38], ax
+ 262:../src/r_main.c **** 				int display_y = 0;
+ 729                             		.loc 1 262 0
+ 730 0528 F6                      		clrw	ax
+ 731 0529 B8 24                   		movw	[sp+36], ax
+ 263:../src/r_main.c **** 				int display_scroll = 0;
+ 732                             		.loc 1 263 0
+ 733 052b F6                      		clrw	ax
+ 734 052c B8 22                   		movw	[sp+34], ax
+ 264:../src/r_main.c **** 				int display_length = 16;
+ 735                             		.loc 1 264 0
+ 736 052e 30 10 00                		movw	ax, #16
+ 737 0531 B8 1A                   		movw	[sp+26], ax
+ 265:../src/r_main.c **** 				int display_loop = 1;
+ 738                             		.loc 1 265 0
+ 739 0533 E6                      		onew	ax
+ 740 0534 B8 18                   		movw	[sp+24], ax
+ 266:../src/r_main.c **** 				int overflow;
+ 267:../src/r_main.c **** 
+ 268:../src/r_main.c **** 				//Determine overflow
+ 269:../src/r_main.c **** 				if (myCounter > 15) {
+ 741                             		.loc 1 269 0
+ 742 0536 AF 00 00                		movw	ax, !_myCounter
+ 743 0539 BD F0                   		movw	r8, ax
+ 744 053b 44 0F 00                		cmpw	ax, #15
+ 745 053e 71 FF                   		 xor1	CY, a.7
+ 746 0540 61 E3                   		 skh
+ 747 0542 EC 54 05 00             		 br	!!.L27
+ 270:../src/r_main.c **** 					overflow = myCounter - 15;
+ 748                             		.loc 1 270 0
+ 749 0546 AF 00 00                		movw	ax, !_myCounter
+ 750 0549 BD F0                   		movw	r8, ax
+ 751 054b 04 F1 FF                		addw	ax, #-15
+ 752 054e B8 20                   		movw	[sp+32], ax
+ 753 0550 EC 57 05 00             		br	!!.L28
+ 754                             	.L27:
+ 271:../src/r_main.c **** 				}
+ 272:../src/r_main.c **** 				else {
+ 273:../src/r_main.c **** 					overflow = 1;
+ 755                             		.loc 1 273 0
+ 756 0554 E6                      		onew	ax
+ 757 0555 B8 20                   		movw	[sp+32], ax
+ 758                             	.L28:
+ 274:../src/r_main.c **** 				}
+ 275:../src/r_main.c **** 
+ 276:../src/r_main.c **** 				//For LCD index i
+ 277:../src/r_main.c **** 				for(display_y = 0 ; display_y < overflow ; display_y++)
+ 759                             		.loc 1 277 0
+ 760 0557 F6                      		clrw	ax
+ 761 0558 B8 24                   		movw	[sp+36], ax
+ 762 055a EC E7 05 00             		br	!!.L29
+ 763                             	.L33:
+ 278:../src/r_main.c **** 				{
+ 279:../src/r_main.c **** 					//For message character j
+ 280:../src/r_main.c **** 					for (display_x = 0 ; display_x < myCounter ; display_x++)
+ 764                             		.loc 1 280 0
+ 765 055e F6                      		clrw	ax
+ 766 055f B8 26                   		movw	[sp+38], ax
+ 767 0561 EC AC 05 00             		br	!!.L30
+ 768                             	.L32:
+ 281:../src/r_main.c **** 					{
+ 282:../src/r_main.c **** 						writeByteLcd(1U, myBuffer[(display_x+display_scroll)]);
+ 769                             		.loc 1 282 0
+ 770 0565 A8 22                   		movw	ax, [sp+34]
+ 771 0567 16                      		movw	hl, ax
+ 772 0568 A8 26                   		movw	ax, [sp+38]
+ 773 056a 07                      		addw	ax, hl
+ 774 056b BD F0                   		movw	r8, ax
+ 775 056d 04 00 00                		addw	ax, #_myBuffer
+ 776 0570 16                      		movw	hl, ax
+ 777 0571 8B                      		mov	a, [hl]
+ 778 0572 9D F0                   		mov	r8, a
+ 779 0574 E1                      		oneb	a
+ 780 0575 98 00                   		mov	[sp], a
+ 781 0577 8D F0                   		mov	a, r8
+ 782 0579 98 02                   		mov	[sp+2], a
+ 783 057b FC 00 00 00             		call	!!%code(_writeByteLcd)
+ 283:../src/r_main.c **** 						delayNoInt(3250);
+ 784                             		.loc 1 283 0
+ 785 057f 30 B2 0C                		movw	ax, #3250
+ 786 0582 B8 00                   		movw	[sp], ax
+ 787 0584 FC 00 00 00             		call	!!%code(_delayNoInt)
+ 284:../src/r_main.c **** 						if (display_x == 7){
+ 788                             		.loc 1 284 0
+ 789 0588 A8 26                   		movw	ax, [sp+38]
+ 790 058a 44 07 00                		cmpw	ax, #7
+ 791 058d 61 E8                   		 skz
+ 792 058f EC A7 05 00             		 br	!!.L31
+ 285:../src/r_main.c **** 							writeByteLcd(0U, LCD_HOME_L2);
+ 793                             		.loc 1 285 0
+ 794 0593 F1                      		clrb	a
+ 795 0594 98 00                   		mov	[sp], a
+ 796 0596 51 C0                   		mov	a, #-64
+ 797 0598 98 02                   		mov	[sp+2], a
+ 798 059a FC 00 00 00             		call	!!%code(_writeByteLcd)
+ 286:../src/r_main.c **** 							delayNoInt(100);
+ 799                             		.loc 1 286 0
+ 800 059e 30 64 00                		movw	ax, #100
+ 801 05a1 B8 00                   		movw	[sp], ax
+ 802 05a3 FC 00 00 00             		call	!!%code(_delayNoInt)
+ 803                             	.L31:
+ 280:../src/r_main.c **** 					{
+ 804                             		.loc 1 280 0 discriminator 2
+ 805 05a7 A8 26                   		movw	ax, [sp+38]
+ 806 05a9 A1                      		incw	ax
+ 807 05aa B8 26                   		movw	[sp+38], ax
+ 808                             	.L30:
+ 280:../src/r_main.c **** 					{
+ 809                             		.loc 1 280 0 is_stmt 0 discriminator 1
+ 810 05ac AF 00 00                		movw	ax, !_myCounter
+ 811 05af BD F0                   		movw	r8, ax
+ 812 05b1 A8 26                   		movw	ax, [sp+38]
+ 813 05b3 46 F0                   		cmpw	ax, r8
+ 814 05b5 71 FF                   		 xor1	CY, a.7
+ 815 05b7 71 77 F1                		 xor1	CY, r9.7
+ 816 05ba 61 D8                   		 sknc
+ 817 05bc EC 65 05 00             		 br	!!.L32
+ 287:../src/r_main.c **** 						}
+ 288:../src/r_main.c **** 					}
+ 289:../src/r_main.c **** 					display_scroll++;
+ 818                             		.loc 1 289 0 is_stmt 1 discriminator 2
+ 819 05c0 A8 22                   		movw	ax, [sp+34]
+ 820 05c2 A1                      		incw	ax
+ 821 05c3 B8 22                   		movw	[sp+34], ax
+ 290:../src/r_main.c **** 					writeByteLcd(0U, LCD_HOME_L1);
+ 822                             		.loc 1 290 0 discriminator 2
+ 823 05c5 F1                      		clrb	a
+ 824 05c6 98 00                   		mov	[sp], a
+ 825 05c8 51 80                   		mov	a, #-128
+ 826 05ca 98 02                   		mov	[sp+2], a
+ 827 05cc FC 00 00 00             		call	!!%code(_writeByteLcd)
+ 291:../src/r_main.c **** 					delayNoInt(100);
+ 828                             		.loc 1 291 0 discriminator 2
+ 829 05d0 30 64 00                		movw	ax, #100
+ 830 05d3 B8 00                   		movw	[sp], ax
+ 831 05d5 FC 00 00 00             		call	!!%code(_delayNoInt)
+ 292:../src/r_main.c **** 					msDelay(350);
+ 832                             		.loc 1 292 0 discriminator 2
+ 833 05d9 30 5E 01                		movw	ax, #350
+ 834 05dc B8 00                   		movw	[sp], ax
+ 835 05de FC 00 00 00             		call	!!%code(_msDelay)
+ 277:../src/r_main.c **** 				{
+ 836                             		.loc 1 277 0 discriminator 2
+ 837 05e2 A8 24                   		movw	ax, [sp+36]
+ 838 05e4 A1                      		incw	ax
+ 839 05e5 B8 24                   		movw	[sp+36], ax
+ 840                             	.L29:
+ 277:../src/r_main.c **** 				{
+ 841                             		.loc 1 277 0 is_stmt 0 discriminator 1
+ 842 05e7 A8 20                   		movw	ax, [sp+32]
+ 843 05e9 BD F0                   		movw	r8, ax
+ 844 05eb A8 24                   		movw	ax, [sp+36]
+ 845 05ed 46 F0                   		cmpw	ax, r8
+ 846 05ef 71 FF                   		 xor1	CY, a.7
+ 847 05f1 71 77 F1                		 xor1	CY, r9.7
+ 848 05f4 61 D8                   		 sknc
+ 849 05f6 EC 5E 05 00             		 br	!!.L33
+ 293:../src/r_main.c **** 				}
+ 294:../src/r_main.c **** 				myCounter = 0;
+ 850                             		.loc 1 294 0 is_stmt 1
+ 851 05fa F6                      		clrw	ax
+ 852 05fb BF 00 00                		movw	!_myCounter, ax
+ 853                             	.L5:
+ 854                             	.LBE7:
+ 295:../src/r_main.c **** 			}
+ 296:../src/r_main.c **** 
+ 297:../src/r_main.c **** 			uart1Status = R_UART1_Receive(uart1RxBuf,1);			// Prime UART2 Rx
+ 855                             		.loc 1 297 0
+ 856 05fe 30 00 00                		movw	ax, #_uart1RxBuf
+ 857 0601 B8 00                   		movw	[sp], ax
+ 858 0603 E6                      		onew	ax
+ 859 0604 B8 02                   		movw	[sp+2], ax
+ 860 0606 FC 00 00 00             		call	!!%code(_R_UART1_Receive)
+ 861 060a AD F0                   		movw	ax, r8
+ 862 060c BF 00 00                		movw	!_uart1Status, ax
+ 863                             	.L3:
+ 298:../src/r_main.c ****         }
+ 299:../src/r_main.c **** 
+ 300:../src/r_main.c ****         if (uart1TxFlag)	//Output sent
+ 864                             		.loc 1 300 0
+ 865 060f 8F 00 00                		mov	a, !_uart1TxFlag
+ 866 0612 9D F0                   		mov	r8, a
+ 867 0614 D4 F0                   		cmp0	r8
+ 868 0616 61 F8                   		 sknz
+ 869 0618 EC 1F 06 00             		 br	!!.L34
+ 301:../src/r_main.c ****         {
+ 302:../src/r_main.c ****         	uart1TxFlag = 0U; //Clear Tx flag
+ 870                             		.loc 1 302 0
+ 871 061c F5 00 00                		clrb	!_uart1TxFlag
+ 872                             	.L34:
+ 303:../src/r_main.c ****         }
+ 304:../src/r_main.c **** 
+ 305:../src/r_main.c ****         pwm(100, 25); 		//PWM always running, motor toggled by DVR_nSLEEP
+ 873                             		.loc 1 305 0
+ 874 061f 30 64 00                		movw	ax, #100
+ 875 0622 B8 00                   		movw	[sp], ax
+ 876 0624 30 19 00                		movw	ax, #25
+ 877 0627 B8 02                   		movw	[sp+2], ax
+ 878 0629 FC 00 00 00             		call	!!%code(_pwm)
+ 879                             	.LBE2:
+ 306:../src/r_main.c **** 
+ 307:../src/r_main.c ****     }
+ 880                             		.loc 1 307 0
+ 881 062d EC 20 00 00             		br	!!.L35
+ 882                             	.LFE0:
+ 884                             		.global	_R_MAIN_UserInit
+ 886                             	_R_MAIN_UserInit:
+ 887                             	.LFB1:
+ 308:../src/r_main.c ****     /* End user code. Do not edit comment generated here */
+ 309:../src/r_main.c **** }
  310:../src/r_main.c **** 
- 311:../src/r_main.c **** 	//Motor off
- 312:../src/r_main.c **** 	DVR_nSLEEP = 0;
- 711                             		.loc 1 312 0
- 712 04bf C9 F0 04 FF             		movw	r8, #-252
- 713 04c3 AD F0                   		movw	ax, r8
- 714 04c5 BD F4                   		movw	r12, ax
- 715 04c7 FA F4                   		movw	hl, r12
- 716 04c9 8B                      		mov	a, [hl]
- 717 04ca 9D F2                   		mov	r10, a
- 718 04cc 5A F2 FB                		and	r10, #-5
- 719 04cf AD F0                   		movw	ax, r8
- 720 04d1 DA F4                   		movw	bc, r12
- 721 04d3 8D F2                   		mov	a, r10
- 722 04d5 48 00 00                		mov	[bc], a
- 313:../src/r_main.c ****     /* End user code. Do not edit comment generated here */
- 314:../src/r_main.c **** }
- 723                             		.loc 1 314 0
- 724 04d8 10 02                   		addw	sp, #2
- 725 04da D7                      		ret
- 726                             	.LFE1:
- 728                             		.global	_displayCharLCD
- 730                             	_displayCharLCD:
- 731                             	.LFB2:
- 315:../src/r_main.c **** 
- 316:../src/r_main.c **** /* Start user code for adding. Do not edit comment generated here */
- 317:../src/r_main.c **** /*
- 318:../src/r_main.c ****  * Display a char on the LCD
- 319:../src/r_main.c ****  */
- 320:../src/r_main.c **** void displayCharLCD(char c)
- 321:../src/r_main.c **** {
- 732                             		.loc 1 321 0
- 733                             		; start of function
- 734                             		; outgoing: 4 bytes
- 735 04db 20 04                   		subw	sp, #4
- 736                             	.LCFI2:
- 322:../src/r_main.c **** 	writeByteLcd(1U, c);
- 737                             		.loc 1 322 0
- 738 04dd E1                      		oneb	a
- 739 04de 98 00                   		mov	[sp], a
- 740 04e0 88 08                   		mov	a, [sp+8]
- 741 04e2 9D F0                   		mov	r8, a
- 742 04e4 98 02                   		mov	[sp+2], a
- 743 04e6 FC 00 00 00             		call	!!%code(_writeByteLcd)
- 323:../src/r_main.c **** 	delayNoInt(100);
- 744                             		.loc 1 323 0
- 745 04ea 30 64 00                		movw	ax, #100
- 746 04ed B8 00                   		movw	[sp], ax
- 747 04ef FC 00 00 00             		call	!!%code(_delayNoInt)
- 324:../src/r_main.c **** }
- 748                             		.loc 1 324 0
- 749 04f3 10 04                   		addw	sp, #4
- 750 04f5 D7                      		ret
- 751                             	.LFE2:
- 753                             		.global	_welcome
- 755                             	_welcome:
- 756                             	.LFB3:
- 325:../src/r_main.c **** 
- 326:../src/r_main.c **** /*
- 327:../src/r_main.c ****  * Welcome the user on LCD
- 328:../src/r_main.c ****  */
- 329:../src/r_main.c **** void welcome(void)
- 330:../src/r_main.c **** {
- 757                             		.loc 1 330 0
- 758                             		; start of function
- 759                             		; locals: 40 bytes
- 760                             		; outgoing: 4 bytes
- 761 04f6 20 2C                   		subw	sp, #44
- 762                             	.LCFI3:
- 331:../src/r_main.c **** 	int scrollCount = 0;
- 763                             		.loc 1 331 0
- 764 04f8 F6                      		clrw	ax
- 765 04f9 B8 2A                   		movw	[sp+42], ax
- 332:../src/r_main.c **** 	int j = 0;
- 766                             		.loc 1 332 0
- 767 04fb F6                      		clrw	ax
- 768 04fc B8 28                   		movw	[sp+40], ax
- 333:../src/r_main.c **** 	int i = 0;
- 769                             		.loc 1 333 0
- 770 04fe F6                      		clrw	ax
- 771 04ff B8 26                   		movw	[sp+38], ax
+ 311:../src/r_main.c **** 
+ 312:../src/r_main.c **** /**************************************************************************************************
+ 313:../src/r_main.c **** * Function Name: R_MAIN_UserInit
+ 314:../src/r_main.c **** * Description  : This function adds user code before implementing main function.
+ 315:../src/r_main.c **** * Arguments    : None
+ 316:../src/r_main.c **** * Return Value : None
+ 317:../src/r_main.c **** ***************************************************************************************************
+ 318:../src/r_main.c **** void R_MAIN_UserInit(void)
+ 319:../src/r_main.c **** {
+ 888                             		.loc 1 319 0
+ 889                             		; start of function
+ 890                             		; outgoing: 2 bytes
+ 891 0631 20 02                   		subw	sp, #2
+ 892                             	.LCFI1:
+ 320:../src/r_main.c ****     /* Start user code. Do not edit comment generated here */
+ 321:../src/r_main.c **** 	//Open connections
+ 322:../src/r_main.c **** 	EI();
+ 893                             		.loc 1 322 0
+ 894                             	 ; 322 "../src/r_main.c" 1
+ 895 0633 71 7A FA                		ei
+ 896                             	 ; 0 "" 2
+ 323:../src/r_main.c **** 	R_RTC_Start();
+ 897                             		.loc 1 323 0
+ 898 0636 FC 00 00 00             		call	!!%code(_R_RTC_Start)
+ 324:../src/r_main.c **** 	//R_SAU0_Create();
+ 325:../src/r_main.c **** 	//R_UART1_Create();
+ 326:../src/r_main.c **** 	R_UART1_Start();
+ 899                             		.loc 1 326 0
+ 900 063a FC 00 00 00             		call	!!%code(_R_UART1_Start)
+ 327:../src/r_main.c **** 	//R_TAU0_Create();
+ 328:../src/r_main.c **** 	R_TAU0_Channel0_Start();
+ 901                             		.loc 1 328 0
+ 902 063e FC 00 00 00             		call	!!%code(_R_TAU0_Channel0_Start)
+ 329:../src/r_main.c **** 	R_TAU0_Channel2_Start();
+ 903                             		.loc 1 329 0
+ 904 0642 FC 00 00 00             		call	!!%code(_R_TAU0_Channel2_Start)
+ 330:../src/r_main.c **** 	R_TAU0_Channel1_Lower8bits_Start();
+ 905                             		.loc 1 330 0
+ 906 0646 FC 00 00 00             		call	!!%code(_R_TAU0_Channel1_Lower8bits_Start)
+ 331:../src/r_main.c **** 
+ 332:../src/r_main.c **** 	//R_TMR_RD0_Create();
+ 333:../src/r_main.c **** 	R_TMR_RD0_Start();
+ 907                             		.loc 1 333 0
+ 908 064a FC 00 00 00             		call	!!%code(_R_TMR_RD0_Start)
  334:../src/r_main.c **** 
- 335:../src/r_main.c **** 	char msg[] = {"                Nel T. 18179460"};
- 772                             		.loc 1 335 0
- 773 0501 30 20 20                		movw	ax, #8224
- 774 0504 B8 04                   		movw	[sp+4], ax
- 775 0506 30 20 20                		movw	ax, #8224
- 776 0509 B8 06                   		movw	[sp+6], ax
- 777 050b 30 20 20                		movw	ax, #8224
- 778 050e B8 08                   		movw	[sp+8], ax
- 779 0510 30 20 20                		movw	ax, #8224
- 780 0513 B8 0A                   		movw	[sp+10], ax
- 781 0515 30 20 20                		movw	ax, #8224
- 782 0518 B8 0C                   		movw	[sp+12], ax
- 783 051a 30 20 20                		movw	ax, #8224
- 784 051d B8 0E                   		movw	[sp+14], ax
- 785 051f 30 20 20                		movw	ax, #8224
- 786 0522 B8 10                   		movw	[sp+16], ax
- 787 0524 30 20 20                		movw	ax, #8224
- 788 0527 B8 12                   		movw	[sp+18], ax
- 789 0529 30 4E 65                		movw	ax, #25934
- 790 052c B8 14                   		movw	[sp+20], ax
- 791 052e 30 6C 20                		movw	ax, #8300
- 792 0531 B8 16                   		movw	[sp+22], ax
- 793 0533 30 54 2E                		movw	ax, #11860
- 794 0536 B8 18                   		movw	[sp+24], ax
- 795 0538 30 20 31                		movw	ax, #12576
- 796 053b B8 1A                   		movw	[sp+26], ax
- 797 053d 30 38 31                		movw	ax, #12600
- 798 0540 B8 1C                   		movw	[sp+28], ax
- 799 0542 30 37 39                		movw	ax, #14647
- 800 0545 B8 1E                   		movw	[sp+30], ax
- 801 0547 30 34 36                		movw	ax, #13876
- 802 054a B8 20                   		movw	[sp+32], ax
- 803 054c 30 30 00                		movw	ax, #48
- 804 054f B8 22                   		movw	[sp+34], ax
+ 335:../src/r_main.c **** 	//R_PCLBUZ0_Create();
  336:../src/r_main.c **** 
- 337:../src/r_main.c **** 	int length = sizeof(msg)/sizeof(char);
- 805                             		.loc 1 337 0
- 806 0551 30 20 00                		movw	ax, #32
- 807 0554 B8 24                   		movw	[sp+36], ax
- 338:../src/r_main.c **** 
- 339:../src/r_main.c **** 	//For LCD index i
- 340:../src/r_main.c **** 	for(i = 0 ; i < (length-16) ; i++)
- 808                             		.loc 1 340 0
- 809 0556 F6                      		clrw	ax
- 810 0557 B8 26                   		movw	[sp+38], ax
- 811 0559 EC EC 05 00             		br	!!.L33
- 812                             	.L37:
- 341:../src/r_main.c **** 	{
- 342:../src/r_main.c **** 		//For message character j
- 343:../src/r_main.c **** 		for (j = 0 ; j < 16 ; j++)
- 813                             		.loc 1 343 0
- 814 055d F6                      		clrw	ax
- 815 055e B8 28                   		movw	[sp+40], ax
- 816 0560 EC B8 05 00             		br	!!.L34
- 817                             	.L36:
- 344:../src/r_main.c **** 		{
- 345:../src/r_main.c **** 			//Offset message for scroll effect
- 346:../src/r_main.c **** 			writeByteLcd(1U, msg[(j+scrollCount)]);
- 818                             		.loc 1 346 0
- 819 0564 A8 2A                   		movw	ax, [sp+42]
- 820 0566 16                      		movw	hl, ax
- 821 0567 A8 28                   		movw	ax, [sp+40]
- 822 0569 07                      		addw	ax, hl
- 823 056a BD F0                   		movw	r8, ax
- 824 056c AE F8                   		movw	ax, sp
- 825 056e BD F4                   		movw	r12, ax
- 826 0570 04 04 00                		addw	ax, #4
- 827 0573 BD F2                   		movw	r10, ax
- 828 0575 06 F0                   		addw	ax, r8
- 829 0577 BD F0                   		movw	r8, ax
- 830 0579 BD F2                   		movw	r10, ax
- 831 057b FA F2                   		movw	hl, r10
- 832 057d 8B                      		mov	a, [hl]
- 833 057e 9D F0                   		mov	r8, a
- 834 0580 E1                      		oneb	a
- 835 0581 98 00                   		mov	[sp], a
- 836 0583 8D F0                   		mov	a, r8
- 837 0585 98 02                   		mov	[sp+2], a
- 838 0587 FC 00 00 00             		call	!!%code(_writeByteLcd)
- 347:../src/r_main.c **** 			delayNoInt(100);
- 839                             		.loc 1 347 0
- 840 058b 30 64 00                		movw	ax, #100
- 841 058e B8 00                   		movw	[sp], ax
- 842 0590 FC 00 00 00             		call	!!%code(_delayNoInt)
- 348:../src/r_main.c **** 			//Jump to second line of LCD due to memory gap
- 349:../src/r_main.c **** 			if (j == 7)
- 843                             		.loc 1 349 0
- 844 0594 A8 28                   		movw	ax, [sp+40]
- 845 0596 44 07 00                		cmpw	ax, #7
- 846 0599 61 E8                   		 skz
- 847 059b EC B3 05 00             		 br	!!.L35
- 350:../src/r_main.c **** 			{
- 351:../src/r_main.c **** 				writeByteLcd(0U, LCD_HOME_L2);
- 848                             		.loc 1 351 0
- 849 059f F1                      		clrb	a
- 850 05a0 98 00                   		mov	[sp], a
- 851 05a2 51 C0                   		mov	a, #-64
- 852 05a4 98 02                   		mov	[sp+2], a
- 853 05a6 FC 00 00 00             		call	!!%code(_writeByteLcd)
- 352:../src/r_main.c **** 				delayNoInt(100);
- 854                             		.loc 1 352 0
- 855 05aa 30 64 00                		movw	ax, #100
- 856 05ad B8 00                   		movw	[sp], ax
- 857 05af FC 00 00 00             		call	!!%code(_delayNoInt)
- 858                             	.L35:
- 343:../src/r_main.c **** 		{
- 859                             		.loc 1 343 0 discriminator 2
- 860 05b3 A8 28                   		movw	ax, [sp+40]
- 861 05b5 A1                      		incw	ax
- 862 05b6 B8 28                   		movw	[sp+40], ax
- 863                             	.L34:
- 343:../src/r_main.c **** 		{
- 864                             		.loc 1 343 0 is_stmt 0 discriminator 1
- 865 05b8 A8 28                   		movw	ax, [sp+40]
- 866 05ba 44 0F 00                		cmpw	ax, #15
- 867 05bd 71 FF                   		 xor1	CY, a.7
- 868 05bf 61 E3                   		 skh
- 869 05c1 EC 64 05 00             		 br	!!.L36
- 353:../src/r_main.c **** 			}
- 354:../src/r_main.c **** 		}
- 355:../src/r_main.c **** 		scrollCount++;
- 870                             		.loc 1 355 0 is_stmt 1 discriminator 2
- 871 05c5 A8 2A                   		movw	ax, [sp+42]
- 872 05c7 A1                      		incw	ax
- 873 05c8 B8 2A                   		movw	[sp+42], ax
- 356:../src/r_main.c **** 		writeByteLcd(0U, LCD_HOME_L1);
- 874                             		.loc 1 356 0 discriminator 2
- 875 05ca F1                      		clrb	a
- 876 05cb 98 00                   		mov	[sp], a
- 877 05cd 51 80                   		mov	a, #-128
- 878 05cf 98 02                   		mov	[sp+2], a
- 879 05d1 FC 00 00 00             		call	!!%code(_writeByteLcd)
- 357:../src/r_main.c **** 		delayNoInt(100);
- 880                             		.loc 1 357 0 discriminator 2
- 881 05d5 30 64 00                		movw	ax, #100
- 882 05d8 B8 00                   		movw	[sp], ax
- 883 05da FC 00 00 00             		call	!!%code(_delayNoInt)
- 358:../src/r_main.c **** 		msDelay(350);
- 884                             		.loc 1 358 0 discriminator 2
- 885 05de 30 5E 01                		movw	ax, #350
- 886 05e1 B8 00                   		movw	[sp], ax
- 887 05e3 FC 00 00 00             		call	!!%code(_msDelay)
- 340:../src/r_main.c **** 	{
- 888                             		.loc 1 340 0 discriminator 2
- 889 05e7 A8 26                   		movw	ax, [sp+38]
- 890 05e9 A1                      		incw	ax
- 891 05ea B8 26                   		movw	[sp+38], ax
- 892                             	.L33:
- 340:../src/r_main.c **** 	{
- 893                             		.loc 1 340 0 is_stmt 0 discriminator 1
- 894 05ec A8 24                   		movw	ax, [sp+36]
- 895 05ee 04 F0 FF                		addw	ax, #-16
- 896 05f1 BD F2                   		movw	r10, ax
- 897 05f3 A8 26                   		movw	ax, [sp+38]
- 898 05f5 BD F0                   		movw	r8, ax
- 899 05f7 AD F2                   		movw	ax, r10
- 900 05f9 46 F0                   		cmpw	ax, r8
- 901 05fb 71 FF                   		 xor1	CY, a.7
- 902 05fd 71 77 F1                		 xor1	CY, r9.7
- 903 0600 61 F3                   		 sknh
- 904 0602 EC 5D 05 00             		 br	!!.L37
- 359:../src/r_main.c **** 	}
- 360:../src/r_main.c **** 	msDelay(500);
- 905                             		.loc 1 360 0 is_stmt 1
- 906 0606 30 F4 01                		movw	ax, #500
- 907 0609 B8 00                   		movw	[sp], ax
- 908 060b FC 00 00 00             		call	!!%code(_msDelay)
- 361:../src/r_main.c **** }
- 909                             		.loc 1 361 0
- 910 060f 10 2C                   		addw	sp, #44
- 911 0611 D7                      		ret
- 912                             	.LFE3:
- 914                             		.global	_msDelay
- 916                             	_msDelay:
- 917                             	.LFB4:
- 362:../src/r_main.c **** 
- 363:../src/r_main.c **** /*
- 364:../src/r_main.c ****  * Delay for t milliseconds
- 365:../src/r_main.c ****  */
- 366:../src/r_main.c **** void msDelay(int t)
- 367:../src/r_main.c **** {
- 918                             		.loc 1 367 0
- 919                             		; start of function
- 920                             		; locals: 2 bytes
- 921                             		; outgoing: 2 bytes
- 922 0612 20 04                   		subw	sp, #4
- 923                             	.LCFI4:
- 368:../src/r_main.c **** 	int a = 0;
- 924                             		.loc 1 368 0
- 925 0614 F6                      		clrw	ax
- 926 0615 B8 02                   		movw	[sp+2], ax
- 369:../src/r_main.c **** 	for(a = 0; a < t; a++)
- 927                             		.loc 1 369 0
- 928 0617 F6                      		clrw	ax
- 929 0618 B8 02                   		movw	[sp+2], ax
- 930 061a EC 2C 06 00             		br	!!.L39
- 931                             	.L40:
- 370:../src/r_main.c **** 	{
- 371:../src/r_main.c **** 		delayNoInt(1000);
- 932                             		.loc 1 371 0 discriminator 3
- 933 061e 30 E8 03                		movw	ax, #1000
- 934 0621 B8 00                   		movw	[sp], ax
- 935 0623 FC 00 00 00             		call	!!%code(_delayNoInt)
- 369:../src/r_main.c **** 	for(a = 0; a < t; a++)
- 936                             		.loc 1 369 0 discriminator 3
- 937 0627 A8 02                   		movw	ax, [sp+2]
- 938 0629 A1                      		incw	ax
- 939 062a B8 02                   		movw	[sp+2], ax
- 940                             	.L39:
- 369:../src/r_main.c **** 	for(a = 0; a < t; a++)
- 941                             		.loc 1 369 0 is_stmt 0 discriminator 1
- 942 062c A8 08                   		movw	ax, [sp+8]
- 943 062e BD F0                   		movw	r8, ax
- 944 0630 A8 02                   		movw	ax, [sp+2]
- 945 0632 46 F0                   		cmpw	ax, r8
- 946 0634 71 FF                   		 xor1	CY, a.7
- 947 0636 71 77 F1                		 xor1	CY, r9.7
- 948 0639 61 D8                   		 sknc
- 949 063b EC 1E 06 00             		 br	!!.L40
- 372:../src/r_main.c **** 	}
- 373:../src/r_main.c **** }
- 950                             		.loc 1 373 0 is_stmt 1
- 951 063f 10 04                   		addw	sp, #4
- 952 0641 D7                      		ret
- 953                             	.LFE4:
- 955                             		.global	_echo
- 957                             	_echo:
- 958                             	.LFB5:
- 374:../src/r_main.c **** 
- 375:../src/r_main.c **** /*
- 376:../src/r_main.c ****  * Use to echo a received command back to sender
- 377:../src/r_main.c ****  */
- 378:../src/r_main.c **** void echo(uint8_t hex)
- 379:../src/r_main.c **** {
- 959                             		.loc 1 379 0
- 960                             		; start of function
- 961                             		; outgoing: 4 bytes
- 962 0642 20 04                   		subw	sp, #4
- 963                             	.LCFI5:
- 380:../src/r_main.c **** 	uart1TxBuf[0] = hex;
- 964                             		.loc 1 380 0
- 965 0644 88 08                   		mov	a, [sp+8]
- 966 0646 9D F0                   		mov	r8, a
- 967 0648 9F 00 00                		mov	!_uart1TxBuf, a
- 381:../src/r_main.c **** 	uart1Status = R_UART1_Send(uart1TxBuf,1);
- 968                             		.loc 1 381 0
- 969 064b 30 00 00                		movw	ax, #_uart1TxBuf
- 970 064e B8 00                   		movw	[sp], ax
- 971 0650 E6                      		onew	ax
- 972 0651 B8 02                   		movw	[sp+2], ax
- 973 0653 FC 00 00 00             		call	!!%code(_R_UART1_Send)
- 974 0657 AD F0                   		movw	ax, r8
- 975 0659 BF 00 00                		movw	!_uart1Status, ax
- 382:../src/r_main.c **** }
- 976                             		.loc 1 382 0
- 977 065c 10 04                   		addw	sp, #4
- 978 065e D7                      		ret
- 979                             	.LFE5:
- 981                             		.global	_pwm
- 983                             	_pwm:
- 984                             	.LFB6:
- 383:../src/r_main.c **** 
- 384:../src/r_main.c **** /*
- 385:../src/r_main.c ****  * Software PWM implementation
- 386:../src/r_main.c ****  * Causes motor to rotate
- 387:../src/r_main.c ****  */
- 388:../src/r_main.c **** void pwm(int cycles_per_second, int divisor)
- 389:../src/r_main.c **** {
- 985                             		.loc 1 389 0
- 390:../src/r_main.c **** 	if (pwm_edge){
- 986                             		.loc 1 390 0
- 987 065f AF 00 00                		movw	ax, !_pwm_edge
- 988 0662 BD F0                   		movw	r8, ax
- 989 0664 44 00 00                		cmpw	ax, #0
- 990 0667 61 F8                   		 sknz
- 991 0669 EC E4 06 00             		 br	!!.L42
- 391:../src/r_main.c **** 		pwm_edge=0;
- 992                             		.loc 1 391 0
- 993 066d F6                      		clrw	ax
- 994 066e BF 00 00                		movw	!_pwm_edge, ax
- 392:../src/r_main.c **** 		//P4_bit.no3^=1;
- 393:../src/r_main.c **** 		pwm_counter++;
- 995                             		.loc 1 393 0
- 996 0671 AF 00 00                		movw	ax, !_pwm_counter
- 997 0674 BD F0                   		movw	r8, ax
- 998 0676 A6 F0                   		incw	r8
- 999 0678 AD F0                   		movw	ax, r8
- 1000 067a BF 00 00                		movw	!_pwm_counter, ax
- 394:../src/r_main.c **** 		//P7^=0x80;
- 395:../src/r_main.c **** 		//P4^=0x04;
- 396:../src/r_main.c **** 
- 397:../src/r_main.c **** 		pwm_counter%=cycles_per_second; // 100 cycles per second
- 1001                             		.loc 1 397 0
- 1002 067d BD F2                   		movw	r10, ax
- 1003 067f A8 04                   		movw	ax, [sp+4]
- 1004 0681 BD F0                   		movw	r8, ax
- 1005                             		; G14 udivmodhi macro r10 = r10 / r8 and r8 = r10 % r8 
- 1006 0683 AD F2                   		movw    ax, r10 
- 1007 0685 EA F0                   		movw    de, r8 
- 1008 0687 61 DD                   		push	psw	; Save the current interrupt status 
- 1009 0689 71 7B FA                		di		; Disable interrupts. See Renesas Technical update TN-RL*-A025B/E 
- 1010 068c CE FB 03                		divhu   	; ax = ax / de, de = ax % de 
- 1011 068f 61 CD                   		pop	psw	; Restore saved interrupt status 
- 1012 0691 BD F2                   		movw    r10, ax 
- 1013 0693 15                      		movw	ax, de 
- 1014 0694 BD F0                   		movw    r8, ax 
- 1015                             		; end of udivmodhi macro
- 1016 0696 AD F0                   		movw	ax, r8
- 1017 0698 BF 00 00                		movw	!_pwm_counter, ax
- 398:../src/r_main.c **** 
- 399:../src/r_main.c **** 		if (pwm_counter < divisor) // div/cycles% duty cycle
- 1018                             		.loc 1 399 0
- 1019 069b A8 06                   		movw	ax, [sp+6]
- 1020 069d BD F2                   		movw	r10, ax
- 1021 069f AF 00 00                		movw	ax, !_pwm_counter
- 1022 06a2 BD F0                   		movw	r8, ax
- 1023 06a4 AD F2                   		movw	ax, r10
- 1024 06a6 46 F0                   		cmpw	ax, r8
- 1025 06a8 61 E3                   		 skh
- 1026 06aa EC CB 06 00             		 br	!!.L44
- 400:../src/r_main.c **** 		{
- 401:../src/r_main.c **** 			//P4_bit.no3 = 1;
- 402:../src/r_main.c **** 			DVR_ENABLE = 1;
- 1027                             		.loc 1 402 0
- 1028 06ae C9 F0 04 FF             		movw	r8, #-252
- 1029 06b2 AD F0                   		movw	ax, r8
- 1030 06b4 BD F4                   		movw	r12, ax
- 1031 06b6 FA F4                   		movw	hl, r12
- 1032 06b8 8B                      		mov	a, [hl]
- 1033 06b9 9D F2                   		mov	r10, a
- 1034 06bb 6A F2 08                		or	r10, #8
- 1035 06be AD F0                   		movw	ax, r8
- 1036 06c0 DA F4                   		movw	bc, r12
- 1037 06c2 8D F2                   		mov	a, r10
- 1038 06c4 48 00 00                		mov	[bc], a
- 1039 06c7 EC E4 06 00             		br	!!.L42
- 1040                             	.L44:
- 403:../src/r_main.c **** 		}
- 404:../src/r_main.c **** 		else
- 405:../src/r_main.c **** 		{
- 406:../src/r_main.c **** 			DVR_ENABLE = 0;
- 1041                             		.loc 1 406 0
- 1042 06cb C9 F0 04 FF             		movw	r8, #-252
- 1043 06cf AD F0                   		movw	ax, r8
- 1044 06d1 BD F4                   		movw	r12, ax
- 1045 06d3 FA F4                   		movw	hl, r12
- 1046 06d5 8B                      		mov	a, [hl]
- 1047 06d6 9D F2                   		mov	r10, a
- 1048 06d8 5A F2 F7                		and	r10, #-9
- 1049 06db AD F0                   		movw	ax, r8
- 1050 06dd DA F4                   		movw	bc, r12
- 1051 06df 8D F2                   		mov	a, r10
- 1052 06e1 48 00 00                		mov	[bc], a
+ 337:../src/r_main.c **** 	dataPrint = 1;
+ 909                             		.loc 1 337 0
+ 910 064e E5 00 00                		oneb	!_dataPrint
+ 338:../src/r_main.c **** 	dataResponse = 1;
+ 911                             		.loc 1 338 0
+ 912 0651 E5 00 00                		oneb	!_dataResponse
+ 339:../src/r_main.c **** 	dataReady = 0;
+ 913                             		.loc 1 339 0
+ 914 0654 F5 00 00                		clrb	!_dataReady
+ 340:../src/r_main.c **** 	R_INTC7_Start();
+ 915                             		.loc 1 340 0
+ 916 0657 FC 00 00 00             		call	!!%code(_R_INTC7_Start)
+ 341:../src/r_main.c **** 
+ 342:../src/r_main.c **** 	//Init flags
+ 343:../src/r_main.c **** 	uart1RxFlag = 0U;
+ 917                             		.loc 1 343 0
+ 918 065b F5 00 00                		clrb	!_uart1RxFlag
+ 344:../src/r_main.c **** 	uart1TxFlag = 0U;
+ 919                             		.loc 1 344 0
+ 920 065e F5 00 00                		clrb	!_uart1TxFlag
+ 345:../src/r_main.c **** 
+ 346:../src/r_main.c **** 	//Welcome user
+ 347:../src/r_main.c **** 	initLcd();
+ 921                             		.loc 1 347 0
+ 922 0661 FC 00 00 00             		call	!!%code(_initLcd)
+ 348:../src/r_main.c **** 	welcome();
+ 923                             		.loc 1 348 0
+ 924 0665 FC 00 00 00             		call	!!%code(_welcome)
+ 349:../src/r_main.c **** 	initLcd();
+ 925                             		.loc 1 349 0
+ 926 0669 FC 00 00 00             		call	!!%code(_initLcd)
+ 350:../src/r_main.c **** 
+ 351:../src/r_main.c **** 	gate_status = GS_UNKNOWN;
+ 927                             		.loc 1 351 0
+ 928 066d F6                      		clrw	ax
+ 929 066e BF 00 00                		movw	!_gate_status, ax
+ 352:../src/r_main.c **** 	//Start in Normal mode
+ 353:../src/r_main.c **** 	mode = 0;
+ 930                             		.loc 1 353 0
+ 931 0671 F6                      		clrw	ax
+ 932 0672 BF 00 00                		movw	!_mode, ax
+ 354:../src/r_main.c **** 	echo(0x80);
+ 933                             		.loc 1 354 0
+ 934 0675 51 80                   		mov	a, #-128
+ 935 0677 98 00                   		mov	[sp], a
+ 936 0679 FC 00 00 00             		call	!!%code(_echo)
+ 355:../src/r_main.c **** 	delayNoInt(100);
+ 937                             		.loc 1 355 0
+ 938 067d 30 64 00                		movw	ax, #100
+ 939 0680 B8 00                   		movw	[sp], ax
+ 940 0682 FC 00 00 00             		call	!!%code(_delayNoInt)
+ 356:../src/r_main.c **** 	uart1TxFlag = 0U; // clear tx flag
+ 941                             		.loc 1 356 0
+ 942 0686 F5 00 00                		clrb	!_uart1TxFlag
+ 357:../src/r_main.c **** 	print_lcd("Normal mode");
+ 943                             		.loc 1 357 0
+ 944 0689 30 0A 00                		movw	ax, #.LC1
+ 945 068c B8 00                   		movw	[sp], ax
+ 946 068e FC 00 00 00             		call	!!%code(_print_lcd)
+ 358:../src/r_main.c **** 
+ 359:../src/r_main.c **** 	//Motor off
+ 360:../src/r_main.c **** 	DVR_nSLEEP = 0;
+ 947                             		.loc 1 360 0
+ 948 0692 C9 F0 04 FF             		movw	r8, #-252
+ 949 0696 AD F0                   		movw	ax, r8
+ 950 0698 BD F4                   		movw	r12, ax
+ 951 069a FA F4                   		movw	hl, r12
+ 952 069c 8B                      		mov	a, [hl]
+ 953 069d 9D F2                   		mov	r10, a
+ 954 069f 5A F2 FB                		and	r10, #-5
+ 955 06a2 AD F0                   		movw	ax, r8
+ 956 06a4 DA F4                   		movw	bc, r12
+ 957 06a6 8D F2                   		mov	a, r10
+ 958 06a8 48 00 00                		mov	[bc], a
+ 361:../src/r_main.c ****     /* End user code. Do not edit comment generated here */
+ 362:../src/r_main.c **** }
+ 959                             		.loc 1 362 0
+ 960 06ab 10 02                   		addw	sp, #2
+ 961 06ad D7                      		ret
+ 962                             	.LFE1:
+ 964                             		.global	_displayCharLCD
+ 966                             	_displayCharLCD:
+ 967                             	.LFB2:
+ 363:../src/r_main.c **** 
+ 364:../src/r_main.c **** /* Start user code for adding. Do not edit comment generated here */
+ 365:../src/r_main.c **** /*
+ 366:../src/r_main.c ****  * Display a char on the LCD
+ 367:../src/r_main.c ****  */
+ 368:../src/r_main.c **** void displayCharLCD(char c)
+ 369:../src/r_main.c **** {
+ 968                             		.loc 1 369 0
+ 969                             		; start of function
+ 970                             		; outgoing: 4 bytes
+ 971 06ae 20 04                   		subw	sp, #4
+ 972                             	.LCFI2:
+ 370:../src/r_main.c **** 	writeByteLcd(1U, c);
+ 973                             		.loc 1 370 0
+ 974 06b0 E1                      		oneb	a
+ 975 06b1 98 00                   		mov	[sp], a
+ 976 06b3 88 08                   		mov	a, [sp+8]
+ 977 06b5 9D F0                   		mov	r8, a
+ 978 06b7 98 02                   		mov	[sp+2], a
+ 979 06b9 FC 00 00 00             		call	!!%code(_writeByteLcd)
+ 371:../src/r_main.c **** 	delayNoInt(100);
+ 980                             		.loc 1 371 0
+ 981 06bd 30 64 00                		movw	ax, #100
+ 982 06c0 B8 00                   		movw	[sp], ax
+ 983 06c2 FC 00 00 00             		call	!!%code(_delayNoInt)
+ 372:../src/r_main.c **** }
+ 984                             		.loc 1 372 0
+ 985 06c6 10 04                   		addw	sp, #4
+ 986 06c8 D7                      		ret
+ 987                             	.LFE2:
+ 989                             		.global	_welcome
+ 991                             	_welcome:
+ 992                             	.LFB3:
+ 373:../src/r_main.c **** 
+ 374:../src/r_main.c **** /*
+ 375:../src/r_main.c ****  * Welcome the user on LCD
+ 376:../src/r_main.c ****  */
+ 377:../src/r_main.c **** void welcome(void)
+ 378:../src/r_main.c **** {
+ 993                             		.loc 1 378 0
+ 994                             		; start of function
+ 995                             		; locals: 40 bytes
+ 996                             		; outgoing: 4 bytes
+ 997 06c9 20 2C                   		subw	sp, #44
+ 998                             	.LCFI3:
+ 379:../src/r_main.c **** 	int scrollCount = 0;
+ 999                             		.loc 1 379 0
+ 1000 06cb F6                      		clrw	ax
+ 1001 06cc B8 2A                   		movw	[sp+42], ax
+ 380:../src/r_main.c **** 	int j = 0;
+ 1002                             		.loc 1 380 0
+ 1003 06ce F6                      		clrw	ax
+ 1004 06cf B8 28                   		movw	[sp+40], ax
+ 381:../src/r_main.c **** 	int i = 0;
+ 1005                             		.loc 1 381 0
+ 1006 06d1 F6                      		clrw	ax
+ 1007 06d2 B8 26                   		movw	[sp+38], ax
+ 382:../src/r_main.c **** 
+ 383:../src/r_main.c **** 	char msg[] = {"                Nel T. 18179460"};
+ 1008                             		.loc 1 383 0
+ 1009 06d4 30 20 20                		movw	ax, #8224
+ 1010 06d7 B8 04                   		movw	[sp+4], ax
+ 1011 06d9 30 20 20                		movw	ax, #8224
+ 1012 06dc B8 06                   		movw	[sp+6], ax
+ 1013 06de 30 20 20                		movw	ax, #8224
+ 1014 06e1 B8 08                   		movw	[sp+8], ax
+ 1015 06e3 30 20 20                		movw	ax, #8224
+ 1016 06e6 B8 0A                   		movw	[sp+10], ax
+ 1017 06e8 30 20 20                		movw	ax, #8224
+ 1018 06eb B8 0C                   		movw	[sp+12], ax
+ 1019 06ed 30 20 20                		movw	ax, #8224
+ 1020 06f0 B8 0E                   		movw	[sp+14], ax
+ 1021 06f2 30 20 20                		movw	ax, #8224
+ 1022 06f5 B8 10                   		movw	[sp+16], ax
+ 1023 06f7 30 20 20                		movw	ax, #8224
+ 1024 06fa B8 12                   		movw	[sp+18], ax
+ 1025 06fc 30 4E 65                		movw	ax, #25934
+ 1026 06ff B8 14                   		movw	[sp+20], ax
+ 1027 0701 30 6C 20                		movw	ax, #8300
+ 1028 0704 B8 16                   		movw	[sp+22], ax
+ 1029 0706 30 54 2E                		movw	ax, #11860
+ 1030 0709 B8 18                   		movw	[sp+24], ax
+ 1031 070b 30 20 31                		movw	ax, #12576
+ 1032 070e B8 1A                   		movw	[sp+26], ax
+ 1033 0710 30 38 31                		movw	ax, #12600
+ 1034 0713 B8 1C                   		movw	[sp+28], ax
+ 1035 0715 30 37 39                		movw	ax, #14647
+ 1036 0718 B8 1E                   		movw	[sp+30], ax
+ 1037 071a 30 34 36                		movw	ax, #13876
+ 1038 071d B8 20                   		movw	[sp+32], ax
+ 1039 071f 30 30 00                		movw	ax, #48
+ 1040 0722 B8 22                   		movw	[sp+34], ax
+ 384:../src/r_main.c **** 
+ 385:../src/r_main.c **** 	int length = sizeof(msg)/sizeof(char);
+ 1041                             		.loc 1 385 0
+ 1042 0724 30 20 00                		movw	ax, #32
+ 1043 0727 B8 24                   		movw	[sp+36], ax
+ 386:../src/r_main.c **** 
+ 387:../src/r_main.c **** 	//For LCD index i
+ 388:../src/r_main.c **** 	for(i = 0 ; i < (length-16) ; i++)
+ 1044                             		.loc 1 388 0
+ 1045 0729 F6                      		clrw	ax
+ 1046 072a B8 26                   		movw	[sp+38], ax
+ 1047 072c EC BF 07 00             		br	!!.L39
+ 1048                             	.L43:
+ 389:../src/r_main.c **** 	{
+ 390:../src/r_main.c **** 		//For message character j
+ 391:../src/r_main.c **** 		for (j = 0 ; j < 16 ; j++)
+ 1049                             		.loc 1 391 0
+ 1050 0730 F6                      		clrw	ax
+ 1051 0731 B8 28                   		movw	[sp+40], ax
+ 1052 0733 EC 8B 07 00             		br	!!.L40
  1053                             	.L42:
- 407:../src/r_main.c **** 		}
- 408:../src/r_main.c **** 	}
+ 392:../src/r_main.c **** 		{
+ 393:../src/r_main.c **** 			//Offset message for scroll effect
+ 394:../src/r_main.c **** 			writeByteLcd(1U, msg[(j+scrollCount)]);
+ 1054                             		.loc 1 394 0
+ 1055 0737 A8 2A                   		movw	ax, [sp+42]
+ 1056 0739 16                      		movw	hl, ax
+ 1057 073a A8 28                   		movw	ax, [sp+40]
+ 1058 073c 07                      		addw	ax, hl
+ 1059 073d BD F0                   		movw	r8, ax
+ 1060 073f AE F8                   		movw	ax, sp
+ 1061 0741 BD F4                   		movw	r12, ax
+ 1062 0743 04 04 00                		addw	ax, #4
+ 1063 0746 BD F2                   		movw	r10, ax
+ 1064 0748 06 F0                   		addw	ax, r8
+ 1065 074a BD F0                   		movw	r8, ax
+ 1066 074c BD F2                   		movw	r10, ax
+ 1067 074e FA F2                   		movw	hl, r10
+ 1068 0750 8B                      		mov	a, [hl]
+ 1069 0751 9D F0                   		mov	r8, a
+ 1070 0753 E1                      		oneb	a
+ 1071 0754 98 00                   		mov	[sp], a
+ 1072 0756 8D F0                   		mov	a, r8
+ 1073 0758 98 02                   		mov	[sp+2], a
+ 1074 075a FC 00 00 00             		call	!!%code(_writeByteLcd)
+ 395:../src/r_main.c **** 			delayNoInt(100);
+ 1075                             		.loc 1 395 0
+ 1076 075e 30 64 00                		movw	ax, #100
+ 1077 0761 B8 00                   		movw	[sp], ax
+ 1078 0763 FC 00 00 00             		call	!!%code(_delayNoInt)
+ 396:../src/r_main.c **** 			//Jump to second line of LCD due to memory gap
+ 397:../src/r_main.c **** 			if (j == 7)
+ 1079                             		.loc 1 397 0
+ 1080 0767 A8 28                   		movw	ax, [sp+40]
+ 1081 0769 44 07 00                		cmpw	ax, #7
+ 1082 076c 61 E8                   		 skz
+ 1083 076e EC 86 07 00             		 br	!!.L41
+ 398:../src/r_main.c **** 			{
+ 399:../src/r_main.c **** 				writeByteLcd(0U, LCD_HOME_L2);
+ 1084                             		.loc 1 399 0
+ 1085 0772 F1                      		clrb	a
+ 1086 0773 98 00                   		mov	[sp], a
+ 1087 0775 51 C0                   		mov	a, #-64
+ 1088 0777 98 02                   		mov	[sp+2], a
+ 1089 0779 FC 00 00 00             		call	!!%code(_writeByteLcd)
+ 400:../src/r_main.c **** 				delayNoInt(100);
+ 1090                             		.loc 1 400 0
+ 1091 077d 30 64 00                		movw	ax, #100
+ 1092 0780 B8 00                   		movw	[sp], ax
+ 1093 0782 FC 00 00 00             		call	!!%code(_delayNoInt)
+ 1094                             	.L41:
+ 391:../src/r_main.c **** 		{
+ 1095                             		.loc 1 391 0 discriminator 2
+ 1096 0786 A8 28                   		movw	ax, [sp+40]
+ 1097 0788 A1                      		incw	ax
+ 1098 0789 B8 28                   		movw	[sp+40], ax
+ 1099                             	.L40:
+ 391:../src/r_main.c **** 		{
+ 1100                             		.loc 1 391 0 is_stmt 0 discriminator 1
+ 1101 078b A8 28                   		movw	ax, [sp+40]
+ 1102 078d 44 0F 00                		cmpw	ax, #15
+ 1103 0790 71 FF                   		 xor1	CY, a.7
+ 1104 0792 61 E3                   		 skh
+ 1105 0794 EC 37 07 00             		 br	!!.L42
+ 401:../src/r_main.c **** 			}
+ 402:../src/r_main.c **** 		}
+ 403:../src/r_main.c **** 		scrollCount++;
+ 1106                             		.loc 1 403 0 is_stmt 1 discriminator 2
+ 1107 0798 A8 2A                   		movw	ax, [sp+42]
+ 1108 079a A1                      		incw	ax
+ 1109 079b B8 2A                   		movw	[sp+42], ax
+ 404:../src/r_main.c **** 		writeByteLcd(0U, LCD_HOME_L1);
+ 1110                             		.loc 1 404 0 discriminator 2
+ 1111 079d F1                      		clrb	a
+ 1112 079e 98 00                   		mov	[sp], a
+ 1113 07a0 51 80                   		mov	a, #-128
+ 1114 07a2 98 02                   		mov	[sp+2], a
+ 1115 07a4 FC 00 00 00             		call	!!%code(_writeByteLcd)
+ 405:../src/r_main.c **** 		delayNoInt(100);
+ 1116                             		.loc 1 405 0 discriminator 2
+ 1117 07a8 30 64 00                		movw	ax, #100
+ 1118 07ab B8 00                   		movw	[sp], ax
+ 1119 07ad FC 00 00 00             		call	!!%code(_delayNoInt)
+ 406:../src/r_main.c **** 		msDelay(350);
+ 1120                             		.loc 1 406 0 discriminator 2
+ 1121 07b1 30 5E 01                		movw	ax, #350
+ 1122 07b4 B8 00                   		movw	[sp], ax
+ 1123 07b6 FC 00 00 00             		call	!!%code(_msDelay)
+ 388:../src/r_main.c **** 	{
+ 1124                             		.loc 1 388 0 discriminator 2
+ 1125 07ba A8 26                   		movw	ax, [sp+38]
+ 1126 07bc A1                      		incw	ax
+ 1127 07bd B8 26                   		movw	[sp+38], ax
+ 1128                             	.L39:
+ 388:../src/r_main.c **** 	{
+ 1129                             		.loc 1 388 0 is_stmt 0 discriminator 1
+ 1130 07bf A8 24                   		movw	ax, [sp+36]
+ 1131 07c1 04 F0 FF                		addw	ax, #-16
+ 1132 07c4 BD F2                   		movw	r10, ax
+ 1133 07c6 A8 26                   		movw	ax, [sp+38]
+ 1134 07c8 BD F0                   		movw	r8, ax
+ 1135 07ca AD F2                   		movw	ax, r10
+ 1136 07cc 46 F0                   		cmpw	ax, r8
+ 1137 07ce 71 FF                   		 xor1	CY, a.7
+ 1138 07d0 71 77 F1                		 xor1	CY, r9.7
+ 1139 07d3 61 F3                   		 sknh
+ 1140 07d5 EC 30 07 00             		 br	!!.L43
+ 407:../src/r_main.c **** 	}
+ 408:../src/r_main.c **** 	msDelay(500);
+ 1141                             		.loc 1 408 0 is_stmt 1
+ 1142 07d9 30 F4 01                		movw	ax, #500
+ 1143 07dc B8 00                   		movw	[sp], ax
+ 1144 07de FC 00 00 00             		call	!!%code(_msDelay)
  409:../src/r_main.c **** }
- 1054                             		.loc 1 409 0
- 1055 06e4 D7                      		ret
- 1056                             	.LFE6:
- 1058                             		.global	_mtrBtn
- 1060                             	_mtrBtn:
- 1061                             	.LFB7:
+ 1145                             		.loc 1 409 0
+ 1146 07e2 10 2C                   		addw	sp, #44
+ 1147 07e4 D7                      		ret
+ 1148                             	.LFE3:
+ 1150                             		.global	_msDelay
+ 1152                             	_msDelay:
+ 1153                             	.LFB4:
  410:../src/r_main.c **** 
- 411:../src/r_main.c **** void mtrBtn()
- 412:../src/r_main.c **** {
- 1062                             		.loc 1 412 0
- 1063                             		; start of function
- 1064                             		; outgoing: 2 bytes
- 1065 06e5 20 02                   		subw	sp, #2
- 1066                             	.LCFI6:
- 413:../src/r_main.c **** 	if (switch_edge)
- 1067                             		.loc 1 413 0
- 1068 06e7 AF 00 00                		movw	ax, !_switch_edge
- 1069 06ea BD F0                   		movw	r8, ax
- 1070 06ec 44 00 00                		cmpw	ax, #0
- 1071 06ef 61 F8                   		 sknz
- 1072 06f1 EC C8 07 00             		 br	!!.L45
- 414:../src/r_main.c **** 	{
- 415:../src/r_main.c **** 		switch_edge = 0;
- 1073                             		.loc 1 415 0
- 1074 06f5 F6                      		clrw	ax
- 1075 06f6 BF 00 00                		movw	!_switch_edge, ax
- 416:../src/r_main.c **** 
- 417:../src/r_main.c **** 		if (SWITCH_OPENED)
- 1076                             		.loc 1 417 0
- 1077 06f9 C9 F0 00 FF             		movw	r8, #-256
- 1078 06fd AD F0                   		movw	ax, r8
- 1079 06ff BD F2                   		movw	r10, ax
- 1080 0701 FA F2                   		movw	hl, r10
- 1081 0703 8B                      		mov	a, [hl]
- 1082 0704 9D F0                   		mov	r8, a
- 1083 0706 31 5A                   		shr	a, 5
- 1084 0708 9D F0                   		mov	r8, a
- 1085 070a 5A F0 01                		and	r8, #1
- 1086 070d 61 F8                   		sknz
- 1087 070f EC 60 07 00             		 br	!!.L47
- 1088                             		 # zero-comparison eliminated
- 418:../src/r_main.c **** 		{
- 419:../src/r_main.c **** 			if (DVR_PHASE == 0)
- 1089                             		.loc 1 419 0
- 1090 0713 C9 F0 04 FF             		movw	r8, #-252
- 1091 0717 AD F0                   		movw	ax, r8
- 1092 0719 BD F4                   		movw	r12, ax
- 1093 071b FA F4                   		movw	hl, r12
- 1094 071d 8B                      		mov	a, [hl]
- 1095 071e 9D F0                   		mov	r8, a
- 1096 0720 31 1A                   		shr	a, 1
- 1097 0722 9D F0                   		mov	r8, a
- 1098 0724 5A F0 01                		and	r8, #1
- 1099 0727 61 E8                   		skz
- 1100 0729 EC C8 07 00             		 br	!!.L45
- 1101                             		 # zero-comparison eliminated
- 420:../src/r_main.c **** 			{
- 421:../src/r_main.c **** 				DVR_nSLEEP = 0;
- 1102                             		.loc 1 421 0
- 1103 072d C9 F0 04 FF             		movw	r8, #-252
- 1104 0731 AD F0                   		movw	ax, r8
- 1105 0733 BD F4                   		movw	r12, ax
- 1106 0735 FA F4                   		movw	hl, r12
- 1107 0737 8B                      		mov	a, [hl]
- 1108 0738 9D F2                   		mov	r10, a
- 1109 073a 5A F2 FB                		and	r10, #-5
- 1110 073d AD F0                   		movw	ax, r8
- 1111 073f DA F4                   		movw	bc, r12
- 1112 0741 8D F2                   		mov	a, r10
- 1113 0743 48 00 00                		mov	[bc], a
- 422:../src/r_main.c **** 				gate_status = GS_OPENED;
- 1114                             		.loc 1 422 0
- 1115 0746 E6                      		onew	ax
- 1116 0747 BF 00 00                		movw	!_gate_status, ax
- 423:../src/r_main.c **** 				print_lcd("Opened");
- 1117                             		.loc 1 423 0
- 1118 074a 30 36 00                		movw	ax, #.LC4
- 1119 074d B8 00                   		movw	[sp], ax
- 1120 074f FC 00 00 00             		call	!!%code(_print_lcd)
- 424:../src/r_main.c **** 				msDelay(5);
- 1121                             		.loc 1 424 0
- 1122 0753 30 05 00                		movw	ax, #5
- 1123 0756 B8 00                   		movw	[sp], ax
- 1124 0758 FC 00 00 00             		call	!!%code(_msDelay)
- 1125 075c EC C8 07 00             		br	!!.L45
- 1126                             	.L47:
- 425:../src/r_main.c **** 			}
- 426:../src/r_main.c **** 
- 427:../src/r_main.c **** 		}
- 428:../src/r_main.c **** 		else if (SWITCH_CLOSED)
- 1127                             		.loc 1 428 0
- 1128 0760 C9 F0 00 FF             		movw	r8, #-256
- 1129 0764 AD F0                   		movw	ax, r8
- 1130 0766 BD F2                   		movw	r10, ax
- 1131 0768 FA F2                   		movw	hl, r10
- 1132 076a 8B                      		mov	a, [hl]
- 1133 076b 9D F0                   		mov	r8, a
- 1134 076d 31 6A                   		shr	a, 6
- 1135 076f 9D F0                   		mov	r8, a
- 1136 0771 5A F0 01                		and	r8, #1
- 1137 0774 61 F8                   		sknz
- 1138 0776 EC C8 07 00             		 br	!!.L45
- 1139                             		 # zero-comparison eliminated
- 429:../src/r_main.c **** 		{
- 430:../src/r_main.c **** 			if (DVR_PHASE == 1) // if opening activated
- 1140                             		.loc 1 430 0
- 1141 077a C9 F0 04 FF             		movw	r8, #-252
- 1142 077e AD F0                   		movw	ax, r8
- 1143 0780 BD F4                   		movw	r12, ax
- 1144 0782 FA F4                   		movw	hl, r12
- 1145 0784 8B                      		mov	a, [hl]
- 1146 0785 9D F0                   		mov	r8, a
- 1147 0787 31 1A                   		shr	a, 1
- 1148 0789 9D F0                   		mov	r8, a
- 1149 078b 5A F0 01                		and	r8, #1
- 1150 078e 4A F0 01                		cmp	r8, #1
- 1151 0791 61 E8                   		 skz
- 1152 0793 EC C8 07 00             		 br	!!.L45
- 431:../src/r_main.c **** 			{
- 432:../src/r_main.c **** 				DVR_nSLEEP = 0;
- 1153                             		.loc 1 432 0
- 1154 0797 C9 F0 04 FF             		movw	r8, #-252
- 1155 079b AD F0                   		movw	ax, r8
- 1156 079d BD F4                   		movw	r12, ax
- 1157 079f FA F4                   		movw	hl, r12
- 1158 07a1 8B                      		mov	a, [hl]
- 1159 07a2 9D F2                   		mov	r10, a
- 1160 07a4 5A F2 FB                		and	r10, #-5
- 1161 07a7 AD F0                   		movw	ax, r8
- 1162 07a9 DA F4                   		movw	bc, r12
- 1163 07ab 8D F2                   		mov	a, r10
- 1164 07ad 48 00 00                		mov	[bc], a
- 433:../src/r_main.c **** 				gate_status = GS_CLOSED;
- 1165                             		.loc 1 433 0
- 1166 07b0 30 02 00                		movw	ax, #2
- 1167 07b3 BF 00 00                		movw	!_gate_status, ax
- 434:../src/r_main.c **** 				print_lcd("Closed");
- 1168                             		.loc 1 434 0
- 1169 07b6 30 3D 00                		movw	ax, #.LC5
- 1170 07b9 B8 00                   		movw	[sp], ax
- 1171 07bb FC 00 00 00             		call	!!%code(_print_lcd)
- 435:../src/r_main.c **** 				msDelay(5);
- 1172                             		.loc 1 435 0
- 1173 07bf 30 05 00                		movw	ax, #5
- 1174 07c2 B8 00                   		movw	[sp], ax
- 1175 07c4 FC 00 00 00             		call	!!%code(_msDelay)
+ 411:../src/r_main.c **** /*
+ 412:../src/r_main.c ****  * Delay for t milliseconds
+ 413:../src/r_main.c ****  */
+ 414:../src/r_main.c **** void msDelay(int t)
+ 415:../src/r_main.c **** {
+ 1154                             		.loc 1 415 0
+ 1155                             		; start of function
+ 1156                             		; locals: 2 bytes
+ 1157                             		; outgoing: 2 bytes
+ 1158 07e5 20 04                   		subw	sp, #4
+ 1159                             	.LCFI4:
+ 416:../src/r_main.c **** 	int a = 0;
+ 1160                             		.loc 1 416 0
+ 1161 07e7 F6                      		clrw	ax
+ 1162 07e8 B8 02                   		movw	[sp+2], ax
+ 417:../src/r_main.c **** 	for(a = 0; a < t; a++)
+ 1163                             		.loc 1 417 0
+ 1164 07ea F6                      		clrw	ax
+ 1165 07eb B8 02                   		movw	[sp+2], ax
+ 1166 07ed EC FF 07 00             		br	!!.L45
+ 1167                             	.L46:
+ 418:../src/r_main.c **** 	{
+ 419:../src/r_main.c **** 		delayNoInt(1000);
+ 1168                             		.loc 1 419 0 discriminator 3
+ 1169 07f1 30 E8 03                		movw	ax, #1000
+ 1170 07f4 B8 00                   		movw	[sp], ax
+ 1171 07f6 FC 00 00 00             		call	!!%code(_delayNoInt)
+ 417:../src/r_main.c **** 	for(a = 0; a < t; a++)
+ 1172                             		.loc 1 417 0 discriminator 3
+ 1173 07fa A8 02                   		movw	ax, [sp+2]
+ 1174 07fc A1                      		incw	ax
+ 1175 07fd B8 02                   		movw	[sp+2], ax
  1176                             	.L45:
- 436:../src/r_main.c **** 			}
- 437:../src/r_main.c **** 		}
- 438:../src/r_main.c **** 	}
- 439:../src/r_main.c **** }
- 1177                             		.loc 1 439 0
- 1178 07c8 10 02                   		addw	sp, #2
- 1179 07ca D7                      		ret
- 1180                             	.LFE7:
- 1292                             	.Letext0:
- 1293                             		.file 2 "../src/iodefine.h"
- 1294                             		.file 3 "../src/r_cg_macrodriver.h"
- 1295                             		.file 4 "../src/r_cg_userdefine.h"
- 1296                             		.file 5 "../src/infrared.h"
+ 417:../src/r_main.c **** 	for(a = 0; a < t; a++)
+ 1177                             		.loc 1 417 0 is_stmt 0 discriminator 1
+ 1178 07ff A8 08                   		movw	ax, [sp+8]
+ 1179 0801 BD F0                   		movw	r8, ax
+ 1180 0803 A8 02                   		movw	ax, [sp+2]
+ 1181 0805 46 F0                   		cmpw	ax, r8
+ 1182 0807 71 FF                   		 xor1	CY, a.7
+ 1183 0809 71 77 F1                		 xor1	CY, r9.7
+ 1184 080c 61 D8                   		 sknc
+ 1185 080e EC F1 07 00             		 br	!!.L46
+ 420:../src/r_main.c **** 	}
+ 421:../src/r_main.c **** }
+ 1186                             		.loc 1 421 0 is_stmt 1
+ 1187 0812 10 04                   		addw	sp, #4
+ 1188 0814 D7                      		ret
+ 1189                             	.LFE4:
+ 1191                             		.global	_echo
+ 1193                             	_echo:
+ 1194                             	.LFB5:
+ 422:../src/r_main.c **** 
+ 423:../src/r_main.c **** /*
+ 424:../src/r_main.c ****  * Use to echo a received command back to sender
+ 425:../src/r_main.c ****  */
+ 426:../src/r_main.c **** void echo(uint8_t hex)
+ 427:../src/r_main.c **** {
+ 1195                             		.loc 1 427 0
+ 1196                             		; start of function
+ 1197                             		; outgoing: 4 bytes
+ 1198 0815 20 04                   		subw	sp, #4
+ 1199                             	.LCFI5:
+ 428:../src/r_main.c **** 	uart1TxBuf[0] = hex;
+ 1200                             		.loc 1 428 0
+ 1201 0817 88 08                   		mov	a, [sp+8]
+ 1202 0819 9D F0                   		mov	r8, a
+ 1203 081b 9F 00 00                		mov	!_uart1TxBuf, a
+ 429:../src/r_main.c **** 	uart1Status = R_UART1_Send(uart1TxBuf,1);
+ 1204                             		.loc 1 429 0
+ 1205 081e 30 00 00                		movw	ax, #_uart1TxBuf
+ 1206 0821 B8 00                   		movw	[sp], ax
+ 1207 0823 E6                      		onew	ax
+ 1208 0824 B8 02                   		movw	[sp+2], ax
+ 1209 0826 FC 00 00 00             		call	!!%code(_R_UART1_Send)
+ 1210 082a AD F0                   		movw	ax, r8
+ 1211 082c BF 00 00                		movw	!_uart1Status, ax
+ 430:../src/r_main.c **** }
+ 1212                             		.loc 1 430 0
+ 1213 082f 10 04                   		addw	sp, #4
+ 1214 0831 D7                      		ret
+ 1215                             	.LFE5:
+ 1217                             		.global	_echoData
+ 1219                             	_echoData:
+ 1220                             	.LFB6:
+ 431:../src/r_main.c **** 
+ 432:../src/r_main.c **** void echoData(uint8_t hex, uint8_t hex2)
+ 433:../src/r_main.c **** {
+ 1221                             		.loc 1 433 0
+ 1222                             		; start of function
+ 1223                             		; outgoing: 4 bytes
+ 1224 0832 20 04                   		subw	sp, #4
+ 1225                             	.LCFI6:
+ 434:../src/r_main.c **** 	uart1TxBuf[0] = hex;
+ 1226                             		.loc 1 434 0
+ 1227 0834 88 08                   		mov	a, [sp+8]
+ 1228 0836 9D F0                   		mov	r8, a
+ 1229 0838 9F 00 00                		mov	!_uart1TxBuf, a
+ 435:../src/r_main.c **** 	uart1TxBuf[1] = hex2;
+ 1230                             		.loc 1 435 0
+ 1231 083b 88 0A                   		mov	a, [sp+10]
+ 1232 083d 9D F0                   		mov	r8, a
+ 1233 083f 9F 00 00                		mov	!_uart1TxBuf+1, a
+ 436:../src/r_main.c **** 	uart1Status = R_UART1_Send(uart1TxBuf,2);
+ 1234                             		.loc 1 436 0
+ 1235 0842 30 00 00                		movw	ax, #_uart1TxBuf
+ 1236 0845 B8 00                   		movw	[sp], ax
+ 1237 0847 30 02 00                		movw	ax, #2
+ 1238 084a B8 02                   		movw	[sp+2], ax
+ 1239 084c FC 00 00 00             		call	!!%code(_R_UART1_Send)
+ 1240 0850 AD F0                   		movw	ax, r8
+ 1241 0852 BF 00 00                		movw	!_uart1Status, ax
+ 437:../src/r_main.c **** }
+ 1242                             		.loc 1 437 0
+ 1243 0855 10 04                   		addw	sp, #4
+ 1244 0857 D7                      		ret
+ 1245                             	.LFE6:
+ 1247                             		.global	_toHex
+ 1249                             	_toHex:
+ 1250                             	.LFB7:
+ 438:../src/r_main.c **** 
+ 439:../src/r_main.c **** /**
+ 440:../src/r_main.c ****  * takes in a binary coded decimal
+ 441:../src/r_main.c ****  */
+ 442:../src/r_main.c **** uint8_t toHex(uint8_t decimal){
+ 1251                             		.loc 1 442 0
+ 443:../src/r_main.c **** 	return (decimal & 0x0F) + ((decimal >> 4) * 10);
+ 1252                             		.loc 1 443 0
+ 1253 0858 88 04                   		mov	a, [sp+4]
+ 1254 085a 5C 0F                   		and	a, #15
+ 1255 085c 9D F1                   		mov	r9, a
+ 1256 085e 88 04                   		mov	a, [sp+4]
+ 1257 0860 31 4A                   		shr	a, 4
+ 1258 0862 9D F0                   		mov	r8, a
+ 1259 0864 61 01                   		add	a, a
+ 1260 0866 9D F0                   		mov	r8, a
+ 1261 0868 31 29                   		shl	a, 2
+ 1262 086a 9D F2                   		mov	r10, a
+ 1263 086c 76                      		mov	l, a
+ 1264 086d 8D F0                   		mov	a, r8
+ 1265 086f 61 0E                   		add	a, l
+ 1266 0871 9D F0                   		mov	r8, a
+ 1267 0873 76                      		mov	l, a
+ 1268 0874 8D F1                   		mov	a, r9
+ 1269 0876 61 0E                   		add	a, l
+ 1270 0878 9D F0                   		mov	r8, a
+ 444:../src/r_main.c **** }
+ 1271                             		.loc 1 444 0
+ 1272 087a D7                      		ret
+ 1273                             	.LFE7:
+ 1275                             		.global	_toBCD
+ 1277                             	_toBCD:
+ 1278                             	.LFB8:
+ 445:../src/r_main.c **** 
+ 446:../src/r_main.c **** /**
+ 447:../src/r_main.c ****  * converts from hex to binary coded decimal
+ 448:../src/r_main.c ****  * max input/output is 99
+ 449:../src/r_main.c ****  */
+ 450:../src/r_main.c **** uint8_t toBCD(uint8_t hex){
+ 1279                             		.loc 1 450 0
+ 1280                             		; start of function
+ 1281                             		; locals: 4 bytes
+ 1282 087b 20 04                   		subw	sp, #4
+ 1283                             	.LCFI7:
+ 451:../src/r_main.c **** 	uint8_t nibble_l = hex % 10; //Isolate lower nibble
+ 1284                             		.loc 1 451 0
+ 1285 087d 88 08                   		mov	a, [sp+8]
+ 1286 087f 70                      		mov	x, a 
+ 1287 0880 51 00                   		mov	a, #0
+ 1288 0882 BD F0                   		movw	r8, ax
+ 1289 0884 C9 F2 0A 00             		movw	r10, #10
+ 1290                             		; G14 udivmodhi macro r10 = r8 / r10 and r8 = r8 % r10 
+ 1291 0888 AD F0                   		movw    ax, r8 
+ 1292 088a EA F2                   		movw    de, r10 
+ 1293 088c 61 DD                   		push	psw	; Save the current interrupt status 
+ 1294 088e 71 7B FA                		di		; Disable interrupts. See Renesas Technical update TN-RL*-A025B/E 
+ 1295 0891 CE FB 03                		divhu   	; ax = ax / de, de = ax % de 
+ 1296 0894 61 CD                   		pop	psw	; Restore saved interrupt status 
+ 1297 0896 BD F2                   		movw    r10, ax 
+ 1298 0898 15                      		movw	ax, de 
+ 1299 0899 BD F0                   		movw    r8, ax 
+ 1300                             		; end of udivmodhi macro
+ 1301 089b 8D F0                   		mov	a, r8
+ 1302 089d 98 03                   		mov	[sp+3], a
+ 452:../src/r_main.c **** 	uint8_t nibble_h = ((hex / 10) % 10) << 4; //Isolate higher nibble
+ 1303                             		.loc 1 452 0
+ 1304 089f 88 08                   		mov	a, [sp+8]
+ 1305 08a1 70                      		mov	x, a 
+ 1306 08a2 51 00                   		mov	a, #0
+ 1307 08a4 BD F0                   		movw	r8, ax
+ 1308 08a6 C9 F2 0A 00             		movw	r10, #10
+ 1309                             		; G14 udivmodhi macro r8 = r8 / r10 and r10 = r8 % r10 
+ 1310 08aa AD F0                   		movw    ax, r8 
+ 1311 08ac EA F2                   		movw    de, r10 
+ 1312 08ae 61 DD                   		push	psw	; Save the current interrupt status 
+ 1313 08b0 71 7B FA                		di		; Disable interrupts. See Renesas Technical update TN-RL*-A025B/E 
+ 1314 08b3 CE FB 03                		divhu   	; ax = ax / de, de = ax % de 
+ 1315 08b6 61 CD                   		pop	psw	; Restore saved interrupt status 
+ 1316 08b8 BD F0                   		movw    r8, ax 
+ 1317 08ba 15                      		movw	ax, de 
+ 1318 08bb BD F2                   		movw    r10, ax 
+ 1319                             		; end of udivmodhi macro
+ 1320 08bd CD F1 00                		mov	r9, #0
+ 1321 08c0 C9 F2 0A 00             		movw	r10, #10
+ 1322                             		; G14 udivmodhi macro r10 = r8 / r10 and r8 = r8 % r10 
+ 1323 08c4 AD F0                   		movw    ax, r8 
+ 1324 08c6 EA F2                   		movw    de, r10 
+ 1325 08c8 61 DD                   		push	psw	; Save the current interrupt status 
+ 1326 08ca 71 7B FA                		di		; Disable interrupts. See Renesas Technical update TN-RL*-A025B/E 
+ 1327 08cd CE FB 03                		divhu   	; ax = ax / de, de = ax % de 
+ 1328 08d0 61 CD                   		pop	psw	; Restore saved interrupt status 
+ 1329 08d2 BD F2                   		movw    r10, ax 
+ 1330 08d4 15                      		movw	ax, de 
+ 1331 08d5 BD F0                   		movw    r8, ax 
+ 1332                             		; end of udivmodhi macro
+ 1333 08d7 8D F0                   		mov	a, r8
+ 1334 08d9 31 49                   		shl	a, 4
+ 1335 08db 98 02                   		mov	[sp+2], a
+ 453:../src/r_main.c **** 	uint8_t byte = nibble_h | nibble_l; //Combine them as two consecutive values
+ 1336                             		.loc 1 453 0
+ 1337 08dd 88 03                   		mov	a, [sp+3]
+ 1338 08df 76                      		mov	l, a
+ 1339 08e0 88 02                   		mov	a, [sp+2]
+ 1340 08e2 61 6E                   		or	a, l
+ 1341 08e4 98 01                   		mov	[sp+1], a
+ 454:../src/r_main.c **** 	return byte;
+ 1342                             		.loc 1 454 0
+ 1343 08e6 9D F0                   		mov	r8, a
+ 455:../src/r_main.c **** }
+ 1344                             		.loc 1 455 0
+ 1345 08e8 10 04                   		addw	sp, #4
+ 1346 08ea D7                      		ret
+ 1347                             	.LFE8:
+ 1349                             		.global	_pwm
+ 1351                             	_pwm:
+ 1352                             	.LFB9:
+ 456:../src/r_main.c **** 
+ 457:../src/r_main.c **** /*
+ 458:../src/r_main.c ****  * Software PWM implementation
+ 459:../src/r_main.c ****  * Causes motor to rotate
+ 460:../src/r_main.c ****  */
+ 461:../src/r_main.c **** void pwm(int cycles_per_second, int divisor)
+ 462:../src/r_main.c **** {
+ 1353                             		.loc 1 462 0
+ 463:../src/r_main.c **** 	if (pwm_edge){
+ 1354                             		.loc 1 463 0
+ 1355 08eb 8F 00 00                		mov	a, !_pwm_edge
+ 1356 08ee 9D F0                   		mov	r8, a
+ 1357 08f0 D4 F0                   		cmp0	r8
+ 1358 08f2 61 F8                   		 sknz
+ 1359 08f4 EC 6E 09 00             		 br	!!.L53
+ 464:../src/r_main.c **** 		pwm_edge=0;
+ 1360                             		.loc 1 464 0
+ 1361 08f8 F5 00 00                		clrb	!_pwm_edge
+ 465:../src/r_main.c **** 		//P4_bit.no3^=1;
+ 466:../src/r_main.c **** 		pwm_counter++;
+ 1362                             		.loc 1 466 0
+ 1363 08fb AF 00 00                		movw	ax, !_pwm_counter
+ 1364 08fe BD F0                   		movw	r8, ax
+ 1365 0900 A6 F0                   		incw	r8
+ 1366 0902 AD F0                   		movw	ax, r8
+ 1367 0904 BF 00 00                		movw	!_pwm_counter, ax
+ 467:../src/r_main.c **** 		//P7^=0x80;
+ 468:../src/r_main.c **** 		//P4^=0x04;
+ 469:../src/r_main.c **** 
+ 470:../src/r_main.c **** 		pwm_counter%=cycles_per_second; // 100 cycles per second
+ 1368                             		.loc 1 470 0
+ 1369 0907 BD F2                   		movw	r10, ax
+ 1370 0909 A8 04                   		movw	ax, [sp+4]
+ 1371 090b BD F0                   		movw	r8, ax
+ 1372                             		; G14 udivmodhi macro r10 = r10 / r8 and r8 = r10 % r8 
+ 1373 090d AD F2                   		movw    ax, r10 
+ 1374 090f EA F0                   		movw    de, r8 
+ 1375 0911 61 DD                   		push	psw	; Save the current interrupt status 
+ 1376 0913 71 7B FA                		di		; Disable interrupts. See Renesas Technical update TN-RL*-A025B/E 
+ 1377 0916 CE FB 03                		divhu   	; ax = ax / de, de = ax % de 
+ 1378 0919 61 CD                   		pop	psw	; Restore saved interrupt status 
+ 1379 091b BD F2                   		movw    r10, ax 
+ 1380 091d 15                      		movw	ax, de 
+ 1381 091e BD F0                   		movw    r8, ax 
+ 1382                             		; end of udivmodhi macro
+ 1383 0920 AD F0                   		movw	ax, r8
+ 1384 0922 BF 00 00                		movw	!_pwm_counter, ax
+ 471:../src/r_main.c **** 
+ 472:../src/r_main.c **** 		if (pwm_counter < divisor) // div/cycles% duty cycle
+ 1385                             		.loc 1 472 0
+ 1386 0925 A8 06                   		movw	ax, [sp+6]
+ 1387 0927 BD F2                   		movw	r10, ax
+ 1388 0929 AF 00 00                		movw	ax, !_pwm_counter
+ 1389 092c BD F0                   		movw	r8, ax
+ 1390 092e AD F2                   		movw	ax, r10
+ 1391 0930 46 F0                   		cmpw	ax, r8
+ 1392 0932 61 E3                   		 skh
+ 1393 0934 EC 55 09 00             		 br	!!.L55
+ 473:../src/r_main.c **** 		{
+ 474:../src/r_main.c **** 			//P4_bit.no3 = 1;
+ 475:../src/r_main.c **** 			DVR_ENABLE = 1;
+ 1394                             		.loc 1 475 0
+ 1395 0938 C9 F0 04 FF             		movw	r8, #-252
+ 1396 093c AD F0                   		movw	ax, r8
+ 1397 093e BD F4                   		movw	r12, ax
+ 1398 0940 FA F4                   		movw	hl, r12
+ 1399 0942 8B                      		mov	a, [hl]
+ 1400 0943 9D F2                   		mov	r10, a
+ 1401 0945 6A F2 08                		or	r10, #8
+ 1402 0948 AD F0                   		movw	ax, r8
+ 1403 094a DA F4                   		movw	bc, r12
+ 1404 094c 8D F2                   		mov	a, r10
+ 1405 094e 48 00 00                		mov	[bc], a
+ 1406 0951 EC 6E 09 00             		br	!!.L53
+ 1407                             	.L55:
+ 476:../src/r_main.c **** 		}
+ 477:../src/r_main.c **** 		else
+ 478:../src/r_main.c **** 		{
+ 479:../src/r_main.c **** 			DVR_ENABLE = 0;
+ 1408                             		.loc 1 479 0
+ 1409 0955 C9 F0 04 FF             		movw	r8, #-252
+ 1410 0959 AD F0                   		movw	ax, r8
+ 1411 095b BD F4                   		movw	r12, ax
+ 1412 095d FA F4                   		movw	hl, r12
+ 1413 095f 8B                      		mov	a, [hl]
+ 1414 0960 9D F2                   		mov	r10, a
+ 1415 0962 5A F2 F7                		and	r10, #-9
+ 1416 0965 AD F0                   		movw	ax, r8
+ 1417 0967 DA F4                   		movw	bc, r12
+ 1418 0969 8D F2                   		mov	a, r10
+ 1419 096b 48 00 00                		mov	[bc], a
+ 1420                             	.L53:
+ 480:../src/r_main.c **** 		}
+ 481:../src/r_main.c **** 	}
+ 482:../src/r_main.c **** }
+ 1421                             		.loc 1 482 0
+ 1422 096e D7                      		ret
+ 1423                             	.LFE9:
+ 1425                             		.global	_mtrBtn
+ 1427                             	_mtrBtn:
+ 1428                             	.LFB10:
+ 483:../src/r_main.c **** 
+ 484:../src/r_main.c **** 
+ 485:../src/r_main.c **** /*
+ 486:../src/r_main.c ****  * Inspect the gate collision buttons
+ 487:../src/r_main.c ****  */
+ 488:../src/r_main.c **** void mtrBtn()
+ 489:../src/r_main.c **** {
+ 1429                             		.loc 1 489 0
+ 1430                             		; start of function
+ 1431                             		; outgoing: 2 bytes
+ 1432 096f 20 02                   		subw	sp, #2
+ 1433                             	.LCFI8:
+ 490:../src/r_main.c **** 	if (switch_edge)
+ 1434                             		.loc 1 490 0
+ 1435 0971 8F 00 00                		mov	a, !_switch_edge
+ 1436 0974 9D F0                   		mov	r8, a
+ 1437 0976 D4 F0                   		cmp0	r8
+ 1438 0978 61 F8                   		 sknz
+ 1439 097a EC 50 0A 00             		 br	!!.L56
+ 491:../src/r_main.c **** 	{
+ 492:../src/r_main.c **** 		switch_edge = 0;
+ 1440                             		.loc 1 492 0
+ 1441 097e F5 00 00                		clrb	!_switch_edge
+ 493:../src/r_main.c **** 
+ 494:../src/r_main.c **** 		if (SWITCH_OPENED)
+ 1442                             		.loc 1 494 0
+ 1443 0981 C9 F0 00 FF             		movw	r8, #-256
+ 1444 0985 AD F0                   		movw	ax, r8
+ 1445 0987 BD F2                   		movw	r10, ax
+ 1446 0989 FA F2                   		movw	hl, r10
+ 1447 098b 8B                      		mov	a, [hl]
+ 1448 098c 9D F0                   		mov	r8, a
+ 1449 098e 31 5A                   		shr	a, 5
+ 1450 0990 9D F0                   		mov	r8, a
+ 1451 0992 5A F0 01                		and	r8, #1
+ 1452 0995 61 F8                   		sknz
+ 1453 0997 EC E8 09 00             		 br	!!.L58
+ 1454                             		 # zero-comparison eliminated
+ 495:../src/r_main.c **** 		{
+ 496:../src/r_main.c **** 			if (DVR_PHASE == 0)
+ 1455                             		.loc 1 496 0
+ 1456 099b C9 F0 04 FF             		movw	r8, #-252
+ 1457 099f AD F0                   		movw	ax, r8
+ 1458 09a1 BD F4                   		movw	r12, ax
+ 1459 09a3 FA F4                   		movw	hl, r12
+ 1460 09a5 8B                      		mov	a, [hl]
+ 1461 09a6 9D F0                   		mov	r8, a
+ 1462 09a8 31 1A                   		shr	a, 1
+ 1463 09aa 9D F0                   		mov	r8, a
+ 1464 09ac 5A F0 01                		and	r8, #1
+ 1465 09af 61 E8                   		skz
+ 1466 09b1 EC 50 0A 00             		 br	!!.L56
+ 1467                             		 # zero-comparison eliminated
+ 497:../src/r_main.c **** 			{
+ 498:../src/r_main.c **** 				DVR_nSLEEP = 0;
+ 1468                             		.loc 1 498 0
+ 1469 09b5 C9 F0 04 FF             		movw	r8, #-252
+ 1470 09b9 AD F0                   		movw	ax, r8
+ 1471 09bb BD F4                   		movw	r12, ax
+ 1472 09bd FA F4                   		movw	hl, r12
+ 1473 09bf 8B                      		mov	a, [hl]
+ 1474 09c0 9D F2                   		mov	r10, a
+ 1475 09c2 5A F2 FB                		and	r10, #-5
+ 1476 09c5 AD F0                   		movw	ax, r8
+ 1477 09c7 DA F4                   		movw	bc, r12
+ 1478 09c9 8D F2                   		mov	a, r10
+ 1479 09cb 48 00 00                		mov	[bc], a
+ 499:../src/r_main.c **** 				gate_status = GS_OPENED;
+ 1480                             		.loc 1 499 0
+ 1481 09ce E6                      		onew	ax
+ 1482 09cf BF 00 00                		movw	!_gate_status, ax
+ 500:../src/r_main.c **** 				print_lcd("Opened");
+ 1483                             		.loc 1 500 0
+ 1484 09d2 30 36 00                		movw	ax, #.LC4
+ 1485 09d5 B8 00                   		movw	[sp], ax
+ 1486 09d7 FC 00 00 00             		call	!!%code(_print_lcd)
+ 501:../src/r_main.c **** 				msDelay(5);
+ 1487                             		.loc 1 501 0
+ 1488 09db 30 05 00                		movw	ax, #5
+ 1489 09de B8 00                   		movw	[sp], ax
+ 1490 09e0 FC 00 00 00             		call	!!%code(_msDelay)
+ 1491 09e4 EC 50 0A 00             		br	!!.L56
+ 1492                             	.L58:
+ 502:../src/r_main.c **** 			}
+ 503:../src/r_main.c **** 
+ 504:../src/r_main.c **** 		}
+ 505:../src/r_main.c **** 		else if (SWITCH_CLOSED)
+ 1493                             		.loc 1 505 0
+ 1494 09e8 C9 F0 00 FF             		movw	r8, #-256
+ 1495 09ec AD F0                   		movw	ax, r8
+ 1496 09ee BD F2                   		movw	r10, ax
+ 1497 09f0 FA F2                   		movw	hl, r10
+ 1498 09f2 8B                      		mov	a, [hl]
+ 1499 09f3 9D F0                   		mov	r8, a
+ 1500 09f5 31 6A                   		shr	a, 6
+ 1501 09f7 9D F0                   		mov	r8, a
+ 1502 09f9 5A F0 01                		and	r8, #1
+ 1503 09fc 61 F8                   		sknz
+ 1504 09fe EC 50 0A 00             		 br	!!.L56
+ 1505                             		 # zero-comparison eliminated
+ 506:../src/r_main.c **** 		{
+ 507:../src/r_main.c **** 			if (DVR_PHASE == 1) // if opening activated
+ 1506                             		.loc 1 507 0
+ 1507 0a02 C9 F0 04 FF             		movw	r8, #-252
+ 1508 0a06 AD F0                   		movw	ax, r8
+ 1509 0a08 BD F4                   		movw	r12, ax
+ 1510 0a0a FA F4                   		movw	hl, r12
+ 1511 0a0c 8B                      		mov	a, [hl]
+ 1512 0a0d 9D F0                   		mov	r8, a
+ 1513 0a0f 31 1A                   		shr	a, 1
+ 1514 0a11 9D F0                   		mov	r8, a
+ 1515 0a13 5A F0 01                		and	r8, #1
+ 1516 0a16 4A F0 01                		cmp	r8, #1
+ 1517 0a19 61 E8                   		 skz
+ 1518 0a1b EC 50 0A 00             		 br	!!.L56
+ 508:../src/r_main.c **** 			{
+ 509:../src/r_main.c **** 				DVR_nSLEEP = 0;
+ 1519                             		.loc 1 509 0
+ 1520 0a1f C9 F0 04 FF             		movw	r8, #-252
+ 1521 0a23 AD F0                   		movw	ax, r8
+ 1522 0a25 BD F4                   		movw	r12, ax
+ 1523 0a27 FA F4                   		movw	hl, r12
+ 1524 0a29 8B                      		mov	a, [hl]
+ 1525 0a2a 9D F2                   		mov	r10, a
+ 1526 0a2c 5A F2 FB                		and	r10, #-5
+ 1527 0a2f AD F0                   		movw	ax, r8
+ 1528 0a31 DA F4                   		movw	bc, r12
+ 1529 0a33 8D F2                   		mov	a, r10
+ 1530 0a35 48 00 00                		mov	[bc], a
+ 510:../src/r_main.c **** 				gate_status = GS_CLOSED;
+ 1531                             		.loc 1 510 0
+ 1532 0a38 30 02 00                		movw	ax, #2
+ 1533 0a3b BF 00 00                		movw	!_gate_status, ax
+ 511:../src/r_main.c **** 				print_lcd("Closed");
+ 1534                             		.loc 1 511 0
+ 1535 0a3e 30 3D 00                		movw	ax, #.LC5
+ 1536 0a41 B8 00                   		movw	[sp], ax
+ 1537 0a43 FC 00 00 00             		call	!!%code(_print_lcd)
+ 512:../src/r_main.c **** 				msDelay(5);
+ 1538                             		.loc 1 512 0
+ 1539 0a47 30 05 00                		movw	ax, #5
+ 1540 0a4a B8 00                   		movw	[sp], ax
+ 1541 0a4c FC 00 00 00             		call	!!%code(_msDelay)
+ 1542                             	.L56:
+ 513:../src/r_main.c **** 			}
+ 514:../src/r_main.c **** 		}
+ 515:../src/r_main.c **** 	}
+ 516:../src/r_main.c **** }
+ 1543                             		.loc 1 516 0
+ 1544 0a50 10 02                   		addw	sp, #2
+ 1545 0a52 D7                      		ret
+ 1546                             	.LFE10:
+ 1548                             		.section	.rodata
+ 1549                             	.LC8:
+ 1550 005b 47 61 74 65 20 73 74 6F 		.string	"Gate stopped."
+ 1550      70 70 65 64 2E 00 
+ 1551                             	.text
+ 1552                             		.global	_boardBtn
+ 1554                             	_boardBtn:
+ 1555                             	.LFB11:
+ 517:../src/r_main.c **** 
+ 518:../src/r_main.c **** /*
+ 519:../src/r_main.c ****  * Inspect the board button values
+ 520:../src/r_main.c ****  */
+ 521:../src/r_main.c **** void boardBtn()
+ 522:../src/r_main.c **** {
+ 1556                             		.loc 1 522 0
+ 1557                             		; start of function
+ 1558                             		; outgoing: 2 bytes
+ 1559 0a53 20 02                   		subw	sp, #2
+ 1560                             	.LCFI9:
+ 523:../src/r_main.c **** 	if (check_btns)
+ 1561                             		.loc 1 523 0
+ 1562 0a55 8F 00 00                		mov	a, !_check_btns
+ 1563 0a58 9D F0                   		mov	r8, a
+ 1564 0a5a D4 F0                   		cmp0	r8
+ 1565 0a5c 61 F8                   		 sknz
+ 1566 0a5e EC 7C 0B 00             		 br	!!.L60
+ 524:../src/r_main.c **** 	{
+ 525:../src/r_main.c **** 		check_btns = 0; //Reset
+ 1567                             		.loc 1 525 0
+ 1568 0a62 F5 00 00                		clrb	!_check_btns
+ 526:../src/r_main.c **** 		if (!BTN_STOP)
+ 1569                             		.loc 1 526 0
+ 1570 0a65 C9 F0 05 FF             		movw	r8, #-251
+ 1571 0a69 AD F0                   		movw	ax, r8
+ 1572 0a6b BD F2                   		movw	r10, ax
+ 1573 0a6d FA F2                   		movw	hl, r10
+ 1574 0a6f 8B                      		mov	a, [hl]
+ 1575 0a70 9D F0                   		mov	r8, a
+ 1576 0a72 31 1A                   		shr	a, 1
+ 1577 0a74 9D F0                   		mov	r8, a
+ 1578 0a76 5A F0 01                		and	r8, #1
+ 1579 0a79 61 E8                   		skz
+ 1580 0a7b EC AB 0A 00             		 br	!!.L62
+ 1581                             		 # zero-comparison eliminated
+ 527:../src/r_main.c **** 		{
+ 528:../src/r_main.c **** 			DVR_nSLEEP = 0;
+ 1582                             		.loc 1 528 0
+ 1583 0a7f C9 F0 04 FF             		movw	r8, #-252
+ 1584 0a83 AD F0                   		movw	ax, r8
+ 1585 0a85 BD F4                   		movw	r12, ax
+ 1586 0a87 FA F4                   		movw	hl, r12
+ 1587 0a89 8B                      		mov	a, [hl]
+ 1588 0a8a 9D F2                   		mov	r10, a
+ 1589 0a8c 5A F2 FB                		and	r10, #-5
+ 1590 0a8f AD F0                   		movw	ax, r8
+ 1591 0a91 DA F4                   		movw	bc, r12
+ 1592 0a93 8D F2                   		mov	a, r10
+ 1593 0a95 48 00 00                		mov	[bc], a
+ 529:../src/r_main.c **** 			gate_status = GS_ESTOP;
+ 1594                             		.loc 1 529 0
+ 1595 0a98 30 03 00                		movw	ax, #3
+ 1596 0a9b BF 00 00                		movw	!_gate_status, ax
+ 530:../src/r_main.c **** 			print_lcd("Gate stopped.");
+ 1597                             		.loc 1 530 0
+ 1598 0a9e 30 5B 00                		movw	ax, #.LC8
+ 1599 0aa1 B8 00                   		movw	[sp], ax
+ 1600 0aa3 FC 00 00 00             		call	!!%code(_print_lcd)
+ 531:../src/r_main.c **** 			return;
+ 1601                             		.loc 1 531 0
+ 1602 0aa7 EC 7C 0B 00             		br	!!.L60
+ 1603                             	.L62:
+ 532:../src/r_main.c **** 		}
+ 533:../src/r_main.c **** 		if (!BTN_STEP)
+ 1604                             		.loc 1 533 0
+ 1605 0aab C9 F0 07 FF             		movw	r8, #-249
+ 1606 0aaf AD F0                   		movw	ax, r8
+ 1607 0ab1 BD F2                   		movw	r10, ax
+ 1608 0ab3 FA F2                   		movw	hl, r10
+ 1609 0ab5 8B                      		mov	a, [hl]
+ 1610 0ab6 9D F0                   		mov	r8, a
+ 1611 0ab8 31 7A                   		shr	a, 7
+ 1612 0aba 9D F0                   		mov	r8, a
+ 1613 0abc D4 F0                   		cmp0	r8
+ 1614 0abe 61 E8                   		 skz
+ 1615 0ac0 EC C8 0A 00             		 br	!!.L63
+ 534:../src/r_main.c **** 		{
+ 535:../src/r_main.c **** 			//TODO
+ 536:../src/r_main.c **** 			return;
+ 1616                             		.loc 1 536 0
+ 1617 0ac4 EC 7C 0B 00             		br	!!.L60
+ 1618                             	.L63:
+ 537:../src/r_main.c **** 		}
+ 538:../src/r_main.c **** 		if (!BTN_OPEN)
+ 1619                             		.loc 1 538 0
+ 1620 0ac8 C9 F0 05 FF             		movw	r8, #-251
+ 1621 0acc AD F0                   		movw	ax, r8
+ 1622 0ace BD F4                   		movw	r12, ax
+ 1623 0ad0 EA F4                   		movw	de, r12
+ 1624 0ad2 89                      		mov	a, [de]
+ 1625 0ad3 5C 01                   		and	a, #1
+ 1626 0ad5 9D F0                   		mov	r8, a
+ 1627 0ad7 D4 F0                   		cmp0	r8
+ 1628 0ad9 61 E8                   		 skz
+ 1629 0adb EC 22 0B 00             		 br	!!.L64
+ 539:../src/r_main.c **** 		{
+ 540:../src/r_main.c **** 			//func
+ 541:../src/r_main.c **** 			DVR_PHASE = 0;
+ 1630                             		.loc 1 541 0
+ 1631 0adf C9 F0 04 FF             		movw	r8, #-252
+ 1632 0ae3 AD F0                   		movw	ax, r8
+ 1633 0ae5 BD F4                   		movw	r12, ax
+ 1634 0ae7 FA F4                   		movw	hl, r12
+ 1635 0ae9 8B                      		mov	a, [hl]
+ 1636 0aea 9D F2                   		mov	r10, a
+ 1637 0aec 5A F2 FD                		and	r10, #-3
+ 1638 0aef AD F0                   		movw	ax, r8
+ 1639 0af1 DA F4                   		movw	bc, r12
+ 1640 0af3 8D F2                   		mov	a, r10
+ 1641 0af5 48 00 00                		mov	[bc], a
+ 542:../src/r_main.c **** 			DVR_nSLEEP = 1;
+ 1642                             		.loc 1 542 0
+ 1643 0af8 C9 F0 04 FF             		movw	r8, #-252
+ 1644 0afc AD F0                   		movw	ax, r8
+ 1645 0afe BD F4                   		movw	r12, ax
+ 1646 0b00 FA F4                   		movw	hl, r12
+ 1647 0b02 8B                      		mov	a, [hl]
+ 1648 0b03 9D F2                   		mov	r10, a
+ 1649 0b05 6A F2 04                		or	r10, #4
+ 1650 0b08 AD F0                   		movw	ax, r8
+ 1651 0b0a DA F4                   		movw	bc, r12
+ 1652 0b0c 8D F2                   		mov	a, r10
+ 1653 0b0e 48 00 00                		mov	[bc], a
+ 543:../src/r_main.c **** 			gate_status = GS_UNKNOWN;
+ 1654                             		.loc 1 543 0
+ 1655 0b11 F6                      		clrw	ax
+ 1656 0b12 BF 00 00                		movw	!_gate_status, ax
+ 544:../src/r_main.c **** 			print_lcd("Gate opening...");
+ 1657                             		.loc 1 544 0
+ 1658 0b15 30 16 00                		movw	ax, #.LC2
+ 1659 0b18 B8 00                   		movw	[sp], ax
+ 1660 0b1a FC 00 00 00             		call	!!%code(_print_lcd)
+ 545:../src/r_main.c **** 			return;
+ 1661                             		.loc 1 545 0
+ 1662 0b1e EC 7C 0B 00             		br	!!.L60
+ 1663                             	.L64:
+ 546:../src/r_main.c **** 		}
+ 547:../src/r_main.c **** 		if (!BTN_CLOSE)
+ 1664                             		.loc 1 547 0
+ 1665 0b22 C9 F0 03 FF             		movw	r8, #-253
+ 1666 0b26 AD F0                   		movw	ax, r8
+ 1667 0b28 BD F2                   		movw	r10, ax
+ 1668 0b2a FA F2                   		movw	hl, r10
+ 1669 0b2c 8B                      		mov	a, [hl]
+ 1670 0b2d 9D F0                   		mov	r8, a
+ 1671 0b2f 31 1A                   		shr	a, 1
+ 1672 0b31 9D F0                   		mov	r8, a
+ 1673 0b33 5A F0 01                		and	r8, #1
+ 1674 0b36 61 E8                   		skz
+ 1675 0b38 EC 7C 0B 00             		 br	!!.L60
+ 1676                             		 # zero-comparison eliminated
+ 548:../src/r_main.c **** 		{
+ 549:../src/r_main.c **** 			DVR_PHASE = 1;
+ 1677                             		.loc 1 549 0
+ 1678 0b3c C9 F0 04 FF             		movw	r8, #-252
+ 1679 0b40 AD F0                   		movw	ax, r8
+ 1680 0b42 BD F4                   		movw	r12, ax
+ 1681 0b44 FA F4                   		movw	hl, r12
+ 1682 0b46 8B                      		mov	a, [hl]
+ 1683 0b47 9D F2                   		mov	r10, a
+ 1684 0b49 6A F2 02                		or	r10, #2
+ 1685 0b4c AD F0                   		movw	ax, r8
+ 1686 0b4e DA F4                   		movw	bc, r12
+ 1687 0b50 8D F2                   		mov	a, r10
+ 1688 0b52 48 00 00                		mov	[bc], a
+ 550:../src/r_main.c **** 			DVR_nSLEEP = 1;
+ 1689                             		.loc 1 550 0
+ 1690 0b55 C9 F0 04 FF             		movw	r8, #-252
+ 1691 0b59 AD F0                   		movw	ax, r8
+ 1692 0b5b BD F4                   		movw	r12, ax
+ 1693 0b5d FA F4                   		movw	hl, r12
+ 1694 0b5f 8B                      		mov	a, [hl]
+ 1695 0b60 9D F2                   		mov	r10, a
+ 1696 0b62 6A F2 04                		or	r10, #4
+ 1697 0b65 AD F0                   		movw	ax, r8
+ 1698 0b67 DA F4                   		movw	bc, r12
+ 1699 0b69 8D F2                   		mov	a, r10
+ 1700 0b6b 48 00 00                		mov	[bc], a
+ 551:../src/r_main.c **** 			gate_status = GS_UNKNOWN;
+ 1701                             		.loc 1 551 0
+ 1702 0b6e F6                      		clrw	ax
+ 1703 0b6f BF 00 00                		movw	!_gate_status, ax
+ 552:../src/r_main.c **** 			print_lcd("Gate closing...");
+ 1704                             		.loc 1 552 0
+ 1705 0b72 30 26 00                		movw	ax, #.LC3
+ 1706 0b75 B8 00                   		movw	[sp], ax
+ 1707 0b77 FC 00 00 00             		call	!!%code(_print_lcd)
+ 553:../src/r_main.c **** 			return;
+ 1708                             		.loc 1 553 0
+ 1709 0b7b 00                      		nop
+ 1710                             	.L60:
+ 554:../src/r_main.c **** 		}
+ 555:../src/r_main.c **** 	}
+ 556:../src/r_main.c **** }
+ 1711                             		.loc 1 556 0
+ 1712 0b7c 10 02                   		addw	sp, #2
+ 1713 0b7e D7                      		ret
+ 1714                             	.LFE11:
+ 1870                             	.Letext0:
+ 1871                             		.file 2 "../src/iodefine.h"
+ 1872                             		.file 3 "../src/r_cg_macrodriver.h"
+ 1873                             		.file 4 "../src/r_cg_rtc.h"
+ 1874                             		.file 5 "../src/r_cg_userdefine.h"
+ 1875                             		.file 6 "../src/global.c"
+ 1876                             		.file 7 "../src/infrared.h"

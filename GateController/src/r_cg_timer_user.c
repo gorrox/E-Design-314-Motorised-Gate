@@ -23,7 +23,7 @@
 * Device(s)    : R5F104LE
 * Tool-Chain   : GCCRL78
 * Description  : This file implements device driver for TAU module.
-* Creation Date: 4/13/2016
+* Creation Date: 5/2/2016
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
@@ -39,8 +39,9 @@ Includes
 Global variables and functions
 ***********************************************************************************************************************/
 /* Start user code for global. Do not edit comment generated here */
-uint8_t pwm_edge;
-uint8_t switch_edge;
+uint8_t volatile pwm_edge;
+uint8_t volatile switch_edge;
+uint8_t volatile check_btns;
 /* End user code. Do not edit comment generated here */
 
 /***********************************************************************************************************************
@@ -65,6 +66,7 @@ void r_tau0_channel1_interrupt(void)
 {
     /* Start user code. Do not edit comment generated here */
 	switch_edge = 1;
+	check_btns = 1;
     /* End user code. Do not edit comment generated here */
 }
 

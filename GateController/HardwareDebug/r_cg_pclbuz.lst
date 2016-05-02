@@ -34,11 +34,12 @@
   34                             		.comm	_uart1TxBuf,16,1
   35                             		.comm	_uart1TxCnt,2,2
   36                             		.comm	_uart1TxFlag,1,1
-  37                             		.comm	_uart1Status,2,2
-  38                             		.global	_R_PCLBUZ0_Create
-  40                             	_R_PCLBUZ0_Create:
-  41                             	.LFB0:
-  42                             		.file 1 "../src/r_cg_pclbuz.c"
+  37                             		.comm	_time_now,7,1
+  38                             		.comm	_uart1Status,2,2
+  39                             		.global	_R_PCLBUZ0_Create
+  41                             	_R_PCLBUZ0_Create:
+  42                             	.LFB0:
+  43                             		.file 1 "../src/r_cg_pclbuz.c"
    1:../src/r_cg_pclbuz.c **** /**************************************************************************************************
    2:../src/r_cg_pclbuz.c **** * DISCLAIMER
    3:../src/r_cg_pclbuz.c **** * This software is supplied by Renesas Electronics Corporation and is only intended for use with Re
@@ -64,7 +65,7 @@
   23:../src/r_cg_pclbuz.c **** * Device(s)    : R5F104LE
   24:../src/r_cg_pclbuz.c **** * Tool-Chain   : GCCRL78
   25:../src/r_cg_pclbuz.c **** * Description  : This file implements device driver for PCLBUZ module.
-  26:../src/r_cg_pclbuz.c **** * Creation Date: 4/13/2016
+  26:../src/r_cg_pclbuz.c **** * Creation Date: 5/2/2016
   27:../src/r_cg_pclbuz.c **** ***************************************************************************************************
   28:../src/r_cg_pclbuz.c **** 
   29:../src/r_cg_pclbuz.c **** /**************************************************************************************************
@@ -90,66 +91,66 @@
   49:../src/r_cg_pclbuz.c **** ***************************************************************************************************
   50:../src/r_cg_pclbuz.c **** void R_PCLBUZ0_Create(void)
   51:../src/r_cg_pclbuz.c **** {
-  43                             		.loc 1 51 0
+  44                             		.loc 1 51 0
   52:../src/r_cg_pclbuz.c ****     PCLOE0 = 0U;    /* disable PCLBUZ0 operation */
-  44                             		.loc 1 52 0
-  45 0000 C9 F0 A5 FF             		movw	r8, #-91
-  46 0004 AD F0                   		movw	ax, r8
-  47 0006 BD F4                   		movw	r12, ax
-  48 0008 FA F4                   		movw	hl, r12
-  49 000a 8B                      		mov	a, [hl]
-  50 000b 9D F2                   		mov	r10, a
-  51 000d 5A F2 7F                		and	r10, #127
-  52 0010 AD F0                   		movw	ax, r8
-  53 0012 DA F4                   		movw	bc, r12
-  54 0014 8D F2                   		mov	a, r10
-  55 0016 48 00 00                		mov	[bc], a
+  45                             		.loc 1 52 0
+  46 0000 C9 F0 A5 FF             		movw	r8, #-91
+  47 0004 AD F0                   		movw	ax, r8
+  48 0006 BD F4                   		movw	r12, ax
+  49 0008 FA F4                   		movw	hl, r12
+  50 000a 8B                      		mov	a, [hl]
+  51 000b 9D F2                   		mov	r10, a
+  52 000d 5A F2 7F                		and	r10, #127
+  53 0010 AD F0                   		movw	ax, r8
+  54 0012 DA F4                   		movw	bc, r12
+  55 0014 8D F2                   		mov	a, r10
+  56 0016 48 00 00                		mov	[bc], a
   53:../src/r_cg_pclbuz.c ****     CKS0 = _0D_PCLBUZ_OUTCLK_fSUB5;
-  56                             		.loc 1 53 0
-  57 0019 C9 F0 A5 FF             		movw	r8, #-91
-  58 001d AD F0                   		movw	ax, r8
-  59 001f BD F2                   		movw	r10, ax
-  60 0021 DA F2                   		movw	bc, r10
-  61 0023 51 0D                   		mov	a, #13
-  62 0025 48 00 00                		mov	[bc], a
+  57                             		.loc 1 53 0
+  58 0019 C9 F0 A5 FF             		movw	r8, #-91
+  59 001d AD F0                   		movw	ax, r8
+  60 001f BD F2                   		movw	r10, ax
+  61 0021 DA F2                   		movw	bc, r10
+  62 0023 51 0D                   		mov	a, #13
+  63 0025 48 00 00                		mov	[bc], a
   54:../src/r_cg_pclbuz.c ****     /* Set PCLBUZ0 pin */
   55:../src/r_cg_pclbuz.c ****     P14 &= 0xFEU;
-  63                             		.loc 1 55 0
-  64 0028 C9 F2 0E FF             		movw	r10, #-242
-  65 002c C9 F0 0E FF             		movw	r8, #-242
-  66 0030 AD F0                   		movw	ax, r8
-  67 0032 BD F4                   		movw	r12, ax
-  68 0034 FA F4                   		movw	hl, r12
-  69 0036 8B                      		mov	a, [hl]
-  70 0037 9D F0                   		mov	r8, a
-  71 0039 5A F0 FE                		and	r8, #-2
-  72 003c AD F2                   		movw	ax, r10
-  73 003e BD F4                   		movw	r12, ax
-  74 0040 DA F4                   		movw	bc, r12
-  75 0042 8D F0                   		mov	a, r8
-  76 0044 48 00 00                		mov	[bc], a
+  64                             		.loc 1 55 0
+  65 0028 C9 F2 0E FF             		movw	r10, #-242
+  66 002c C9 F0 0E FF             		movw	r8, #-242
+  67 0030 AD F0                   		movw	ax, r8
+  68 0032 BD F4                   		movw	r12, ax
+  69 0034 FA F4                   		movw	hl, r12
+  70 0036 8B                      		mov	a, [hl]
+  71 0037 9D F0                   		mov	r8, a
+  72 0039 5A F0 FE                		and	r8, #-2
+  73 003c AD F2                   		movw	ax, r10
+  74 003e BD F4                   		movw	r12, ax
+  75 0040 DA F4                   		movw	bc, r12
+  76 0042 8D F0                   		mov	a, r8
+  77 0044 48 00 00                		mov	[bc], a
   56:../src/r_cg_pclbuz.c ****     PM14 &= 0xFEU;
-  77                             		.loc 1 56 0
-  78 0047 C9 F2 2E FF             		movw	r10, #-210
-  79 004b C9 F0 2E FF             		movw	r8, #-210
-  80 004f AD F0                   		movw	ax, r8
-  81 0051 BD F4                   		movw	r12, ax
-  82 0053 FA F4                   		movw	hl, r12
-  83 0055 8B                      		mov	a, [hl]
-  84 0056 9D F0                   		mov	r8, a
-  85 0058 5A F0 FE                		and	r8, #-2
-  86 005b AD F2                   		movw	ax, r10
-  87 005d BD F4                   		movw	r12, ax
-  88 005f DA F4                   		movw	bc, r12
-  89 0061 8D F0                   		mov	a, r8
-  90 0063 48 00 00                		mov	[bc], a
+  78                             		.loc 1 56 0
+  79 0047 C9 F2 2E FF             		movw	r10, #-210
+  80 004b C9 F0 2E FF             		movw	r8, #-210
+  81 004f AD F0                   		movw	ax, r8
+  82 0051 BD F4                   		movw	r12, ax
+  83 0053 FA F4                   		movw	hl, r12
+  84 0055 8B                      		mov	a, [hl]
+  85 0056 9D F0                   		mov	r8, a
+  86 0058 5A F0 FE                		and	r8, #-2
+  87 005b AD F2                   		movw	ax, r10
+  88 005d BD F4                   		movw	r12, ax
+  89 005f DA F4                   		movw	bc, r12
+  90 0061 8D F0                   		mov	a, r8
+  91 0063 48 00 00                		mov	[bc], a
   57:../src/r_cg_pclbuz.c **** }
-  91                             		.loc 1 57 0
-  92 0066 D7                      		ret
-  93                             	.LFE0:
-  95                             		.global	_R_PCLBUZ0_Start
-  97                             	_R_PCLBUZ0_Start:
-  98                             	.LFB1:
+  92                             		.loc 1 57 0
+  93 0066 D7                      		ret
+  94                             	.LFE0:
+  96                             		.global	_R_PCLBUZ0_Start
+  98                             	_R_PCLBUZ0_Start:
+  99                             	.LFB1:
   58:../src/r_cg_pclbuz.c **** 
   59:../src/r_cg_pclbuz.c **** /**************************************************************************************************
   60:../src/r_cg_pclbuz.c **** * Function Name: R_PCLBUZ0_Start
@@ -159,27 +160,27 @@
   64:../src/r_cg_pclbuz.c **** ***************************************************************************************************
   65:../src/r_cg_pclbuz.c **** void R_PCLBUZ0_Start(void)
   66:../src/r_cg_pclbuz.c **** {
-  99                             		.loc 1 66 0
+ 100                             		.loc 1 66 0
   67:../src/r_cg_pclbuz.c ****     PCLOE0 = 1U;    /* enable PCLBUZ0 operation */
- 100                             		.loc 1 67 0
- 101 0067 C9 F0 A5 FF             		movw	r8, #-91
- 102 006b AD F0                   		movw	ax, r8
- 103 006d BD F4                   		movw	r12, ax
- 104 006f FA F4                   		movw	hl, r12
- 105 0071 8B                      		mov	a, [hl]
- 106 0072 9D F2                   		mov	r10, a
- 107 0074 6A F2 80                		or	r10, #-128
- 108 0077 AD F0                   		movw	ax, r8
- 109 0079 DA F4                   		movw	bc, r12
- 110 007b 8D F2                   		mov	a, r10
- 111 007d 48 00 00                		mov	[bc], a
+ 101                             		.loc 1 67 0
+ 102 0067 C9 F0 A5 FF             		movw	r8, #-91
+ 103 006b AD F0                   		movw	ax, r8
+ 104 006d BD F4                   		movw	r12, ax
+ 105 006f FA F4                   		movw	hl, r12
+ 106 0071 8B                      		mov	a, [hl]
+ 107 0072 9D F2                   		mov	r10, a
+ 108 0074 6A F2 80                		or	r10, #-128
+ 109 0077 AD F0                   		movw	ax, r8
+ 110 0079 DA F4                   		movw	bc, r12
+ 111 007b 8D F2                   		mov	a, r10
+ 112 007d 48 00 00                		mov	[bc], a
   68:../src/r_cg_pclbuz.c **** }
- 112                             		.loc 1 68 0
- 113 0080 D7                      		ret
- 114                             	.LFE1:
- 116                             		.global	_R_PCLBUZ0_Stop
- 118                             	_R_PCLBUZ0_Stop:
- 119                             	.LFB2:
+ 113                             		.loc 1 68 0
+ 114 0080 D7                      		ret
+ 115                             	.LFE1:
+ 117                             		.global	_R_PCLBUZ0_Stop
+ 119                             	_R_PCLBUZ0_Stop:
+ 120                             	.LFB2:
   69:../src/r_cg_pclbuz.c **** 
   70:../src/r_cg_pclbuz.c **** /**************************************************************************************************
   71:../src/r_cg_pclbuz.c **** * Function Name: R_PCLBUZ0_Stop
@@ -189,26 +190,27 @@
   75:../src/r_cg_pclbuz.c **** ***************************************************************************************************
   76:../src/r_cg_pclbuz.c **** void R_PCLBUZ0_Stop(void)
   77:../src/r_cg_pclbuz.c **** {
- 120                             		.loc 1 77 0
+ 121                             		.loc 1 77 0
   78:../src/r_cg_pclbuz.c ****     PCLOE0 = 0U;    /* disable PCLBUZ0 operation */
- 121                             		.loc 1 78 0
- 122 0081 C9 F0 A5 FF             		movw	r8, #-91
- 123 0085 AD F0                   		movw	ax, r8
- 124 0087 BD F4                   		movw	r12, ax
- 125 0089 FA F4                   		movw	hl, r12
- 126 008b 8B                      		mov	a, [hl]
- 127 008c 9D F2                   		mov	r10, a
- 128 008e 5A F2 7F                		and	r10, #127
- 129 0091 AD F0                   		movw	ax, r8
- 130 0093 DA F4                   		movw	bc, r12
- 131 0095 8D F2                   		mov	a, r10
- 132 0097 48 00 00                		mov	[bc], a
+ 122                             		.loc 1 78 0
+ 123 0081 C9 F0 A5 FF             		movw	r8, #-91
+ 124 0085 AD F0                   		movw	ax, r8
+ 125 0087 BD F4                   		movw	r12, ax
+ 126 0089 FA F4                   		movw	hl, r12
+ 127 008b 8B                      		mov	a, [hl]
+ 128 008c 9D F2                   		mov	r10, a
+ 129 008e 5A F2 7F                		and	r10, #127
+ 130 0091 AD F0                   		movw	ax, r8
+ 131 0093 DA F4                   		movw	bc, r12
+ 132 0095 8D F2                   		mov	a, r10
+ 133 0097 48 00 00                		mov	[bc], a
   79:../src/r_cg_pclbuz.c **** }
- 133                             		.loc 1 79 0
- 134 009a D7                      		ret
- 135                             	.LFE2:
- 179                             	.Letext0:
- 180                             		.file 2 "../src/iodefine.h"
- 181                             		.file 3 "../src/r_cg_macrodriver.h"
- 182                             		.file 4 "../src/r_cg_userdefine.h"
- 183                             		.file 5 "../src/global.c"
+ 134                             		.loc 1 79 0
+ 135 009a D7                      		ret
+ 136                             	.LFE2:
+ 180                             	.Letext0:
+ 181                             		.file 2 "../src/iodefine.h"
+ 182                             		.file 3 "../src/r_cg_macrodriver.h"
+ 183                             		.file 4 "../src/r_cg_rtc.h"
+ 184                             		.file 5 "../src/r_cg_userdefine.h"
+ 185                             		.file 6 "../src/global.c"

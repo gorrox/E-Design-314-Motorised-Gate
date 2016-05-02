@@ -23,7 +23,7 @@
 * Device(s)    : R5F104LE
 * Tool-Chain   : GCCRL78
 * Description  : This file implements main function.
-* Creation Date: 4/13/2016
+* Creation Date: 5/2/2016
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
@@ -36,6 +36,7 @@ Includes
 #include "r_cg_serial.h"
 #include "r_cg_adc.h"
 #include "r_cg_timer.h"
+#include "r_cg_rtc.h"
 #include "r_cg_pclbuz.h"
 /* Start user code for include. Do not edit comment generated here */
 #include "lcd.h"
@@ -60,13 +61,14 @@ extern uint8_t uart1TxFlag;						// UART1 Transmit flag
 
 extern MD_STATUS uart1Status;
 
-extern uint8_t timer_interrupt;
-extern pwm_edge;
-extern switch_edge;
+extern volatile uint8_t timer_interrupt;
+extern volatile uint8_t pwm_edge;
+extern volatile uint8_t switch_edge;
+extern volatile uint8_t check_btns;
 
 //int mode = 0; // 0 for normal mode, 1 for test mode
 //int pwm_flag = 0;
-char myBuffer[40];
+char myBuffer[RX_BUF_LEN];
 int myCounter = 0;
 //int motorCounter = 0;
 //int welcome = 1;
@@ -79,6 +81,8 @@ void msDelay(int t);
 void echo(uint8_t hex);
 void pwm(int cycles_per_second, int divisor);
 void mtrBtn();
+uint8_t toHex(uint8_t decimal);
+uint8_t toBCD(uint8_t hex);
 /* End user code. Do not edit comment generated here */
 void R_MAIN_UserInit(void);
 
@@ -98,16 +102,20 @@ void main(void)
     ir_rxMessage = 0x0000;
     while (1U)
     {
+    	mtrBtn();			//Check and react: switch pressed
 
-    	mtrBtn();			//Switch pressed
-    	IRcmd();
-    	if (dataReady && dataPrint)
+    	boardBtn();			//Check and react: board buttons
+
+    	IRcmd();			//Check and react: IR command
+
+    	if (dataReady && dataPrint)	//Check and react: print to LCD
 		{
 			uint8_t ascii_word[16];
 			word_to_ascii(ir_rxMessage, ascii_word);
 			print_lcd(ascii_word);
 			dataPrint = 0;
 		}
+
         if (uart1RxFlag)	//Input received
         {
         	uart1RxFlag = 0U;
@@ -196,13 +204,51 @@ void main(void)
 				uint8_t cmd = ir_rxMessage & 0x7;
 				uint8_t addr = (ir_rxMessage >> 3) & 0xFF;
 				uint8_t tog = (ir_rxMessage >> 11) & 0x6;
+				echoData(addr, ((tog<<6) + cmd));
+				//echo(addr);
+				//echo((tog<<6) + cmd);
+			}
 
-				echo(addr);
-				echo((tog<<6) + cmd);
+			else if (uart1RxBuf[0] == 0xF2) //SET RTC TO PREV 5 BYTES
+			{
+				echo(0xF2);
+				time_now.sec = toBCD(myBuffer[myCounter - 1]);
+				time_now.min = toBCD(myBuffer[myCounter - 2]);
+				time_now.hour = toBCD(myBuffer[myCounter - 3]);
+				time_now.day = toBCD(myBuffer[myCounter - 4]);
+				time_now.month = toBCD(myBuffer[myCounter - 5]);
+				R_RTC_Stop();
+				R_RTC_Set_CounterValue(time_now);
+				R_RTC_Start();
+				int i;
+				for (i = 0; i < RX_BUF_LEN; i++)
+				{
+					myBuffer[i] = 0x0;
+				}
+				myCounter = 0;
+			}
+
+			else if (uart1RxBuf[0] == 0xF3) //SEND RTC VIA UART
+			{
+				int i;
+				for (i = 0; i < RX_BUF_LEN; i++)
+				{
+					myBuffer[i] = 0x0;
+				}
+				myCounter = 0;
+				R_RTC_Get_CounterValue(&time_now);
+				myBuffer[0] = 0xF3;
+				myBuffer[1] = toHex(time_now.month);
+				myBuffer[2] = toHex(time_now.day);
+				myBuffer[3] = toHex(time_now.hour);
+				myBuffer[4] = toHex(time_now.min);
+				myBuffer[5] = toHex(time_now.sec);
+
+				R_UART1_Send(myBuffer, 6);
 			}
 
 			//Buffer not full and input is not a command
-			else if((myCounter < 40)&&(uart1RxBuf[0] < 0x7F))
+			else if((myCounter < RX_BUF_LEN)&&(uart1RxBuf[0] < 0x7F))
 			{
 				myBuffer[myCounter] = uart1RxBuf[0];
 				myCounter++;
@@ -274,12 +320,14 @@ void R_MAIN_UserInit(void)
     /* Start user code. Do not edit comment generated here */
 	//Open connections
 	EI();
+	R_RTC_Start();
 	//R_SAU0_Create();
 	//R_UART1_Create();
 	R_UART1_Start();
 	//R_TAU0_Create();
 	R_TAU0_Channel0_Start();
 	R_TAU0_Channel2_Start();
+	R_TAU0_Channel1_Lower8bits_Start();
 
 	//R_TMR_RD0_Create();
 	R_TMR_RD0_Start();
@@ -381,6 +429,31 @@ void echo(uint8_t hex)
 	uart1Status = R_UART1_Send(uart1TxBuf,1);
 }
 
+void echoData(uint8_t hex, uint8_t hex2)
+{
+	uart1TxBuf[0] = hex;
+	uart1TxBuf[1] = hex2;
+	uart1Status = R_UART1_Send(uart1TxBuf,2);
+}
+
+/**
+ * takes in a binary coded decimal
+ */
+uint8_t toHex(uint8_t decimal){
+	return (decimal & 0x0F) + ((decimal >> 4) * 10);
+}
+
+/**
+ * converts from hex to binary coded decimal
+ * max input/output is 99
+ */
+uint8_t toBCD(uint8_t hex){
+	uint8_t nibble_l = hex % 10; //Isolate lower nibble
+	uint8_t nibble_h = ((hex / 10) % 10) << 4; //Isolate higher nibble
+	uint8_t byte = nibble_h | nibble_l; //Combine them as two consecutive values
+	return byte;
+}
+
 /*
  * Software PWM implementation
  * Causes motor to rotate
@@ -408,6 +481,10 @@ void pwm(int cycles_per_second, int divisor)
 	}
 }
 
+
+/*
+ * Inspect the gate collision buttons
+ */
 void mtrBtn()
 {
 	if (switch_edge)
@@ -434,6 +511,46 @@ void mtrBtn()
 				print_lcd("Closed");
 				msDelay(5);
 			}
+		}
+	}
+}
+
+/*
+ * Inspect the board button values
+ */
+void boardBtn()
+{
+	if (check_btns)
+	{
+		check_btns = 0; //Reset
+		if (!BTN_STOP)
+		{
+			DVR_nSLEEP = 0;
+			gate_status = GS_ESTOP;
+			print_lcd("Gate stopped.");
+			return;
+		}
+		if (!BTN_STEP)
+		{
+			//TODO
+			return;
+		}
+		if (!BTN_OPEN)
+		{
+			//func
+			DVR_PHASE = 0;
+			DVR_nSLEEP = 1;
+			gate_status = GS_UNKNOWN;
+			print_lcd("Gate opening...");
+			return;
+		}
+		if (!BTN_CLOSE)
+		{
+			DVR_PHASE = 1;
+			DVR_nSLEEP = 1;
+			gate_status = GS_UNKNOWN;
+			print_lcd("Gate closing...");
+			return;
 		}
 	}
 }

@@ -63,35 +63,37 @@ void receive(void)
 
 void IRcmd(void)
 {
-	if (dataReady && dataResponse)
-	{
-		uint8_t cmd = ir_rxMessage & 0x7;
-		uint8_t addr = (ir_rxMessage >> 3) & 0xFF;
-		uint8_t tog = (ir_rxMessage >> 11) & 0x6;
-
-		if (addr == TNELaddr)
+		if (dataReady && dataResponse)
 		{
-			switch(cmd)
+			uint8_t cmd = ir_rxMessage & 0x7;
+			uint8_t addr = (ir_rxMessage >> 3) & 0xFF;
+			uint8_t tog = (ir_rxMessage >> 11) & 0x1;
+
+			if (addr == TNELaddr)
 			{
-				case 0x1: // OPEN
-					if (mode) echo(0x88);
-					DVR_PHASE = 0;
-					DVR_nSLEEP = 1;
-					gate_status = GS_UNKNOWN;
-					break;
-				case 0x2: // CLOSE
-					if (mode) echo(0x90);
-					DVR_PHASE = 1;
-					DVR_nSLEEP = 1;
-					gate_status = GS_UNKNOWN;
-					break;
-				case 0x3: //ESTOP
-					if (mode) echo(0x84);
-					DVR_nSLEEP = 0;
-					gate_status = GS_ESTOP;
-					break;
+				switch(cmd)
+				{
+					case 0x1: // OPEN
+						//if (mode) echo(0x88);
+						DVR_PHASE = 0;
+						DVR_nSLEEP = 1;
+						gate_status = GS_UNKNOWN;
+						break;
+					case 0x2: // CLOSE
+						//if (mode) echo(0x90);
+						DVR_PHASE = 1;
+						DVR_nSLEEP = 1;
+						gate_status = GS_UNKNOWN;
+						break;
+					case 0x3: //ESTOP
+						//if (mode) echo(0x84);
+						DVR_nSLEEP = 0;
+						gate_status = GS_ESTOP;
+						break;
+				}
 			}
+			dataResponse = 0;
 		}
-		dataResponse = 0;
-	}
+
+
 }

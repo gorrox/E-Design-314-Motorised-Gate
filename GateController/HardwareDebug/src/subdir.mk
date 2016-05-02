@@ -20,6 +20,8 @@ C_SRCS += \
 ..\src/r_cg_pclbuz_user.c \
 ..\src/r_cg_port.c \
 ..\src/r_cg_port_user.c \
+..\src/r_cg_rtc.c \
+..\src/r_cg_rtc_user.c \
 ..\src/r_cg_serial.c \
 ..\src/r_cg_serial_user.c \
 ..\src/r_cg_timer.c \
@@ -42,6 +44,8 @@ C_DEPS += \
 ./src/r_cg_pclbuz_user.d \
 ./src/r_cg_port.d \
 ./src/r_cg_port_user.d \
+./src/r_cg_rtc.d \
+./src/r_cg_rtc_user.d \
 ./src/r_cg_serial.d \
 ./src/r_cg_serial_user.d \
 ./src/r_cg_timer.d \
@@ -64,6 +68,8 @@ OBJS += \
 ./src/r_cg_pclbuz_user.o \
 ./src/r_cg_port.o \
 ./src/r_cg_port_user.o \
+./src/r_cg_rtc.o \
+./src/r_cg_rtc_user.o \
 ./src/r_cg_serial.o \
 ./src/r_cg_serial_user.o \
 ./src/r_cg_timer.o \
@@ -184,6 +190,26 @@ src/r_cg_port_user.o: ../src/r_cg_port_user.c
 	@rl78-elf-gcc -MM -MP -MF "src/r_cg_port_user.d" -MT"src/r_cg_port_user.o" -MT"src/r_cg_port_user.d" @"src/r_cg_port_user.depsub" "$<"
 	@echo	rl78-elf-gcc -MM -MP -MF "src/r_cg_port_user.d" -MT"src/r_cg_port_user.o" -MT"src/r_cg_port_user.d" -x c   -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g "$<"
 	@rl78-elf-gcc -Wa,-adlhn="$(basename $(notdir $<)).lst" @"src/r_cg_port_user.sub" -o "$(@:%.d=%.o)" "$<"
+	@echo rl78-elf-gcc -c -x c  -Wa,-adlhn="$(basename $(notdir $<)).lst" -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g -o "$(@:%.d=%.o)" "$<"
+	@echo 'Finished scanning and building: $<'
+	@echo.
+
+src/r_cg_rtc.o: ../src/r_cg_rtc.c
+	@echo 'Scanning and building file: $<'
+	@echo 'Invoking: Scanner and Compiler'
+	@rl78-elf-gcc -MM -MP -MF "src/r_cg_rtc.d" -MT"src/r_cg_rtc.o" -MT"src/r_cg_rtc.d" @"src/r_cg_rtc.depsub" "$<"
+	@echo	rl78-elf-gcc -MM -MP -MF "src/r_cg_rtc.d" -MT"src/r_cg_rtc.o" -MT"src/r_cg_rtc.d" -x c   -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g "$<"
+	@rl78-elf-gcc -Wa,-adlhn="$(basename $(notdir $<)).lst" @"src/r_cg_rtc.sub" -o "$(@:%.d=%.o)" "$<"
+	@echo rl78-elf-gcc -c -x c  -Wa,-adlhn="$(basename $(notdir $<)).lst" -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g -o "$(@:%.d=%.o)" "$<"
+	@echo 'Finished scanning and building: $<'
+	@echo.
+
+src/r_cg_rtc_user.o: ../src/r_cg_rtc_user.c
+	@echo 'Scanning and building file: $<'
+	@echo 'Invoking: Scanner and Compiler'
+	@rl78-elf-gcc -MM -MP -MF "src/r_cg_rtc_user.d" -MT"src/r_cg_rtc_user.o" -MT"src/r_cg_rtc_user.d" @"src/r_cg_rtc_user.depsub" "$<"
+	@echo	rl78-elf-gcc -MM -MP -MF "src/r_cg_rtc_user.d" -MT"src/r_cg_rtc_user.o" -MT"src/r_cg_rtc_user.d" -x c   -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g "$<"
+	@rl78-elf-gcc -Wa,-adlhn="$(basename $(notdir $<)).lst" @"src/r_cg_rtc_user.sub" -o "$(@:%.d=%.o)" "$<"
 	@echo rl78-elf-gcc -c -x c  -Wa,-adlhn="$(basename $(notdir $<)).lst" -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g -o "$(@:%.d=%.o)" "$<"
 	@echo 'Finished scanning and building: $<'
 	@echo.

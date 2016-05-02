@@ -23,7 +23,7 @@
 * Device(s)    : R5F104LE
 * Tool-Chain   : GCCRL78
 * Description  : This file includes user definition.
-* Creation Date: 4/13/2016
+* Creation Date: 5/2/2016
 ***********************************************************************************************************************/
 
 #ifndef _USER_DEF_H
@@ -50,6 +50,11 @@ int gate_status;
 #define GS_OPENED	1
 #define GS_CLOSED	2
 #define GS_ESTOP	3
+//Board buttons
+#define BTN_STEP		P7_bit.no7 //Menu step: 		INTP11, P77
+#define BTN_STOP		P5_bit.no1 //Emergency stop: 	INTP2, P51
+#define BTN_OPEN		P5_bit.no0 //Open gate:			INTP1, P50
+#define BTN_CLOSE		P3_bit.no1 //Close gate:		INTP4, P31
 //Controller mode
 int mode;
 

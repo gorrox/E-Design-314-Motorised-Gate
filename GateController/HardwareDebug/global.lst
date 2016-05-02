@@ -34,8 +34,10 @@
   34                             		.comm	_uart1TxBuf,16,1
   35                             		.comm	_uart1TxCnt,2,2
   36                             		.comm	_uart1TxFlag,1,1
-  37                             		.comm	_uart1Status,2,2
-  38                             	.Letext0:
-  39                             		.file 1 "../src/r_cg_macrodriver.h"
-  40                             		.file 2 "../src/r_cg_userdefine.h"
-  41                             		.file 3 "../src/global.c"
+  37                             		.comm	_time_now,7,1
+  38                             		.comm	_uart1Status,2,2
+  39                             	.Letext0:
+  40                             		.file 1 "../src/r_cg_macrodriver.h"
+  41                             		.file 2 "../src/r_cg_rtc.h"
+  42                             		.file 3 "../src/r_cg_userdefine.h"
+  43                             		.file 4 "../src/global.c"

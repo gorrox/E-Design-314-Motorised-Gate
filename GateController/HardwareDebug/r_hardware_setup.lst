@@ -34,11 +34,12 @@
   34                             		.comm	_uart1TxBuf,16,1
   35                             		.comm	_uart1TxCnt,2,2
   36                             		.comm	_uart1TxFlag,1,1
-  37                             		.comm	_uart1Status,2,2
-  38                             		.global	_R_Systeminit
-  40                             	_R_Systeminit:
-  41                             	.LFB0:
-  42                             		.file 1 "../src/r_hardware_setup.c"
+  37                             		.comm	_time_now,7,1
+  38                             		.comm	_uart1Status,2,2
+  39                             		.global	_R_Systeminit
+  41                             	_R_Systeminit:
+  42                             	.LFB0:
+  43                             		.file 1 "../src/r_hardware_setup.c"
    1:../src/r_hardware_setup.c **** /**************************************************************************************************
    2:../src/r_hardware_setup.c **** * DISCLAIMER
    3:../src/r_hardware_setup.c **** * This software is supplied by Renesas Electronics Corporation and is only intended for use with Re
@@ -64,7 +65,7 @@
   23:../src/r_hardware_setup.c **** * Device(s)    : R5F104LE
   24:../src/r_hardware_setup.c **** * Tool-Chain   : GCCRL78
   25:../src/r_hardware_setup.c **** * Description  : This file implements system initializing function.
-  26:../src/r_hardware_setup.c **** * Creation Date: 4/13/2016
+  26:../src/r_hardware_setup.c **** * Creation Date: 5/2/2016
   27:../src/r_hardware_setup.c **** ***************************************************************************************************
   28:../src/r_hardware_setup.c **** 
   29:../src/r_hardware_setup.c **** /**************************************************************************************************
@@ -77,118 +78,123 @@
   36:../src/r_hardware_setup.c **** #include "r_cg_serial.h"
   37:../src/r_hardware_setup.c **** #include "r_cg_adc.h"
   38:../src/r_hardware_setup.c **** #include "r_cg_timer.h"
-  39:../src/r_hardware_setup.c **** #include "r_cg_pclbuz.h"
-  40:../src/r_hardware_setup.c **** /* Start user code for include. Do not edit comment generated here */
-  41:../src/r_hardware_setup.c **** /* End user code. Do not edit comment generated here */
-  42:../src/r_hardware_setup.c **** #include "r_cg_userdefine.h"
-  43:../src/r_hardware_setup.c **** 
-  44:../src/r_hardware_setup.c **** /**************************************************************************************************
-  45:../src/r_hardware_setup.c **** Global variables and functions
-  46:../src/r_hardware_setup.c **** ***************************************************************************************************
-  47:../src/r_hardware_setup.c **** /* Start user code for global. Do not edit comment generated here */
-  48:../src/r_hardware_setup.c **** /* End user code. Do not edit comment generated here */
-  49:../src/r_hardware_setup.c **** int HardwareSetup(void);
-  50:../src/r_hardware_setup.c **** void R_Systeminit(void);
-  51:../src/r_hardware_setup.c **** 
+  39:../src/r_hardware_setup.c **** #include "r_cg_rtc.h"
+  40:../src/r_hardware_setup.c **** #include "r_cg_pclbuz.h"
+  41:../src/r_hardware_setup.c **** /* Start user code for include. Do not edit comment generated here */
+  42:../src/r_hardware_setup.c **** /* End user code. Do not edit comment generated here */
+  43:../src/r_hardware_setup.c **** #include "r_cg_userdefine.h"
+  44:../src/r_hardware_setup.c **** 
+  45:../src/r_hardware_setup.c **** /**************************************************************************************************
+  46:../src/r_hardware_setup.c **** Global variables and functions
+  47:../src/r_hardware_setup.c **** ***************************************************************************************************
+  48:../src/r_hardware_setup.c **** /* Start user code for global. Do not edit comment generated here */
+  49:../src/r_hardware_setup.c **** /* End user code. Do not edit comment generated here */
+  50:../src/r_hardware_setup.c **** int HardwareSetup(void);
+  51:../src/r_hardware_setup.c **** void R_Systeminit(void);
   52:../src/r_hardware_setup.c **** 
-  53:../src/r_hardware_setup.c **** /**************************************************************************************************
-  54:../src/r_hardware_setup.c **** * Function Name: R_Systeminit
-  55:../src/r_hardware_setup.c **** * Description  : This function initializes every macro.
-  56:../src/r_hardware_setup.c **** * Arguments    : None
-  57:../src/r_hardware_setup.c **** * Return Value : None
-  58:../src/r_hardware_setup.c **** ***************************************************************************************************
-  59:../src/r_hardware_setup.c **** void R_Systeminit(void)
-  60:../src/r_hardware_setup.c **** {
-  43                             		.loc 1 60 0
-  61:../src/r_hardware_setup.c ****     PIOR0 = 0x00U;
+  53:../src/r_hardware_setup.c **** 
+  54:../src/r_hardware_setup.c **** /**************************************************************************************************
+  55:../src/r_hardware_setup.c **** * Function Name: R_Systeminit
+  56:../src/r_hardware_setup.c **** * Description  : This function initializes every macro.
+  57:../src/r_hardware_setup.c **** * Arguments    : None
+  58:../src/r_hardware_setup.c **** * Return Value : None
+  59:../src/r_hardware_setup.c **** ***************************************************************************************************
+  60:../src/r_hardware_setup.c **** void R_Systeminit(void)
+  61:../src/r_hardware_setup.c **** {
   44                             		.loc 1 61 0
-  45 0000 C9 F0 77 00             		movw	r8, #119
-  46 0004 AD F0                   		movw	ax, r8
-  47 0006 BD F2                   		movw	r10, ax
-  48 0008 DA F2                   		movw	bc, r10
-  49 000a F1                      		clrb	a
-  50 000b 48 00 00                		mov	[bc], a
-  62:../src/r_hardware_setup.c ****     PIOR1 = 0x00U;
-  51                             		.loc 1 62 0
-  52 000e C9 F0 79 00             		movw	r8, #121
-  53 0012 AD F0                   		movw	ax, r8
-  54 0014 BD F2                   		movw	r10, ax
-  55 0016 DA F2                   		movw	bc, r10
-  56 0018 F1                      		clrb	a
-  57 0019 48 00 00                		mov	[bc], a
-  63:../src/r_hardware_setup.c ****     R_CGC_Create();
-  58                             		.loc 1 63 0
-  59 001c FC 00 00 00             		call	!!%code(_R_CGC_Create)
-  64:../src/r_hardware_setup.c ****     R_PORT_Create();
-  60                             		.loc 1 64 0
-  61 0020 FC 00 00 00             		call	!!%code(_R_PORT_Create)
-  65:../src/r_hardware_setup.c ****     R_SAU0_Create();
-  62                             		.loc 1 65 0
-  63 0024 FC 00 00 00             		call	!!%code(_R_SAU0_Create)
-  66:../src/r_hardware_setup.c ****     R_ADC_Create();
-  64                             		.loc 1 66 0
-  65 0028 FC 00 00 00             		call	!!%code(_R_ADC_Create)
-  67:../src/r_hardware_setup.c ****     R_TAU0_Create();
-  66                             		.loc 1 67 0
-  67 002c FC 00 00 00             		call	!!%code(_R_TAU0_Create)
-  68:../src/r_hardware_setup.c ****     R_PCLBUZ0_Create();
-  68                             		.loc 1 68 0
-  69 0030 FC 00 00 00             		call	!!%code(_R_PCLBUZ0_Create)
-  69:../src/r_hardware_setup.c ****     R_INTC_Create();
-  70                             		.loc 1 69 0
-  71 0034 FC 00 00 00             		call	!!%code(_R_INTC_Create)
-  70:../src/r_hardware_setup.c ****     R_TMR_RD0_Create();
-  72                             		.loc 1 70 0
-  73 0038 FC 00 00 00             		call	!!%code(_R_TMR_RD0_Create)
-  71:../src/r_hardware_setup.c ****     IAWCTL = 0x00U;
-  74                             		.loc 1 71 0
-  75 003c C9 F0 78 00             		movw	r8, #120
-  76 0040 AD F0                   		movw	ax, r8
-  77 0042 BD F2                   		movw	r10, ax
-  78 0044 DA F2                   		movw	bc, r10
-  79 0046 F1                      		clrb	a
-  80 0047 48 00 00                		mov	[bc], a
-  72:../src/r_hardware_setup.c **** }
-  81                             		.loc 1 72 0
-  82 004a D7                      		ret
-  83                             	.LFE0:
-  85                             		.global	_HardwareSetup
-  87                             	_HardwareSetup:
-  88                             	.LFB1:
-  73:../src/r_hardware_setup.c **** 
-  74:../src/r_hardware_setup.c **** /**************************************************************************************************
-  75:../src/r_hardware_setup.c **** * Function Name: HardwareSetup
-  76:../src/r_hardware_setup.c **** * Description  : This function initializes hardware setting.
-  77:../src/r_hardware_setup.c **** * Arguments    : None
-  78:../src/r_hardware_setup.c **** * Return Value : None
-  79:../src/r_hardware_setup.c **** ***************************************************************************************************
-  80:../src/r_hardware_setup.c **** int HardwareSetup(void)
-  81:../src/r_hardware_setup.c **** {
-  89                             		.loc 1 81 0
-  90                             		; start of function
-  91                             		; locals: 2 bytes
-  92 004b 20 02                   		subw	sp, #2
-  93                             	.LCFI0:
-  82:../src/r_hardware_setup.c ****     DI();
-  94                             		.loc 1 82 0
-  95                             	 ; 82 "../src/r_hardware_setup.c" 1
-  96 004d 71 7B FA                		di
-  97                             	 ; 0 "" 2
-  83:../src/r_hardware_setup.c ****     R_Systeminit();
-  98                             		.loc 1 83 0
-  99 0050 FC 00 00 00             		call	!!%code(_R_Systeminit)
-  84:../src/r_hardware_setup.c **** 
-  85:../src/r_hardware_setup.c ****     return (1U);
- 100                             		.loc 1 85 0
- 101 0054 E6                      		onew	ax
- 102 0055 B8 00                   		movw	[sp], ax
- 103 0057 BD F0                   		movw	r8, ax
-  86:../src/r_hardware_setup.c **** }
- 104                             		.loc 1 86 0
- 105 0059 10 02                   		addw	sp, #2
- 106 005b D7                      		ret
- 107                             	.LFE1:
- 147                             	.Letext0:
- 148                             		.file 2 "../src/r_cg_macrodriver.h"
- 149                             		.file 3 "../src/r_cg_userdefine.h"
- 150                             		.file 4 "../src/global.c"
+  62:../src/r_hardware_setup.c ****     PIOR0 = 0x00U;
+  45                             		.loc 1 62 0
+  46 0000 C9 F0 77 00             		movw	r8, #119
+  47 0004 AD F0                   		movw	ax, r8
+  48 0006 BD F2                   		movw	r10, ax
+  49 0008 DA F2                   		movw	bc, r10
+  50 000a F1                      		clrb	a
+  51 000b 48 00 00                		mov	[bc], a
+  63:../src/r_hardware_setup.c ****     PIOR1 = 0x00U;
+  52                             		.loc 1 63 0
+  53 000e C9 F0 79 00             		movw	r8, #121
+  54 0012 AD F0                   		movw	ax, r8
+  55 0014 BD F2                   		movw	r10, ax
+  56 0016 DA F2                   		movw	bc, r10
+  57 0018 F1                      		clrb	a
+  58 0019 48 00 00                		mov	[bc], a
+  64:../src/r_hardware_setup.c ****     R_CGC_Create();
+  59                             		.loc 1 64 0
+  60 001c FC 00 00 00             		call	!!%code(_R_CGC_Create)
+  65:../src/r_hardware_setup.c ****     R_PORT_Create();
+  61                             		.loc 1 65 0
+  62 0020 FC 00 00 00             		call	!!%code(_R_PORT_Create)
+  66:../src/r_hardware_setup.c ****     R_SAU0_Create();
+  63                             		.loc 1 66 0
+  64 0024 FC 00 00 00             		call	!!%code(_R_SAU0_Create)
+  67:../src/r_hardware_setup.c ****     R_ADC_Create();
+  65                             		.loc 1 67 0
+  66 0028 FC 00 00 00             		call	!!%code(_R_ADC_Create)
+  68:../src/r_hardware_setup.c ****     R_TAU0_Create();
+  67                             		.loc 1 68 0
+  68 002c FC 00 00 00             		call	!!%code(_R_TAU0_Create)
+  69:../src/r_hardware_setup.c ****     R_RTC_Create();
+  69                             		.loc 1 69 0
+  70 0030 FC 00 00 00             		call	!!%code(_R_RTC_Create)
+  70:../src/r_hardware_setup.c ****     R_PCLBUZ0_Create();
+  71                             		.loc 1 70 0
+  72 0034 FC 00 00 00             		call	!!%code(_R_PCLBUZ0_Create)
+  71:../src/r_hardware_setup.c ****     R_INTC_Create();
+  73                             		.loc 1 71 0
+  74 0038 FC 00 00 00             		call	!!%code(_R_INTC_Create)
+  72:../src/r_hardware_setup.c ****     R_TMR_RD0_Create();
+  75                             		.loc 1 72 0
+  76 003c FC 00 00 00             		call	!!%code(_R_TMR_RD0_Create)
+  73:../src/r_hardware_setup.c ****     IAWCTL = 0x00U;
+  77                             		.loc 1 73 0
+  78 0040 C9 F0 78 00             		movw	r8, #120
+  79 0044 AD F0                   		movw	ax, r8
+  80 0046 BD F2                   		movw	r10, ax
+  81 0048 DA F2                   		movw	bc, r10
+  82 004a F1                      		clrb	a
+  83 004b 48 00 00                		mov	[bc], a
+  74:../src/r_hardware_setup.c **** }
+  84                             		.loc 1 74 0
+  85 004e D7                      		ret
+  86                             	.LFE0:
+  88                             		.global	_HardwareSetup
+  90                             	_HardwareSetup:
+  91                             	.LFB1:
+  75:../src/r_hardware_setup.c **** 
+  76:../src/r_hardware_setup.c **** /**************************************************************************************************
+  77:../src/r_hardware_setup.c **** * Function Name: HardwareSetup
+  78:../src/r_hardware_setup.c **** * Description  : This function initializes hardware setting.
+  79:../src/r_hardware_setup.c **** * Arguments    : None
+  80:../src/r_hardware_setup.c **** * Return Value : None
+  81:../src/r_hardware_setup.c **** ***************************************************************************************************
+  82:../src/r_hardware_setup.c **** int HardwareSetup(void)
+  83:../src/r_hardware_setup.c **** {
+  92                             		.loc 1 83 0
+  93                             		; start of function
+  94                             		; locals: 2 bytes
+  95 004f 20 02                   		subw	sp, #2
+  96                             	.LCFI0:
+  84:../src/r_hardware_setup.c ****     DI();
+  97                             		.loc 1 84 0
+  98                             	 ; 84 "../src/r_hardware_setup.c" 1
+  99 0051 71 7B FA                		di
+ 100                             	 ; 0 "" 2
+  85:../src/r_hardware_setup.c ****     R_Systeminit();
+ 101                             		.loc 1 85 0
+ 102 0054 FC 00 00 00             		call	!!%code(_R_Systeminit)
+  86:../src/r_hardware_setup.c **** 
+  87:../src/r_hardware_setup.c ****     return (1U);
+ 103                             		.loc 1 87 0
+ 104 0058 E6                      		onew	ax
+ 105 0059 B8 00                   		movw	[sp], ax
+ 106 005b BD F0                   		movw	r8, ax
+  88:../src/r_hardware_setup.c **** }
+ 107                             		.loc 1 88 0
+ 108 005d 10 02                   		addw	sp, #2
+ 109 005f D7                      		ret
+ 110                             	.LFE1:
+ 150                             	.Letext0:
+ 151                             		.file 2 "../src/r_cg_macrodriver.h"
+ 152                             		.file 3 "../src/r_cg_rtc.h"
+ 153                             		.file 4 "../src/r_cg_userdefine.h"
+ 154                             		.file 5 "../src/global.c"

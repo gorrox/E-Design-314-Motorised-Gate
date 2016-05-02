@@ -23,7 +23,7 @@
 * Device(s)    : R5F104LE
 * Tool-Chain   : GCCRL78
 * Description  : This file implements device driver for INTC module.
-* Creation Date: 4/13/2016
+* Creation Date: 5/2/2016
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
@@ -73,9 +73,9 @@ void R_INTC_Create(void)
     PIF10 = 0U;    /* clear INTP10 interrupt flag */
     PMK11 = 1U;    /* disable INTP11 operation */
     PIF11 = 0U;    /* clear INTP11 interrupt flag */
-    /* Set INTP7 low priority */
-    PPR17 = 1U;
-    PPR07 = 1U;
+    /* Set INTP7 high priority */
+    PPR17 = 0U;
+    PPR07 = 0U;
     EGN0 = _80_INTP7_EDGE_FALLING_SEL;
     EGP0 = _80_INTP7_EDGE_RISING_SEL;
     /* Set INTP7 pin */

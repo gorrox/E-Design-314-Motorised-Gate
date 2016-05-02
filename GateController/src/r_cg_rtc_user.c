@@ -18,11 +18,11 @@
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-* File Name    : r_cg_pclbuz_user.c
+* File Name    : r_cg_rtc_user.c
 * Version      : CodeGenerator for RL78/G14 V2.04.02.01 [15 May 2015]
 * Device(s)    : R5F104LE
 * Tool-Chain   : GCCRL78
-* Description  : This file implements device driver for PCLBUZ module.
+* Description  : This file implements device driver for RTC module.
 * Creation Date: 5/2/2016
 ***********************************************************************************************************************/
 
@@ -30,7 +30,7 @@
 Includes
 ***********************************************************************************************************************/
 #include "r_cg_macrodriver.h"
-#include "r_cg_pclbuz.h"
+#include "r_cg_rtc.h"
 /* Start user code for include. Do not edit comment generated here */
 /* End user code. Do not edit comment generated here */
 #include "r_cg_userdefine.h"

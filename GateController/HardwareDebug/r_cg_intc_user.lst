@@ -34,15 +34,16 @@
   34                             		.comm	_uart1TxBuf,16,1
   35                             		.comm	_uart1TxCnt,2,2
   36                             		.comm	_uart1TxFlag,1,1
-  37                             		.comm	_uart1Status,2,2
-  38                             		.comm	_ir_rxMessage,2,2
-  39                             		.comm	_dataReady,1,1
-  40                             		.comm	_dataPrint,1,1
-  41                             		.comm	_dataResponse,1,1
-  42                             		.global	_r_intc7_interrupt
-  44                             	_r_intc7_interrupt:
-  45                             	.LFB0:
-  46                             		.file 1 "../src/r_cg_intc_user.c"
+  37                             		.comm	_time_now,7,1
+  38                             		.comm	_uart1Status,2,2
+  39                             		.comm	_ir_rxMessage,2,2
+  40                             		.comm	_dataReady,1,1
+  41                             		.comm	_dataPrint,1,1
+  42                             		.comm	_dataResponse,1,1
+  43                             		.global	_r_intc7_interrupt
+  45                             	_r_intc7_interrupt:
+  46                             	.LFB0:
+  47                             		.file 1 "../src/r_cg_intc_user.c"
    1:../src/r_cg_intc_user.c **** /**************************************************************************************************
    2:../src/r_cg_intc_user.c **** * DISCLAIMER
    3:../src/r_cg_intc_user.c **** * This software is supplied by Renesas Electronics Corporation and is only intended for use with Re
@@ -68,7 +69,7 @@
   23:../src/r_cg_intc_user.c **** * Device(s)    : R5F104LE
   24:../src/r_cg_intc_user.c **** * Tool-Chain   : GCCRL78
   25:../src/r_cg_intc_user.c **** * Description  : This file implements device driver for INTC module.
-  26:../src/r_cg_intc_user.c **** * Creation Date: 4/13/2016
+  26:../src/r_cg_intc_user.c **** * Creation Date: 5/2/2016
   27:../src/r_cg_intc_user.c **** ***************************************************************************************************
   28:../src/r_cg_intc_user.c **** 
   29:../src/r_cg_intc_user.c **** /**************************************************************************************************
@@ -95,55 +96,56 @@
   50:../src/r_cg_intc_user.c **** ***************************************************************************************************
   51:../src/r_cg_intc_user.c **** void r_intc7_interrupt(void)
   52:../src/r_cg_intc_user.c **** {
-  47                             		.loc 1 52 0
-  48                             		; start of function
-  49                             		; push 16: ax bc de hl r8 r10 r12 r14
-  50 0000 61 CF                   		sel	rb0
-  51 0002 C1                      		push	ax
-  52                             	.LCFI0:
-  53 0003 C3                      		push	bc
-  54                             	.LCFI1:
-  55 0004 C5                      		push	de
-  56                             	.LCFI2:
-  57 0005 C7                      		push	hl
-  58                             	.LCFI3:
-  59 0006 61 DF                   		sel	rb1
-  60 0008 C1                      		push	ax ; r8
-  61                             	.LCFI4:
-  62 0009 C3                      		push	bc ; r10
-  63                             	.LCFI5:
-  64 000a C5                      		push	de ; r12
-  65                             	.LCFI6:
-  66 000b C7                      		push	hl ; r14
-  67                             	.LCFI7:
-  68 000c 61 CF                   		sel	rb0
+  48                             		.loc 1 52 0
+  49                             		; start of function
+  50                             		; push 16: ax bc de hl r8 r10 r12 r14
+  51 0000 61 CF                   		sel	rb0
+  52 0002 C1                      		push	ax
+  53                             	.LCFI0:
+  54 0003 C3                      		push	bc
+  55                             	.LCFI1:
+  56 0004 C5                      		push	de
+  57                             	.LCFI2:
+  58 0005 C7                      		push	hl
+  59                             	.LCFI3:
+  60 0006 61 DF                   		sel	rb1
+  61 0008 C1                      		push	ax ; r8
+  62                             	.LCFI4:
+  63 0009 C3                      		push	bc ; r10
+  64                             	.LCFI5:
+  65 000a C5                      		push	de ; r12
+  66                             	.LCFI6:
+  67 000b C7                      		push	hl ; r14
+  68                             	.LCFI7:
+  69 000c 61 CF                   		sel	rb0
   53:../src/r_cg_intc_user.c ****     /* Start user code. Do not edit comment generated here */
   54:../src/r_cg_intc_user.c **** 	dataReady = 0;
-  69                             		.loc 1 54 0
-  70 000e F5 00 00                		clrb	!_dataReady
+  70                             		.loc 1 54 0
+  71 000e F5 00 00                		clrb	!_dataReady
   55:../src/r_cg_intc_user.c **** 	R_INTC7_Stop();
-  71                             		.loc 1 55 0
-  72 0011 FC 00 00 00             		call	!!%code(_R_INTC7_Stop)
+  72                             		.loc 1 55 0
+  73 0011 FC 00 00 00             		call	!!%code(_R_INTC7_Stop)
   56:../src/r_cg_intc_user.c **** 	R_TAU0_Channel3_Start();
-  73                             		.loc 1 56 0
-  74 0015 FC 00 00 00             		call	!!%code(_R_TAU0_Channel3_Start)
+  74                             		.loc 1 56 0
+  75 0015 FC 00 00 00             		call	!!%code(_R_TAU0_Channel3_Start)
   57:../src/r_cg_intc_user.c ****     /* End user code. Do not edit comment generated here */
   58:../src/r_cg_intc_user.c **** }
-  75                             		.loc 1 58 0
-  76 0019 61 DF                   		sel	rb1
-  77 001b C6                      		pop	hl ; r14
-  78 001c C4                      		pop	de ; r12
-  79 001d C2                      		pop	bc ; r10
-  80 001e C0                      		pop	ax ; r8
-  81 001f 61 CF                   		sel	rb0
-  82 0021 C6                      		pop	hl
-  83 0022 C4                      		pop	de
-  84 0023 C2                      		pop	bc
-  85 0024 C0                      		pop	ax
-  86 0025 61 FC                   		reti
-  87                             	.LFE0:
- 147                             	.Letext0:
- 148                             		.file 2 "../src/r_cg_macrodriver.h"
- 149                             		.file 3 "../src/r_cg_userdefine.h"
- 150                             		.file 4 "../src/global.c"
- 151                             		.file 5 "../src/infrared.h"
+  76                             		.loc 1 58 0
+  77 0019 61 DF                   		sel	rb1
+  78 001b C6                      		pop	hl ; r14
+  79 001c C4                      		pop	de ; r12
+  80 001d C2                      		pop	bc ; r10
+  81 001e C0                      		pop	ax ; r8
+  82 001f 61 CF                   		sel	rb0
+  83 0021 C6                      		pop	hl
+  84 0022 C4                      		pop	de
+  85 0023 C2                      		pop	bc
+  86 0024 C0                      		pop	ax
+  87 0025 61 FC                   		reti
+  88                             	.LFE0:
+ 148                             	.Letext0:
+ 149                             		.file 2 "../src/r_cg_macrodriver.h"
+ 150                             		.file 3 "../src/r_cg_rtc.h"
+ 151                             		.file 4 "../src/r_cg_userdefine.h"
+ 152                             		.file 5 "../src/global.c"
+ 153                             		.file 6 "../src/infrared.h"
