@@ -8,32 +8,50 @@ Common symbol       size              file
 
 g_uart1_rx_length   0x2               ./src/r_cg_serial.o
 g_uart1_rx_count    0x2               ./src/r_cg_serial.o
-uart1RxOvrFlag      0x1               ./src/global.o
-uart1RxFlag         0x1               ./src/global.o
-gate_status         0x2               ./src/global.o
-uart1RxBuf          0x10              ./src/global.o
-check_btns          0x1               ./src/r_cg_timer_user.o
-switch_edge         0x1               ./src/r_cg_timer_user.o
+uart1RxOvrFlag      0x1               ./src/adc.o
+uart1RxFlag         0x1               ./src/adc.o
+timer_adc_reader_10Hz_interrupt
+                    0x1               ./src/adc.o
+latest_current_reading
+                    0x1               ./src/adc.o
+gate_status         0x2               ./src/adc.o
+uart1RxBuf          0x10              ./src/adc.o
+check_btns          0x1               ./src/adc.o
+switch_edge         0x1               ./src/adc.o
+ADC_done            0x1               ./src/adc.o
+gate_cmd            0x1               ./src/adc.o
 gp_uart1_rx_address
                     0x2               ./src/r_cg_serial.o
-pwm_counter         0x2               ./src/r_main.o
-uart1RxCnt          0x2               ./src/global.o
-ir_rxMessage        0x2               ./src/infrared.o
+pwm_counter         0x2               ./src/adc.o
+uart1RxCnt          0x2               ./src/adc.o
+INTAD_FSM_state     0x1               ./src/adc.o
+ir_rxMessage        0x2               ./src/adc.o
+collision_det_counter
+                    0x1               ./src/adc.o
+auto_close          0x1               ./src/adc.o
+adc_ready           0x1               ./src/adc.o
 gp_uart1_tx_address
                     0x2               ./src/r_cg_serial.o
-dataReady           0x1               ./src/infrared.o
-uart1RxErrFlag      0x1               ./src/global.o
-mode                0x2               ./src/global.o
-uart1TxFlag         0x1               ./src/global.o
-uart1Status         0x2               ./src/global.o
+dataReady           0x1               ./src/adc.o
+uart1RxErrFlag      0x1               ./src/adc.o
+collision_det       0x1               ./src/adc.o
+mode                0x1               ./src/adc.o
+uart1TxFlag         0x1               ./src/adc.o
+myCounter           0x2               ./src/adc.o
+uart1Status         0x2               ./src/adc.o
+ADC_value           0x8               ./src/adc.o
+ADC_counter         0x1               ./src/adc.o
 g_uart1_tx_count    0x2               ./src/r_cg_serial.o
-uart1TxBuf          0x10              ./src/global.o
-dataPrint           0x1               ./src/infrared.o
-dataResponse        0x1               ./src/infrared.o
-time_now            0x7               ./src/global.o
-pwm_edge            0x1               ./src/r_cg_timer_user.o
-uart1TxCnt          0x2               ./src/global.o
-myBuffer            0x10              ./src/r_main.o
+auto_close_cntr     0x1               ./src/adc.o
+uart1TxBuf          0x10              ./src/adc.o
+dataPrint           0x1               ./src/adc.o
+dataResponse        0x1               ./src/adc.o
+time_now            0x7               ./src/adc.o
+pwm_edge            0x1               ./src/adc.o
+initial_current     0x1               ./src/adc.o
+GS_PREV_STATE       0x1               ./src/adc.o
+uart1TxCnt          0x2               ./src/adc.o
+myBuffer            0x10              ./src/adc.o
 
 Memory Configuration
 
@@ -74,7 +92,7 @@ Linker script and memory map
 
 .lowtext        0x000000d8        0x0
  *(.plt)
- .plt           0x000000d8        0x0 ./src/infrared.o
+ .plt           0x000000d8        0x0 ./src/adc.o
  *(.lowtext)
                 0x000000d8                . = ALIGN (0x2)
 
@@ -92,111 +110,122 @@ Linker script and memory map
                 0x000000d8                __DTOR_END__ = .
                 0x000000d8                _mdata = .
 
-.text           0x000000dc     0x3272
+.text           0x000000dc     0x35ce
  *(.text)
- .text          0x000000dc        0x0 ./src/global.o
- .text          0x000000dc      0x275 ./src/infrared.o
-                0x000000dc                receive
-                0x00000244                IRcmd
- .text          0x00000351      0x54b ./src/lcd.o
-                0x00000351                startTMR0
-                0x0000038c                delayNoInt
-                0x000003be                writeByteLcd
-                0x000003ef                writeNibbleLcd
-                0x000004f1                initLcd
-                0x000005df                testLCDConnections
-                0x00000723                lcd_clear
-                0x00000777                print_lcd
-                0x0000081e                delay
-                0x00000835                word_to_ascii
- .text          0x0000089c      0x283 ./src/r_cg_adc.o
-                0x0000089c                R_ADC_Create
-                0x00000a34                R_ADC_Start
-                0x00000a80                R_ADC_Stop
-                0x00000acc                R_ADC_Set_OperationOn
-                0x00000ae6                R_ADC_Set_OperationOff
-                0x00000b00                R_ADC_Get_Result
- .text          0x00000b1f        0xc ./src/r_cg_adc_user.o
-                0x00000b1f                r_adc_interrupt
- .text          0x00000b2b       0xbe ./src/r_cg_cgc.o
-                0x00000b2b                R_CGC_Create
- .text          0x00000be9        0x0 ./src/r_cg_cgc_user.o
- .text          0x00000be9      0x32e ./src/r_cg_intc.o
-                0x00000be9                R_INTC_Create
-                0x00000eb1                R_INTC7_Start
-                0x00000ee4                R_INTC7_Stop
- .text          0x00000f17       0x27 ./src/r_cg_intc_user.o
-                0x00000f17                r_intc7_interrupt
- .text          0x00000f3e       0x9b ./src/r_cg_pclbuz.o
-                0x00000f3e                R_PCLBUZ0_Create
-                0x00000fa5                R_PCLBUZ0_Start
-                0x00000fbf                R_PCLBUZ0_Stop
- .text          0x00000fd9        0x0 ./src/r_cg_pclbuz_user.o
- .text          0x00000fd9       0xb3 ./src/r_cg_port.o
-                0x00000fd9                R_PORT_Create
- .text          0x0000108c        0x0 ./src/r_cg_port_user.o
- .text          0x0000108c      0x409 ./src/r_cg_rtc.o
-                0x0000108c                R_RTC_Create
-                0x00001168                R_RTC_Start
-                0x00001182                R_RTC_Stop
-                0x0000119c                R_RTC_Get_CounterValue
-                0x0000132b                R_RTC_Set_CounterValue
- .text          0x00001495        0x0 ./src/r_cg_rtc_user.o
- .text          0x00001495      0x566 ./src/r_cg_serial.o
-                0x00001495                R_SAU0_Create
-                0x000014c7                R_UART1_Create
-                0x0000179a                R_UART1_Start
-                0x0000187d                R_UART1_Stop
-                0x00001936                R_UART1_Receive
-                0x00001968                R_UART1_Send
- .text          0x000019fb      0x143 ./src/r_cg_serial_user.o
-                0x000019fb                r_uart1_interrupt_receive
-                0x00001acf                r_uart1_interrupt_send
- .text          0x00001b3e      0xb23 ./src/r_cg_timer.o
-                0x00001b3e                R_TAU0_Create
-                0x0000204d                R_TAU0_Channel0_Start
-                0x000020a8                R_TAU0_Channel0_Stop
-                0x00002103                R_TAU0_Channel1_Lower8bits_Start
-                0x0000215e                R_TAU0_Channel1_Lower8bits_Stop
-                0x000021b9                R_TAU0_Channel2_Start
-                0x00002214                R_TAU0_Channel2_Stop
-                0x0000226f                R_TAU0_Channel3_Start
-                0x000022ca                R_TAU0_Channel3_Stop
-                0x00002325                R_TMR_RD0_Create
-                0x0000253d                R_TMR_RD0_Start
-                0x000025cf                R_TMR_RD0_Stop
- .text          0x00002661       0x78 ./src/r_cg_timer_user.o
-                0x00002661                r_tau0_channel0_interrupt
-                0x0000266d                r_tau0_channel1_interrupt
-                0x0000267f                r_tau0_channel2_interrupt
-                0x0000268e                r_tau0_channel3_interrupt
-                0x000026cd                r_tmr_rd0_interrupt
- .text          0x000026d9        0xc ./src/r_cg_vector_table.o
-                0x000026d9                R_Dummy
- .text          0x000026e5       0x60 ./src/r_hardware_setup.o
-                0x000026e5                R_Systeminit
-                0x00002734                HardwareSetup
- .text          0x00002745      0xb7f ./src/r_main.o
-                0x00002745                main
-                0x00002d76                R_MAIN_UserInit
-                0x00002df3                displayCharLCD
-                0x00002e0e                welcome
-                0x00002f2a                msDelay
-                0x00002f5a                echo
-                0x00002f77                echoData
-                0x00002f9d                toHex
-                0x00002fc0                toBCD
-                0x00003030                pwm
-                0x000030b4                mtrBtn
-                0x00003198                boardBtn
- .text          0x000032c4       0x60 ./src/r_reset_program.o
-                0x000032c6                PowerON_Reset
- .text          0x00003324       0x29 C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/lib/g14\liboptc.a(strlen.o)
-                0x00003324                strlen
+ .text          0x000000dc      0x245 ./src/adc.o
+                0x000000dc                ADC
+                0x00000265                adc_get_reading
+                0x0000029d                adc_multi_channel_interrupt_service_routine
+                0x000002f9                adc_get_multiple_channels
+ .text          0x00000321      0xc4c ./src/global.o
+                0x00000321                init
+                0x000003be                core
+                0x000009c4                displayCharLCD
+                0x000009df                welcome
+                0x00000afb                msDelay
+                0x00000b2b                openGate
+                0x00000b6c                closeGate
+                0x00000bc0                stopGate
+                0x00000bea                echo
+                0x00000c07                echoData
+                0x00000c2d                buzzerBeep
+                0x00000c66                toHex
+                0x00000c89                toBCD
+                0x00000cf9                pwm
+                0x00000d7d                mtrBtn
+                0x00000eb0                boardBtn
+ .text          0x00000f6d      0x239 ./src/infrared.o
+                0x00000f6d                receive
+                0x000010d5                IRcmd
+ .text          0x000011a6      0x54b ./src/lcd.o
+                0x000011a6                startTMR0
+                0x000011e1                delayNoInt
+                0x00001213                writeByteLcd
+                0x00001244                writeNibbleLcd
+                0x00001346                initLcd
+                0x00001434                testLCDConnections
+                0x00001578                lcd_clear
+                0x000015cc                print_lcd
+                0x00001673                delay
+                0x0000168a                word_to_ascii
+ .text          0x000016f1      0x283 ./src/r_cg_adc.o
+                0x000016f1                R_ADC_Create
+                0x00001889                R_ADC_Start
+                0x000018d5                R_ADC_Stop
+                0x00001921                R_ADC_Set_OperationOn
+                0x0000193b                R_ADC_Set_OperationOff
+                0x00001955                R_ADC_Get_Result
+ .text          0x00001974        0xf ./src/r_cg_adc_user.o
+                0x00001974                r_adc_interrupt
+ .text          0x00001983       0xbe ./src/r_cg_cgc.o
+                0x00001983                R_CGC_Create
+ .text          0x00001a41        0x0 ./src/r_cg_cgc_user.o
+ .text          0x00001a41      0x32e ./src/r_cg_intc.o
+                0x00001a41                R_INTC_Create
+                0x00001d09                R_INTC7_Start
+                0x00001d3c                R_INTC7_Stop
+ .text          0x00001d6f       0x27 ./src/r_cg_intc_user.o
+                0x00001d6f                r_intc7_interrupt
+ .text          0x00001d96       0x9b ./src/r_cg_pclbuz.o
+                0x00001d96                R_PCLBUZ0_Create
+                0x00001dfd                R_PCLBUZ0_Start
+                0x00001e17                R_PCLBUZ0_Stop
+ .text          0x00001e31        0x0 ./src/r_cg_pclbuz_user.o
+ .text          0x00001e31       0xb3 ./src/r_cg_port.o
+                0x00001e31                R_PORT_Create
+ .text          0x00001ee4        0x0 ./src/r_cg_port_user.o
+ .text          0x00001ee4      0x43b ./src/r_cg_rtc.o
+                0x00001ee4                R_RTC_Create
+                0x00001ff2                R_RTC_Start
+                0x0000200c                R_RTC_Stop
+                0x00002026                R_RTC_Get_CounterValue
+                0x000021b5                R_RTC_Set_CounterValue
+ .text          0x0000231f        0x0 ./src/r_cg_rtc_user.o
+ .text          0x0000231f      0x566 ./src/r_cg_serial.o
+                0x0000231f                R_SAU0_Create
+                0x00002351                R_UART1_Create
+                0x00002624                R_UART1_Start
+                0x00002707                R_UART1_Stop
+                0x000027c0                R_UART1_Receive
+                0x000027f2                R_UART1_Send
+ .text          0x00002885      0x143 ./src/r_cg_serial_user.o
+                0x00002885                r_uart1_interrupt_receive
+                0x00002959                r_uart1_interrupt_send
+ .text          0x000029c8      0xb23 ./src/r_cg_timer.o
+                0x000029c8                R_TAU0_Create
+                0x00002ed7                R_TAU0_Channel0_Start
+                0x00002f32                R_TAU0_Channel0_Stop
+                0x00002f8d                R_TAU0_Channel1_Lower8bits_Start
+                0x00002fe8                R_TAU0_Channel1_Lower8bits_Stop
+                0x00003043                R_TAU0_Channel2_Start
+                0x0000309e                R_TAU0_Channel2_Stop
+                0x000030f9                R_TAU0_Channel3_Start
+                0x00003154                R_TAU0_Channel3_Stop
+                0x000031af                R_TMR_RD0_Create
+                0x000033c7                R_TMR_RD0_Start
+                0x00003459                R_TMR_RD0_Stop
+ .text          0x000034eb       0xbb ./src/r_cg_timer_user.o
+                0x000034eb                r_tau0_channel0_interrupt
+                0x000034f7                r_tau0_channel1_interrupt
+                0x0000354c                r_tau0_channel2_interrupt
+                0x0000355b                r_tau0_channel3_interrupt
+                0x0000359a                r_tmr_rd0_interrupt
+ .text          0x000035a6        0xc ./src/r_cg_vector_table.o
+                0x000035a6                R_Dummy
+ .text          0x000035b2       0x60 ./src/r_hardware_setup.o
+                0x000035b2                R_Systeminit
+                0x00003601                HardwareSetup
+ .text          0x00003612        0xe ./src/r_main.o
+                0x00003612                main
+                0x0000361b                R_MAIN_UserInit
+ .text          0x00003620       0x60 ./src/r_reset_program.o
+                0x00003622                PowerON_Reset
+ .text          0x00003680       0x29 C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/lib/g14\liboptc.a(strlen.o)
+                0x00003680                strlen
  *(.text.*)
-                0x0000334d                etext = .
-                0x0000334e                . = ALIGN (0x2)
- *fill*         0x0000334d        0x1 
+                0x000036a9                etext = .
+                0x000036aa                . = ALIGN (0x2)
+ *fill*         0x000036a9        0x1 
 
 .init
  *(.init)
@@ -208,12 +237,13 @@ Linker script and memory map
  *(.got)
  *(.got.plt)
 
-.rodata         0x0000334e       0x69
-                0x0000334e                . = ALIGN (0x2)
+.rodata         0x000036aa       0x79
+                0x000036aa                . = ALIGN (0x2)
  *(.rodata)
- .rodata        0x0000334e       0x69 ./src/r_main.o
+ .rodata        0x000036aa       0x10 ./src/adc.o
+ .rodata        0x000036ba       0x69 ./src/global.o
  *(.rodata.*)
-                0x000033b7                _erodata = .
+                0x00003723                _erodata = .
 
 .eh_frame_hdr
  *(.eh_frame_hdr)
@@ -221,15 +251,16 @@ Linker script and memory map
 .eh_frame
  *(.eh_frame)
 
-.jcr            0x000033b7        0x1
+.jcr            0x00003723        0x1
  *(.jcr)
-                0x000033b8                . = ALIGN (0x2)
- *fill*         0x000033b7        0x1 
+                0x00003724                . = ALIGN (0x2)
+ *fill*         0x00003723        0x1 
 
 .data           0x000fe900        0x4 load address 0x000000d8
                 0x000fe900                . = ALIGN (0x2)
                 0x000fe900                _data = .
  *(.data)
+ .data          0x000fe900        0x0 ./src/adc.o
  .data          0x000fe900        0x0 ./src/global.o
  .data          0x000fe900        0x3 ./src/infrared.o
  .data          0x000fe903        0x0 ./src/lcd.o
@@ -260,79 +291,91 @@ Linker script and memory map
                 0x000fe904                _edata = .
                 0x00000004                PROVIDE (__romdatacopysize, SIZEOF (.data))
 
-.bss            0x000fe904       0x62 load address 0x000000dc
+.bss            0x000fe904       0x74 load address 0x000000dc
                 0x000fe904                . = ALIGN (0x2)
                 0x000fe904                _bss = .
  *(.bss)
- .bss           0x000fe904        0x0 ./src/global.o
- .bss           0x000fe904        0x2 ./src/infrared.o
- .bss           0x000fe906        0x0 ./src/lcd.o
- .bss           0x000fe906        0x0 ./src/r_cg_adc.o
- .bss           0x000fe906        0x0 ./src/r_cg_adc_user.o
- .bss           0x000fe906        0x0 ./src/r_cg_cgc.o
- .bss           0x000fe906        0x0 ./src/r_cg_cgc_user.o
- .bss           0x000fe906        0x0 ./src/r_cg_intc.o
- .bss           0x000fe906        0x0 ./src/r_cg_intc_user.o
- .bss           0x000fe906        0x0 ./src/r_cg_pclbuz.o
- .bss           0x000fe906        0x0 ./src/r_cg_pclbuz_user.o
- .bss           0x000fe906        0x0 ./src/r_cg_port.o
- .bss           0x000fe906        0x0 ./src/r_cg_port_user.o
- .bss           0x000fe906        0x0 ./src/r_cg_rtc.o
- .bss           0x000fe906        0x0 ./src/r_cg_rtc_user.o
- .bss           0x000fe906        0x0 ./src/r_cg_serial.o
- .bss           0x000fe906        0x0 ./src/r_cg_serial_user.o
- .bss           0x000fe906        0x0 ./src/r_cg_timer.o
- .bss           0x000fe906        0x0 ./src/r_cg_timer_user.o
- .bss           0x000fe906        0x0 ./src/r_cg_vector_table.o
- .bss           0x000fe906        0x0 ./src/r_hardware_setup.o
- .bss           0x000fe906        0x2 ./src/r_main.o
-                0x000fe906                myCounter
+ .bss           0x000fe904        0x1 ./src/adc.o
+ .bss           0x000fe905        0x0 ./src/global.o
+ *fill*         0x000fe905        0x1 
+ .bss           0x000fe906        0x2 ./src/infrared.o
+ .bss           0x000fe908        0x0 ./src/lcd.o
+ .bss           0x000fe908        0x0 ./src/r_cg_adc.o
+ .bss           0x000fe908        0x0 ./src/r_cg_adc_user.o
+ .bss           0x000fe908        0x0 ./src/r_cg_cgc.o
+ .bss           0x000fe908        0x0 ./src/r_cg_cgc_user.o
+ .bss           0x000fe908        0x0 ./src/r_cg_intc.o
+ .bss           0x000fe908        0x0 ./src/r_cg_intc_user.o
+ .bss           0x000fe908        0x0 ./src/r_cg_pclbuz.o
+ .bss           0x000fe908        0x0 ./src/r_cg_pclbuz_user.o
+ .bss           0x000fe908        0x0 ./src/r_cg_port.o
+ .bss           0x000fe908        0x0 ./src/r_cg_port_user.o
+ .bss           0x000fe908        0x0 ./src/r_cg_rtc.o
+ .bss           0x000fe908        0x0 ./src/r_cg_rtc_user.o
+ .bss           0x000fe908        0x0 ./src/r_cg_serial.o
+ .bss           0x000fe908        0x0 ./src/r_cg_serial_user.o
+ .bss           0x000fe908        0x0 ./src/r_cg_timer.o
+ .bss           0x000fe908        0x0 ./src/r_cg_timer_user.o
+ .bss           0x000fe908        0x0 ./src/r_cg_vector_table.o
+ .bss           0x000fe908        0x0 ./src/r_hardware_setup.o
+ .bss           0x000fe908        0x0 ./src/r_main.o
  .bss           0x000fe908        0x0 ./src/r_reset_program.o
  .bss           0x000fe908        0x0 C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/lib/g14\liboptc.a(strlen.o)
  *(.bss.**)
                 0x000fe908                . = ALIGN (0x2)
  *(COMMON)
- COMMON         0x000fe908       0x38 ./src/global.o
+ COMMON         0x000fe908       0x66 ./src/adc.o
                 0x000fe908                uart1RxOvrFlag
                 0x000fe909                uart1RxFlag
-                0x000fe90a                gate_status
-                0x000fe90c                uart1RxBuf
-                0x000fe91c                uart1RxCnt
-                0x000fe91e                uart1RxErrFlag
-                0x000fe920                mode
-                0x000fe922                uart1TxFlag
-                0x000fe924                uart1Status
-                0x000fe926                uart1TxBuf
-                0x000fe936                time_now
-                0x000fe93e                uart1TxCnt
- COMMON         0x000fe940        0x5 ./src/infrared.o
-                0x000fe940                ir_rxMessage
-                0x000fe942                dataReady
-                0x000fe943                dataPrint
-                0x000fe944                dataResponse
- *fill*         0x000fe945        0x1 
- COMMON         0x000fe946        0xa ./src/r_cg_serial.o
-                0x000fe946                g_uart1_rx_length
-                0x000fe948                g_uart1_rx_count
-                0x000fe94a                gp_uart1_rx_address
-                0x000fe94c                gp_uart1_tx_address
-                0x000fe94e                g_uart1_tx_count
- COMMON         0x000fe950        0x3 ./src/r_cg_timer_user.o
-                0x000fe950                check_btns
-                0x000fe951                switch_edge
-                0x000fe952                pwm_edge
- *fill*         0x000fe953        0x1 
- COMMON         0x000fe954       0x12 ./src/r_main.o
-                0x000fe954                pwm_counter
-                0x000fe956                myBuffer
-                0x000fe966                . = ALIGN (0x2)
-                0x000fe966                _ebss = .
-                0x000fe966                _end = .
+                0x000fe90a                timer_adc_reader_10Hz_interrupt
+                0x000fe90b                latest_current_reading
+                0x000fe90c                gate_status
+                0x000fe90e                uart1RxBuf
+                0x000fe91e                check_btns
+                0x000fe91f                switch_edge
+                0x000fe920                ADC_done
+                0x000fe921                gate_cmd
+                0x000fe922                pwm_counter
+                0x000fe924                uart1RxCnt
+                0x000fe926                INTAD_FSM_state
+                0x000fe928                ir_rxMessage
+                0x000fe92a                collision_det_counter
+                0x000fe92b                auto_close
+                0x000fe92c                adc_ready
+                0x000fe92d                dataReady
+                0x000fe92e                uart1RxErrFlag
+                0x000fe92f                collision_det
+                0x000fe930                mode
+                0x000fe931                uart1TxFlag
+                0x000fe932                myCounter
+                0x000fe934                uart1Status
+                0x000fe936                ADC_value
+                0x000fe93e                ADC_counter
+                0x000fe93f                auto_close_cntr
+                0x000fe940                uart1TxBuf
+                0x000fe950                dataPrint
+                0x000fe951                dataResponse
+                0x000fe952                time_now
+                0x000fe959                pwm_edge
+                0x000fe95a                initial_current
+                0x000fe95b                GS_PREV_STATE
+                0x000fe95c                uart1TxCnt
+                0x000fe95e                myBuffer
+ COMMON         0x000fe96e        0xa ./src/r_cg_serial.o
+                0x000fe96e                g_uart1_rx_length
+                0x000fe970                g_uart1_rx_count
+                0x000fe972                gp_uart1_rx_address
+                0x000fe974                gp_uart1_tx_address
+                0x000fe976                g_uart1_tx_count
+                0x000fe978                . = ALIGN (0x2)
+                0x000fe978                _ebss = .
+                0x000fe978                _end = .
                 0x00000064                PROVIDE (stack_size, 0x64)
 
 .stack          0x000ffedc        0x0
                 0x000ffedc                _stack = .
                 0x00000001                ASSERT ((_stack > (_end + stack_size)), Error: Too much data - no room left for the stack)
+LOAD ./src/adc.o
 LOAD ./src/global.o
 LOAD ./src/infrared.o
 LOAD ./src/lcd.o
@@ -363,178 +406,207 @@ LOAD C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/lib/gcc/rl78-elf/4.9-GNURL78_v15.02/
 END GROUP
 OUTPUT(GateController.x elf32-rl78)
 
-.debug_info     0x00000000     0x4c9b
- .debug_info    0x00000000      0x1bb ./src/global.o
- .debug_info    0x000001bb      0x39d ./src/infrared.o
- .debug_info    0x00000558      0x5de ./src/lcd.o
- .debug_info    0x00000b36      0x4c9 ./src/r_cg_adc.o
- .debug_info    0x00000fff      0x1d4 ./src/r_cg_adc_user.o
- .debug_info    0x000011d3      0x2be ./src/r_cg_cgc.o
- .debug_info    0x00001491      0x1bb ./src/r_cg_cgc_user.o
- .debug_info    0x0000164c      0x513 ./src/r_cg_intc.o
- .debug_info    0x00001b5f      0x222 ./src/r_cg_intc_user.o
- .debug_info    0x00001d81      0x2eb ./src/r_cg_pclbuz.o
- .debug_info    0x0000206c      0x1bb ./src/r_cg_pclbuz_user.o
- .debug_info    0x00002227      0x402 ./src/r_cg_port.o
- .debug_info    0x00002629      0x1bb ./src/r_cg_port_user.o
- .debug_info    0x000027e4      0x3d5 ./src/r_cg_rtc.o
- .debug_info    0x00002bb9      0x1bb ./src/r_cg_rtc_user.o
- .debug_info    0x00002d74      0x5d5 ./src/r_cg_serial.o
- .debug_info    0x00003349      0x2b7 ./src/r_cg_serial_user.o
- .debug_info    0x00003600      0x7c8 ./src/r_cg_timer.o
- .debug_info    0x00003dc8      0x310 ./src/r_cg_timer_user.o
- .debug_info    0x000040d8      0x269 ./src/r_cg_vector_table.o
- .debug_info    0x00004341      0x1e9 ./src/r_hardware_setup.o
- .debug_info    0x0000452a      0x6ed ./src/r_main.o
- .debug_info    0x00004c17       0x84 ./src/r_reset_program.o
+.debug_frame    0x00000000      0x9b0
+ .debug_frame   0x00000000       0x74 ./src/adc.o
+ .debug_frame   0x00000074      0x16c ./src/global.o
+ .debug_frame   0x000001e0       0x44 ./src/infrared.o
+ .debug_frame   0x00000224       0xec ./src/lcd.o
+ .debug_frame   0x00000310       0x74 ./src/r_cg_adc.o
+ .debug_frame   0x00000384       0x40 ./src/r_cg_adc_user.o
+ .debug_frame   0x000003c4       0x2c ./src/r_cg_cgc.o
+ .debug_frame   0x000003f0       0x44 ./src/r_cg_intc.o
+ .debug_frame   0x00000434       0x5c ./src/r_cg_intc_user.o
+ .debug_frame   0x00000490       0x44 ./src/r_cg_pclbuz.o
+ .debug_frame   0x000004d4       0x24 ./src/r_cg_port.o
+ .debug_frame   0x000004f8       0x74 ./src/r_cg_rtc.o
+ .debug_frame   0x0000056c       0x94 ./src/r_cg_serial.o
+ .debug_frame   0x00000600       0xec ./src/r_cg_serial_user.o
+ .debug_frame   0x000006ec      0x100 ./src/r_cg_timer.o
+ .debug_frame   0x000007ec      0x114 ./src/r_cg_timer_user.o
+ .debug_frame   0x00000900       0x40 ./src/r_cg_vector_table.o
+ .debug_frame   0x00000940       0x3c ./src/r_hardware_setup.o
+ .debug_frame   0x0000097c       0x34 ./src/r_main.o
 
-.debug_abbrev   0x00000000     0x157b
- .debug_abbrev  0x00000000       0x81 ./src/global.o
- .debug_abbrev  0x00000081      0x12e ./src/infrared.o
- .debug_abbrev  0x000001af      0x1d9 ./src/lcd.o
- .debug_abbrev  0x00000388      0x13d ./src/r_cg_adc.o
- .debug_abbrev  0x000004c5       0x9d ./src/r_cg_adc_user.o
- .debug_abbrev  0x00000562       0xe6 ./src/r_cg_cgc.o
- .debug_abbrev  0x00000648       0x81 ./src/r_cg_cgc_user.o
- .debug_abbrev  0x000006c9      0x119 ./src/r_cg_intc.o
- .debug_abbrev  0x000007e2       0xa4 ./src/r_cg_intc_user.o
- .debug_abbrev  0x00000886       0xdb ./src/r_cg_pclbuz.o
- .debug_abbrev  0x00000961       0x81 ./src/r_cg_pclbuz_user.o
- .debug_abbrev  0x000009e2       0xdb ./src/r_cg_port.o
- .debug_abbrev  0x00000abd       0x81 ./src/r_cg_port_user.o
- .debug_abbrev  0x00000b3e      0x14e ./src/r_cg_rtc.o
- .debug_abbrev  0x00000c8c       0x81 ./src/r_cg_rtc_user.o
- .debug_abbrev  0x00000d0d      0x182 ./src/r_cg_serial.o
- .debug_abbrev  0x00000e8f      0x124 ./src/r_cg_serial_user.o
- .debug_abbrev  0x00000fb3      0x149 ./src/r_cg_timer.o
- .debug_abbrev  0x000010fc      0x105 ./src/r_cg_timer_user.o
- .debug_abbrev  0x00001201       0xb2 ./src/r_cg_vector_table.o
- .debug_abbrev  0x000012b3       0xb7 ./src/r_hardware_setup.o
- .debug_abbrev  0x0000136a      0x1fd ./src/r_main.o
- .debug_abbrev  0x00001567       0x14 ./src/r_reset_program.o
+.debug_info     0x00000000     0x494a
+ .debug_info    0x00000000      0x559 ./src/adc.o
+ .debug_info    0x00000559      0x8b0 ./src/global.o
+ .debug_info    0x00000e09      0x502 ./src/infrared.o
+ .debug_info    0x0000130b      0x488 ./src/lcd.o
+ .debug_info    0x00001793      0x361 ./src/r_cg_adc.o
+ .debug_info    0x00001af4      0x3a9 ./src/r_cg_adc_user.o
+ .debug_info    0x00001e9d      0x156 ./src/r_cg_cgc.o
+ .debug_info    0x00001ff3       0x48 ./src/r_cg_cgc_user.o
+ .debug_info    0x0000203b      0x3a0 ./src/r_cg_intc.o
+ .debug_info    0x000023db      0x3a9 ./src/r_cg_intc_user.o
+ .debug_info    0x00002784      0x178 ./src/r_cg_pclbuz.o
+ .debug_info    0x000028fc       0x48 ./src/r_cg_pclbuz_user.o
+ .debug_info    0x00002944      0x28f ./src/r_cg_port.o
+ .debug_info    0x00002bd3       0x48 ./src/r_cg_port_user.o
+ .debug_info    0x00002c1b      0x328 ./src/r_cg_rtc.o
+ .debug_info    0x00002f43       0x48 ./src/r_cg_rtc_user.o
+ .debug_info    0x00002f8b      0x483 ./src/r_cg_serial.o
+ .debug_info    0x0000340e      0x482 ./src/r_cg_serial_user.o
+ .debug_info    0x00003890      0x65c ./src/r_cg_timer.o
+ .debug_info    0x00003eec      0x49b ./src/r_cg_timer_user.o
+ .debug_info    0x00004387      0x108 ./src/r_cg_vector_table.o
+ .debug_info    0x0000448f       0x7d ./src/r_hardware_setup.o
+ .debug_info    0x0000450c      0x3ba ./src/r_main.o
+ .debug_info    0x000048c6       0x84 ./src/r_reset_program.o
 
-.debug_aranges  0x00000000      0x2b8
- .debug_aranges
-                0x00000000       0x18 ./src/global.o
- .debug_aranges
-                0x00000018       0x20 ./src/infrared.o
- .debug_aranges
-                0x00000038       0x20 ./src/lcd.o
- .debug_aranges
-                0x00000058       0x20 ./src/r_cg_adc.o
- .debug_aranges
-                0x00000078       0x20 ./src/r_cg_adc_user.o
- .debug_aranges
-                0x00000098       0x20 ./src/r_cg_cgc.o
- .debug_aranges
-                0x000000b8       0x18 ./src/r_cg_cgc_user.o
- .debug_aranges
-                0x000000d0       0x20 ./src/r_cg_intc.o
- .debug_aranges
-                0x000000f0       0x20 ./src/r_cg_intc_user.o
- .debug_aranges
-                0x00000110       0x20 ./src/r_cg_pclbuz.o
- .debug_aranges
-                0x00000130       0x18 ./src/r_cg_pclbuz_user.o
- .debug_aranges
-                0x00000148       0x20 ./src/r_cg_port.o
- .debug_aranges
-                0x00000168       0x18 ./src/r_cg_port_user.o
- .debug_aranges
-                0x00000180       0x20 ./src/r_cg_rtc.o
- .debug_aranges
-                0x000001a0       0x18 ./src/r_cg_rtc_user.o
- .debug_aranges
-                0x000001b8       0x20 ./src/r_cg_serial.o
- .debug_aranges
-                0x000001d8       0x20 ./src/r_cg_serial_user.o
- .debug_aranges
-                0x000001f8       0x20 ./src/r_cg_timer.o
- .debug_aranges
-                0x00000218       0x20 ./src/r_cg_timer_user.o
- .debug_aranges
-                0x00000238       0x20 ./src/r_cg_vector_table.o
- .debug_aranges
-                0x00000258       0x20 ./src/r_hardware_setup.o
- .debug_aranges
-                0x00000278       0x20 ./src/r_main.o
- .debug_aranges
-                0x00000298       0x20 ./src/r_reset_program.o
+.debug_abbrev   0x00000000     0x126a
+ .debug_abbrev  0x00000000      0x173 ./src/adc.o
+ .debug_abbrev  0x00000173      0x1ea ./src/global.o
+ .debug_abbrev  0x0000035d      0x114 ./src/infrared.o
+ .debug_abbrev  0x00000471      0x198 ./src/lcd.o
+ .debug_abbrev  0x00000609       0xf1 ./src/r_cg_adc.o
+ .debug_abbrev  0x000006fa       0xa4 ./src/r_cg_adc_user.o
+ .debug_abbrev  0x0000079e       0x9a ./src/r_cg_cgc.o
+ .debug_abbrev  0x00000838       0x1b ./src/r_cg_cgc_user.o
+ .debug_abbrev  0x00000853       0xcd ./src/r_cg_intc.o
+ .debug_abbrev  0x00000920       0xa4 ./src/r_cg_intc_user.o
+ .debug_abbrev  0x000009c4       0x8f ./src/r_cg_pclbuz.o
+ .debug_abbrev  0x00000a53       0x1b ./src/r_cg_pclbuz_user.o
+ .debug_abbrev  0x00000a6e       0x8f ./src/r_cg_port.o
+ .debug_abbrev  0x00000afd       0x1b ./src/r_cg_port_user.o
+ .debug_abbrev  0x00000b18      0x13a ./src/r_cg_rtc.o
+ .debug_abbrev  0x00000c52       0x1b ./src/r_cg_rtc_user.o
+ .debug_abbrev  0x00000c6d      0x147 ./src/r_cg_serial.o
+ .debug_abbrev  0x00000db4      0x124 ./src/r_cg_serial_user.o
+ .debug_abbrev  0x00000ed8      0x115 ./src/r_cg_timer.o
+ .debug_abbrev  0x00000fed       0xed ./src/r_cg_timer_user.o
+ .debug_abbrev  0x000010da       0x7c ./src/r_cg_vector_table.o
+ .debug_abbrev  0x00001156       0x5c ./src/r_hardware_setup.o
+ .debug_abbrev  0x000011b2       0xa4 ./src/r_main.o
+ .debug_abbrev  0x00001256       0x14 ./src/r_reset_program.o
 
-.debug_line     0x00000000     0x232b
- .debug_line    0x00000000       0x69 ./src/global.o
- .debug_line    0x00000069      0x1c3 ./src/infrared.o
- .debug_line    0x0000022c      0x38c ./src/lcd.o
- .debug_line    0x000005b8      0x18b ./src/r_cg_adc.o
- .debug_line    0x00000743       0x92 ./src/r_cg_adc_user.o
- .debug_line    0x000007d5       0xeb ./src/r_cg_cgc.o
- .debug_line    0x000008c0       0x69 ./src/r_cg_cgc_user.o
- .debug_line    0x00000929      0x17a ./src/r_cg_intc.o
- .debug_line    0x00000aa3       0xb3 ./src/r_cg_intc_user.o
- .debug_line    0x00000b56       0xda ./src/r_cg_pclbuz.o
- .debug_line    0x00000c30       0x69 ./src/r_cg_pclbuz_user.o
- .debug_line    0x00000c99       0xf6 ./src/r_cg_port.o
- .debug_line    0x00000d8f       0x69 ./src/r_cg_port_user.o
- .debug_line    0x00000df8      0x27d ./src/r_cg_rtc.o
- .debug_line    0x00001075       0x69 ./src/r_cg_rtc_user.o
- .debug_line    0x000010de      0x272 ./src/r_cg_serial.o
- .debug_line    0x00001350      0x143 ./src/r_cg_serial_user.o
- .debug_line    0x00001493      0x397 ./src/r_cg_timer.o
- .debug_line    0x0000182a       0xf0 ./src/r_cg_timer_user.o
- .debug_line    0x0000191a       0x97 ./src/r_cg_vector_table.o
- .debug_line    0x000019b1       0xfb ./src/r_hardware_setup.o
- .debug_line    0x00001aac      0x720 ./src/r_main.o
- .debug_line    0x000021cc      0x15f ./src/r_reset_program.o
+.debug_aranges  0x00000000      0x2e0
+ .debug_aranges
+                0x00000000       0x20 ./src/adc.o
+ .debug_aranges
+                0x00000020       0x20 ./src/global.o
+ .debug_aranges
+                0x00000040       0x20 ./src/infrared.o
+ .debug_aranges
+                0x00000060       0x20 ./src/lcd.o
+ .debug_aranges
+                0x00000080       0x20 ./src/r_cg_adc.o
+ .debug_aranges
+                0x000000a0       0x20 ./src/r_cg_adc_user.o
+ .debug_aranges
+                0x000000c0       0x20 ./src/r_cg_cgc.o
+ .debug_aranges
+                0x000000e0       0x18 ./src/r_cg_cgc_user.o
+ .debug_aranges
+                0x000000f8       0x20 ./src/r_cg_intc.o
+ .debug_aranges
+                0x00000118       0x20 ./src/r_cg_intc_user.o
+ .debug_aranges
+                0x00000138       0x20 ./src/r_cg_pclbuz.o
+ .debug_aranges
+                0x00000158       0x18 ./src/r_cg_pclbuz_user.o
+ .debug_aranges
+                0x00000170       0x20 ./src/r_cg_port.o
+ .debug_aranges
+                0x00000190       0x18 ./src/r_cg_port_user.o
+ .debug_aranges
+                0x000001a8       0x20 ./src/r_cg_rtc.o
+ .debug_aranges
+                0x000001c8       0x18 ./src/r_cg_rtc_user.o
+ .debug_aranges
+                0x000001e0       0x20 ./src/r_cg_serial.o
+ .debug_aranges
+                0x00000200       0x20 ./src/r_cg_serial_user.o
+ .debug_aranges
+                0x00000220       0x20 ./src/r_cg_timer.o
+ .debug_aranges
+                0x00000240       0x20 ./src/r_cg_timer_user.o
+ .debug_aranges
+                0x00000260       0x20 ./src/r_cg_vector_table.o
+ .debug_aranges
+                0x00000280       0x20 ./src/r_hardware_setup.o
+ .debug_aranges
+                0x000002a0       0x20 ./src/r_main.o
+ .debug_aranges
+                0x000002c0       0x20 ./src/r_reset_program.o
 
-.debug_str      0x00000000      0xd5a
- .debug_str     0x00000000      0x200 ./src/global.o
-                                0x20c (size before relaxing)
- .debug_str     0x00000200       0xd3 ./src/infrared.o
-                                0x2d7 (size before relaxing)
- .debug_str     0x000002d3       0xfd ./src/lcd.o
-                                0x318 (size before relaxing)
- .debug_str     0x000003d0       0xe6 ./src/r_cg_adc.o
-                                0x331 (size before relaxing)
- .debug_str     0x000004b6       0x27 ./src/r_cg_adc_user.o
-                                0x223 (size before relaxing)
- .debug_str     0x000004dd       0x35 ./src/r_cg_cgc.o
-                                0x239 (size before relaxing)
- .debug_str     0x00000512       0x17 ./src/r_cg_cgc_user.o
-                                0x213 (size before relaxing)
- .debug_str     0x00000529       0x7a ./src/r_cg_intc.o
-                                0x2de (size before relaxing)
- .debug_str     0x000005a3       0x2a ./src/r_cg_intc_user.o
+.debug_line     0x00000000     0x2327
+ .debug_line    0x00000000      0x20a ./src/adc.o
+ .debug_line    0x0000020a      0x819 ./src/global.o
+ .debug_line    0x00000a23      0x1c9 ./src/infrared.o
+ .debug_line    0x00000bec      0x35d ./src/lcd.o
+ .debug_line    0x00000f49      0x15c ./src/r_cg_adc.o
+ .debug_line    0x000010a5       0x9a ./src/r_cg_adc_user.o
+ .debug_line    0x0000113f       0xbc ./src/r_cg_cgc.o
+ .debug_line    0x000011fb       0x1d ./src/r_cg_cgc_user.o
+ .debug_line    0x00001218      0x135 ./src/r_cg_intc.o
+ .debug_line    0x0000134d       0xa7 ./src/r_cg_intc_user.o
+ .debug_line    0x000013f4       0x95 ./src/r_cg_pclbuz.o
+ .debug_line    0x00001489       0x1d ./src/r_cg_pclbuz_user.o
+ .debug_line    0x000014a6       0xb1 ./src/r_cg_port.o
+ .debug_line    0x00001557       0x1d ./src/r_cg_port_user.o
+ .debug_line    0x00001574      0x268 ./src/r_cg_rtc.o
+ .debug_line    0x000017dc       0x1d ./src/r_cg_rtc_user.o
+ .debug_line    0x000017f9      0x243 ./src/r_cg_serial.o
+ .debug_line    0x00001a3c      0x145 ./src/r_cg_serial_user.o
+ .debug_line    0x00001b81      0x368 ./src/r_cg_timer.o
+ .debug_line    0x00001ee9      0x116 ./src/r_cg_timer_user.o
+ .debug_line    0x00001fff       0x68 ./src/r_cg_vector_table.o
+ .debug_line    0x00002067       0xb6 ./src/r_hardware_setup.o
+ .debug_line    0x0000211d       0xab ./src/r_main.o
+ .debug_line    0x000021c8      0x15f ./src/r_reset_program.o
+
+.debug_str      0x00000000      0xefb
+ .debug_str     0x00000000      0x408 ./src/adc.o
+                                0x426 (size before relaxing)
+ .debug_str     0x00000408      0x172 ./src/global.o
+                                0x4e9 (size before relaxing)
+ .debug_str     0x0000057a       0x84 ./src/infrared.o
+                                0x3f8 (size before relaxing)
+ .debug_str     0x000005fe       0xf1 ./src/lcd.o
                                 0x254 (size before relaxing)
- .debug_str     0x000005cd       0x4d ./src/r_cg_pclbuz.o
-                                0x26a (size before relaxing)
- .debug_str     0x0000061a       0x1a ./src/r_cg_pclbuz_user.o
-                                0x216 (size before relaxing)
- .debug_str     0x00000634       0x5b ./src/r_cg_port.o
-                                0x289 (size before relaxing)
- .debug_str     0x0000068f       0x18 ./src/r_cg_port_user.o
-                                0x214 (size before relaxing)
- .debug_str     0x000006a7       0xa2 ./src/r_cg_rtc.o
-                                0x2e8 (size before relaxing)
- .debug_str     0x00000749       0x17 ./src/r_cg_rtc_user.o
-                                0x213 (size before relaxing)
- .debug_str     0x00000760      0x109 ./src/r_cg_serial.o
-                                0x372 (size before relaxing)
- .debug_str     0x00000869       0xc9 ./src/r_cg_serial_user.o
-                                0x321 (size before relaxing)
- .debug_str     0x00000932      0x1bc ./src/r_cg_timer.o
-                                0x498 (size before relaxing)
- .debug_str     0x00000aee       0xb5 ./src/r_cg_timer_user.o
-                                0x2c7 (size before relaxing)
- .debug_str     0x00000ba3       0x4c ./src/r_cg_vector_table.o
-                                0x250 (size before relaxing)
- .debug_str     0x00000bef       0x35 ./src/r_hardware_setup.o
-                                0x231 (size before relaxing)
- .debug_str     0x00000c24      0x136 ./src/r_main.o
-                                0x3b8 (size before relaxing)
+ .debug_str     0x000006ef       0xbe ./src/r_cg_adc.o
+                                0x265 (size before relaxing)
+ .debug_str     0x000007ad       0x27 ./src/r_cg_adc_user.o
+                                0x378 (size before relaxing)
+ .debug_str     0x000007d4       0x35 ./src/r_cg_cgc.o
+                                0x16d (size before relaxing)
+ .debug_str     0x00000809       0x17 ./src/r_cg_cgc_user.o
+                                0x13e (size before relaxing)
+ .debug_str     0x00000820       0x7a ./src/r_cg_intc.o
+                                0x209 (size before relaxing)
+ .debug_str     0x0000089a       0x2a ./src/r_cg_intc_user.o
+                                0x37b (size before relaxing)
+ .debug_str     0x000008c4       0x2e ./src/r_cg_pclbuz.o
+                                0x195 (size before relaxing)
+ .debug_str     0x000008f2       0x1a ./src/r_cg_pclbuz_user.o
+                                0x141 (size before relaxing)
+ .debug_str     0x0000090c       0x5b ./src/r_cg_port.o
+                                0x1b4 (size before relaxing)
+ .debug_str     0x00000967       0x18 ./src/r_cg_port_user.o
+                                0x13f (size before relaxing)
+ .debug_str     0x0000097f       0xa2 ./src/r_cg_rtc.o
+                                0x26c (size before relaxing)
+ .debug_str     0x00000a21       0x17 ./src/r_cg_rtc_user.o
+                                0x13e (size before relaxing)
+ .debug_str     0x00000a38      0x103 ./src/r_cg_serial.o
+                                0x2b8 (size before relaxing)
+ .debug_str     0x00000b3b       0xc9 ./src/r_cg_serial_user.o
+                                0x476 (size before relaxing)
+ .debug_str     0x00000c04      0x1bc ./src/r_cg_timer.o
+                                0x3cb (size before relaxing)
+ .debug_str     0x00000dc0       0x95 ./src/r_cg_timer_user.o
+                                0x3f4 (size before relaxing)
+ .debug_str     0x00000e55       0x4c ./src/r_cg_vector_table.o
+                                0x18c (size before relaxing)
+ .debug_str     0x00000ea1       0x35 ./src/r_hardware_setup.o
+                                0x15c (size before relaxing)
+ .debug_str     0x00000ed6       0x25 ./src/r_main.o
+                                0x376 (size before relaxing)
 
 .comment        0x00000000       0x94
- .comment       0x00000000       0x94 ./src/global.o
+ .comment       0x00000000       0x94 ./src/adc.o
                                  0x95 (size before relaxing)
+ .comment       0x00000000       0x95 ./src/global.o
  .comment       0x00000000       0x95 ./src/infrared.o
  .comment       0x00000000       0x95 ./src/lcd.o
  .comment       0x00000000       0x95 ./src/r_cg_adc.o
@@ -557,22 +629,3 @@ OUTPUT(GateController.x elf32-rl78)
  .comment       0x00000000       0x95 ./src/r_hardware_setup.o
  .comment       0x00000000       0x95 ./src/r_main.o
  .comment       0x00000000       0x95 C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/lib/g14\liboptc.a(strlen.o)
-
-.debug_frame    0x00000000      0x8b8
- .debug_frame   0x00000000       0x44 ./src/infrared.o
- .debug_frame   0x00000044       0xec ./src/lcd.o
- .debug_frame   0x00000130       0x74 ./src/r_cg_adc.o
- .debug_frame   0x000001a4       0x40 ./src/r_cg_adc_user.o
- .debug_frame   0x000001e4       0x2c ./src/r_cg_cgc.o
- .debug_frame   0x00000210       0x44 ./src/r_cg_intc.o
- .debug_frame   0x00000254       0x5c ./src/r_cg_intc_user.o
- .debug_frame   0x000002b0       0x44 ./src/r_cg_pclbuz.o
- .debug_frame   0x000002f4       0x24 ./src/r_cg_port.o
- .debug_frame   0x00000318       0x74 ./src/r_cg_rtc.o
- .debug_frame   0x0000038c       0x94 ./src/r_cg_serial.o
- .debug_frame   0x00000420       0xec ./src/r_cg_serial_user.o
- .debug_frame   0x0000050c      0x100 ./src/r_cg_timer.o
- .debug_frame   0x0000060c      0x10c ./src/r_cg_timer_user.o
- .debug_frame   0x00000718       0x40 ./src/r_cg_vector_table.o
- .debug_frame   0x00000758       0x3c ./src/r_hardware_setup.o
- .debug_frame   0x00000794      0x124 ./src/r_main.o

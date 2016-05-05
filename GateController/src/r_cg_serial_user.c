@@ -23,7 +23,7 @@
 * Device(s)    : R5F104LE
 * Tool-Chain   : GCCRL78
 * Description  : This file implements device driver for Serial module.
-* Creation Date: 5/2/2016
+* Creation Date: 5/4/2016
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
@@ -33,7 +33,7 @@ Includes
 #include "r_cg_serial.h"
 /* Start user code for include. Do not edit comment generated here */
 /* End user code. Do not edit comment generated here */
-#include "r_cg_userdefine.h"
+#include "global.h"
 
 /***********************************************************************************************************************
 Global variables and functions

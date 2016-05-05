@@ -24,22 +24,46 @@
   24                             	r31	=	0xffee7
   25                             	.text
   26                             	.Ltext0:
-  27                             		.comm	_gate_status,2,2
-  28                             		.comm	_mode,2,2
-  29                             		.comm	_uart1RxBuf,16,1
-  30                             		.comm	_uart1RxCnt,2,2
-  31                             		.comm	_uart1RxFlag,1,1
-  32                             		.comm	_uart1RxErrFlag,1,1
-  33                             		.comm	_uart1RxOvrFlag,1,1
-  34                             		.comm	_uart1TxBuf,16,1
-  35                             		.comm	_uart1TxCnt,2,2
-  36                             		.comm	_uart1TxFlag,1,1
-  37                             		.comm	_time_now,7,1
-  38                             		.comm	_uart1Status,2,2
-  39                             		.global	_r_adc_interrupt
-  41                             	_r_adc_interrupt:
-  42                             	.LFB0:
-  43                             		.file 1 "../src/r_cg_adc_user.c"
+  27                             		.comm	_ir_rxMessage,2,2
+  28                             		.comm	_dataReady,1,1
+  29                             		.comm	_dataPrint,1,1
+  30                             		.comm	_dataResponse,1,1
+  31                             		.comm	_gate_status,2,2
+  32                             		.comm	_mode,1,1
+  33                             		.comm	_GS_PREV_STATE,1,1
+  34                             		.comm	_uart1RxBuf,16,1
+  35                             		.comm	_uart1RxCnt,2,2
+  36                             		.comm	_uart1RxFlag,1,1
+  37                             		.comm	_uart1RxErrFlag,1,1
+  38                             		.comm	_uart1RxOvrFlag,1,1
+  39                             		.comm	_uart1TxBuf,16,1
+  40                             		.comm	_uart1TxCnt,2,2
+  41                             		.comm	_uart1TxFlag,1,1
+  42                             		.comm	_time_now,7,1
+  43                             		.comm	_uart1Status,2,2
+  44                             		.comm	_myBuffer,16,1
+  45                             		.comm	_myCounter,2,2
+  46                             		.comm	_pwm_counter,2,2
+  47                             		.comm	_pwm_edge,1,1
+  48                             		.comm	_switch_edge,1,1
+  49                             		.comm	_check_btns,1,1
+  50                             		.comm	_gate_cmd,1,1
+  51                             		.comm	_auto_close,1,1
+  52                             		.comm	_auto_close_cntr,1,1
+  53                             		.comm	_ADC_done,1,1
+  54                             		.comm	_ADC_value,8,2
+  55                             		.comm	_INTAD_FSM_state,1,1
+  56                             		.comm	_adc_ready,1,1
+  57                             		.comm	_latest_current_reading,1,1
+  58                             		.comm	_ADC_counter,1,1
+  59                             		.comm	_timer_adc_reader_10Hz_interrupt,1,1
+  60                             		.comm	_initial_current,1,1
+  61                             		.comm	_collision_det_counter,1,1
+  62                             		.comm	_collision_det,1,1
+  63                             		.global	_r_adc_interrupt
+  65                             	_r_adc_interrupt:
+  66                             	.LFB0:
+  67                             		.file 1 "../src/r_cg_adc_user.c"
    1:../src/r_cg_adc_user.c **** /**************************************************************************************************
    2:../src/r_cg_adc_user.c **** * DISCLAIMER
    3:../src/r_cg_adc_user.c **** * This software is supplied by Renesas Electronics Corporation and is only intended for use with Re
@@ -65,7 +89,7 @@
   23:../src/r_cg_adc_user.c **** * Device(s)    : R5F104LE
   24:../src/r_cg_adc_user.c **** * Tool-Chain   : GCCRL78
   25:../src/r_cg_adc_user.c **** * Description  : This file implements device driver for ADC module.
-  26:../src/r_cg_adc_user.c **** * Creation Date: 5/2/2016
+  26:../src/r_cg_adc_user.c **** * Creation Date: 5/4/2016
   27:../src/r_cg_adc_user.c **** ***************************************************************************************************
   28:../src/r_cg_adc_user.c **** 
   29:../src/r_cg_adc_user.c **** /**************************************************************************************************
@@ -74,47 +98,52 @@
   32:../src/r_cg_adc_user.c **** #include "r_cg_macrodriver.h"
   33:../src/r_cg_adc_user.c **** #include "r_cg_adc.h"
   34:../src/r_cg_adc_user.c **** /* Start user code for include. Do not edit comment generated here */
-  35:../src/r_cg_adc_user.c **** /* End user code. Do not edit comment generated here */
-  36:../src/r_cg_adc_user.c **** #include "r_cg_userdefine.h"
-  37:../src/r_cg_adc_user.c **** 
-  38:../src/r_cg_adc_user.c **** /**************************************************************************************************
-  39:../src/r_cg_adc_user.c **** Global variables and functions
-  40:../src/r_cg_adc_user.c **** ***************************************************************************************************
-  41:../src/r_cg_adc_user.c **** /* Start user code for global. Do not edit comment generated here */
-  42:../src/r_cg_adc_user.c **** /* End user code. Do not edit comment generated here */
-  43:../src/r_cg_adc_user.c **** 
-  44:../src/r_cg_adc_user.c **** /**************************************************************************************************
-  45:../src/r_cg_adc_user.c **** * Function Name: r_adc_interrupt
-  46:../src/r_cg_adc_user.c **** * Description  : This function is INTAD interrupt service routine.
-  47:../src/r_cg_adc_user.c **** * Arguments    : None
-  48:../src/r_cg_adc_user.c **** * Return Value : None
-  49:../src/r_cg_adc_user.c **** ***************************************************************************************************
-  50:../src/r_cg_adc_user.c **** void r_adc_interrupt(void)
-  51:../src/r_cg_adc_user.c **** {
-  44                             		.loc 1 51 0
-  45                             		; start of function
-  46                             		; push 8: ax bc de hl
-  47 0000 61 CF                   		sel	rb0
-  48 0002 C1                      		push	ax
-  49                             	.LCFI0:
-  50 0003 C3                      		push	bc
-  51                             	.LCFI1:
-  52 0004 C5                      		push	de
-  53                             	.LCFI2:
-  54 0005 C7                      		push	hl
-  55                             	.LCFI3:
-  52:../src/r_cg_adc_user.c ****     /* Start user code. Do not edit comment generated here */
-  53:../src/r_cg_adc_user.c ****     /* End user code. Do not edit comment generated here */
-  54:../src/r_cg_adc_user.c **** }
-  56                             		.loc 1 54 0
-  57 0006 C6                      		pop	hl
-  58 0007 C4                      		pop	de
-  59 0008 C2                      		pop	bc
-  60 0009 C0                      		pop	ax
-  61 000a 61 FC                   		reti
-  62                             	.LFE0:
- 106                             	.Letext0:
- 107                             		.file 2 "../src/r_cg_macrodriver.h"
- 108                             		.file 3 "../src/r_cg_rtc.h"
- 109                             		.file 4 "../src/r_cg_userdefine.h"
- 110                             		.file 5 "../src/global.c"
+  35:../src/r_cg_adc_user.c **** #include "adc.h"
+  36:../src/r_cg_adc_user.c **** /* End user code. Do not edit comment generated here */
+  37:../src/r_cg_adc_user.c **** #include "r_cg_userdefine.h"
+  38:../src/r_cg_adc_user.c **** 
+  39:../src/r_cg_adc_user.c **** /**************************************************************************************************
+  40:../src/r_cg_adc_user.c **** Global variables and functions
+  41:../src/r_cg_adc_user.c **** ***************************************************************************************************
+  42:../src/r_cg_adc_user.c **** /* Start user code for global. Do not edit comment generated here */
+  43:../src/r_cg_adc_user.c **** /* End user code. Do not edit comment generated here */
+  44:../src/r_cg_adc_user.c **** 
+  45:../src/r_cg_adc_user.c **** /**************************************************************************************************
+  46:../src/r_cg_adc_user.c **** * Function Name: r_adc_interrupt
+  47:../src/r_cg_adc_user.c **** * Description  : This function is INTAD interrupt service routine.
+  48:../src/r_cg_adc_user.c **** * Arguments    : None
+  49:../src/r_cg_adc_user.c **** * Return Value : None
+  50:../src/r_cg_adc_user.c **** ***************************************************************************************************
+  51:../src/r_cg_adc_user.c **** void r_adc_interrupt(void)
+  52:../src/r_cg_adc_user.c **** {
+  68                             		.loc 1 52 0
+  69                             		; start of function
+  70                             		; push 8: ax bc de hl
+  71 0000 61 CF                   		sel	rb0
+  72 0002 C1                      		push	ax
+  73                             	.LCFI0:
+  74 0003 C3                      		push	bc
+  75                             	.LCFI1:
+  76 0004 C5                      		push	de
+  77                             	.LCFI2:
+  78 0005 C7                      		push	hl
+  79                             	.LCFI3:
+  53:../src/r_cg_adc_user.c ****     /* Start user code. Do not edit comment generated here */
+  54:../src/r_cg_adc_user.c **** 	adc_ready = 1;
+  80                             		.loc 1 54 0
+  81 0006 E5 00 00                		oneb	!_adc_ready
+  55:../src/r_cg_adc_user.c ****     /* End user code. Do not edit comment generated here */
+  56:../src/r_cg_adc_user.c **** }
+  82                             		.loc 1 56 0
+  83 0009 C6                      		pop	hl
+  84 000a C4                      		pop	de
+  85 000b C2                      		pop	bc
+  86 000c C0                      		pop	ax
+  87 000d 61 FC                   		reti
+  88                             	.LFE0:
+ 132                             	.Letext0:
+ 133                             		.file 2 "../src/r_cg_macrodriver.h"
+ 134                             		.file 3 "../src/r_cg_rtc.h"
+ 135                             		.file 4 "../src/infrared.h"
+ 136                             		.file 5 "../src/global.h"
+ 137                             		.file 6 "../src/adc.h"

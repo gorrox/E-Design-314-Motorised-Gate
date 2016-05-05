@@ -23,7 +23,7 @@
 * Device(s)    : R5F104LE
 * Tool-Chain   : GCCRL78
 * Description  : This file includes user definition.
-* Creation Date: 5/2/2016
+* Creation Date: 5/4/2016
 ***********************************************************************************************************************/
 
 #ifndef _USER_DEF_H
@@ -34,36 +34,6 @@ User definitions
 ***********************************************************************************************************************/
 
 /* Start user code for function. Do not edit comment generated here */
-#define RX_BUF_LEN 16
-#define TX_BUF_LEN 16
-//DVR
-#define DVR_nFAULT	P14_bit.no6
-#define DVR_PHASE	P4_bit.no1 //Default: 0 opening dir, 1 closing dir
-#define DVR_nSLEEP	P4_bit.no2
-#define DVR_ENABLE	P4_bit.no3
-//Motor switches
-#define SWITCH_OPENED	P0_bit.no5
-#define SWITCH_CLOSED	P0_bit.no6
-//Gate status
-int gate_status;
-#define GS_UNKNOWN	0
-#define GS_OPENED	1
-#define GS_CLOSED	2
-#define GS_ESTOP	3
-//Board buttons
-#define BTN_STEP		P7_bit.no7 //Menu step: 		INTP11, P77
-#define BTN_STOP		P5_bit.no1 //Emergency stop: 	INTP2, P51
-#define BTN_OPEN		P5_bit.no0 //Open gate:			INTP1, P50
-#define BTN_CLOSE		P3_bit.no1 //Close gate:		INTP4, P31
-//Controller mode
-int mode;
 
-#include "r_cg_macrodriver.h"
-#include "r_cg_cgc.h"
-#include "r_cg_port.h"
-#include "r_cg_serial.h"
-#include "r_cg_timer.h"
-#include "lcd.h"
-#include "global.c"
 /* End user code. Do not edit comment generated here */
 #endif

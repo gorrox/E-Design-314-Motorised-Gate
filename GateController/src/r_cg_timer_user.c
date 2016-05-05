@@ -23,7 +23,7 @@
 * Device(s)    : R5F104LE
 * Tool-Chain   : GCCRL78
 * Description  : This file implements device driver for TAU module.
-* Creation Date: 5/2/2016
+* Creation Date: 5/4/2016
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
@@ -32,6 +32,7 @@ Includes
 #include "r_cg_macrodriver.h"
 #include "r_cg_timer.h"
 /* Start user code for include. Do not edit comment generated here */
+#include "global.h"
 /* End user code. Do not edit comment generated here */
 #include "r_cg_userdefine.h"
 
@@ -39,9 +40,7 @@ Includes
 Global variables and functions
 ***********************************************************************************************************************/
 /* Start user code for global. Do not edit comment generated here */
-uint8_t volatile pwm_edge;
-uint8_t volatile switch_edge;
-uint8_t volatile check_btns;
+
 /* End user code. Do not edit comment generated here */
 
 /***********************************************************************************************************************
@@ -67,6 +66,30 @@ void r_tau0_channel1_interrupt(void)
     /* Start user code. Do not edit comment generated here */
 	switch_edge = 1;
 	check_btns = 1;
+	ADC_counter++;
+	if (ADC_counter == 100)
+	{
+		ADC_counter = 0;
+		timer_adc_reader_10Hz_interrupt = 1;
+	}
+
+	if(auto_close)
+	{
+		auto_close_cntr++;
+		if (auto_close_cntr >= AUTO_CLOSE_DELAY)
+		{
+			auto_close_cntr = 0;
+			closeGate();
+			print_lcd("Auto close");
+		}
+	}
+
+	//if (gate_cmd) collision_det_counter++;
+	//if (collision_det_counter == COLLISION_DET_DELAY)
+	//{
+		//collision_det_counter = 0;
+		//collision_det = 1;
+	//}
     /* End user code. Do not edit comment generated here */
 }
 
@@ -92,7 +115,7 @@ void r_tau0_channel2_interrupt(void)
 void r_tau0_channel3_interrupt(void)
 {
     /* Start user code. Do not edit comment generated here */
-	receive();
+	receive(); //IR receive
 	P7 ^= 0x80;
     /* End user code. Do not edit comment generated here */
 }

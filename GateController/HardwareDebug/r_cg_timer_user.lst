@@ -24,25 +24,46 @@
   24                             	r31	=	0xffee7
   25                             	.text
   26                             	.Ltext0:
-  27                             		.comm	_gate_status,2,2
-  28                             		.comm	_mode,2,2
-  29                             		.comm	_uart1RxBuf,16,1
-  30                             		.comm	_uart1RxCnt,2,2
-  31                             		.comm	_uart1RxFlag,1,1
-  32                             		.comm	_uart1RxErrFlag,1,1
-  33                             		.comm	_uart1RxOvrFlag,1,1
-  34                             		.comm	_uart1TxBuf,16,1
-  35                             		.comm	_uart1TxCnt,2,2
-  36                             		.comm	_uart1TxFlag,1,1
-  37                             		.comm	_time_now,7,1
-  38                             		.comm	_uart1Status,2,2
-  39                             		.comm	_pwm_edge,1,1
-  40                             		.comm	_switch_edge,1,1
-  41                             		.comm	_check_btns,1,1
-  42                             		.global	_r_tau0_channel0_interrupt
-  44                             	_r_tau0_channel0_interrupt:
-  45                             	.LFB0:
-  46                             		.file 1 "../src/r_cg_timer_user.c"
+  27                             		.comm	_ir_rxMessage,2,2
+  28                             		.comm	_dataReady,1,1
+  29                             		.comm	_dataPrint,1,1
+  30                             		.comm	_dataResponse,1,1
+  31                             		.comm	_ADC_done,1,1
+  32                             		.comm	_ADC_value,8,2
+  33                             		.comm	_INTAD_FSM_state,1,1
+  34                             		.comm	_adc_ready,1,1
+  35                             		.comm	_latest_current_reading,1,1
+  36                             		.comm	_ADC_counter,1,1
+  37                             		.comm	_timer_adc_reader_10Hz_interrupt,1,1
+  38                             		.comm	_initial_current,1,1
+  39                             		.comm	_collision_det_counter,1,1
+  40                             		.comm	_collision_det,1,1
+  41                             		.comm	_gate_status,2,2
+  42                             		.comm	_mode,1,1
+  43                             		.comm	_GS_PREV_STATE,1,1
+  44                             		.comm	_uart1RxBuf,16,1
+  45                             		.comm	_uart1RxCnt,2,2
+  46                             		.comm	_uart1RxFlag,1,1
+  47                             		.comm	_uart1RxErrFlag,1,1
+  48                             		.comm	_uart1RxOvrFlag,1,1
+  49                             		.comm	_uart1TxBuf,16,1
+  50                             		.comm	_uart1TxCnt,2,2
+  51                             		.comm	_uart1TxFlag,1,1
+  52                             		.comm	_time_now,7,1
+  53                             		.comm	_uart1Status,2,2
+  54                             		.comm	_myBuffer,16,1
+  55                             		.comm	_myCounter,2,2
+  56                             		.comm	_pwm_counter,2,2
+  57                             		.comm	_pwm_edge,1,1
+  58                             		.comm	_switch_edge,1,1
+  59                             		.comm	_check_btns,1,1
+  60                             		.comm	_gate_cmd,1,1
+  61                             		.comm	_auto_close,1,1
+  62                             		.comm	_auto_close_cntr,1,1
+  63                             		.global	_r_tau0_channel0_interrupt
+  65                             	_r_tau0_channel0_interrupt:
+  66                             	.LFB0:
+  67                             		.file 1 "../src/r_cg_timer_user.c"
    1:../src/r_cg_timer_user.c **** /**************************************************************************************************
    2:../src/r_cg_timer_user.c **** * DISCLAIMER
    3:../src/r_cg_timer_user.c **** * This software is supplied by Renesas Electronics Corporation and is only intended for use with Re
@@ -68,7 +89,7 @@
   23:../src/r_cg_timer_user.c **** * Device(s)    : R5F104LE
   24:../src/r_cg_timer_user.c **** * Tool-Chain   : GCCRL78
   25:../src/r_cg_timer_user.c **** * Description  : This file implements device driver for TAU module.
-  26:../src/r_cg_timer_user.c **** * Creation Date: 5/2/2016
+  26:../src/r_cg_timer_user.c **** * Creation Date: 5/4/2016
   27:../src/r_cg_timer_user.c **** ***************************************************************************************************
   28:../src/r_cg_timer_user.c **** 
   29:../src/r_cg_timer_user.c **** /**************************************************************************************************
@@ -77,230 +98,291 @@
   32:../src/r_cg_timer_user.c **** #include "r_cg_macrodriver.h"
   33:../src/r_cg_timer_user.c **** #include "r_cg_timer.h"
   34:../src/r_cg_timer_user.c **** /* Start user code for include. Do not edit comment generated here */
-  35:../src/r_cg_timer_user.c **** /* End user code. Do not edit comment generated here */
-  36:../src/r_cg_timer_user.c **** #include "r_cg_userdefine.h"
-  37:../src/r_cg_timer_user.c **** 
-  38:../src/r_cg_timer_user.c **** /**************************************************************************************************
-  39:../src/r_cg_timer_user.c **** Global variables and functions
-  40:../src/r_cg_timer_user.c **** ***************************************************************************************************
-  41:../src/r_cg_timer_user.c **** /* Start user code for global. Do not edit comment generated here */
-  42:../src/r_cg_timer_user.c **** uint8_t volatile pwm_edge;
-  43:../src/r_cg_timer_user.c **** uint8_t volatile switch_edge;
-  44:../src/r_cg_timer_user.c **** uint8_t volatile check_btns;
-  45:../src/r_cg_timer_user.c **** /* End user code. Do not edit comment generated here */
-  46:../src/r_cg_timer_user.c **** 
-  47:../src/r_cg_timer_user.c **** /**************************************************************************************************
-  48:../src/r_cg_timer_user.c **** * Function Name: r_tau0_channel0_interrupt
-  49:../src/r_cg_timer_user.c **** * Description  : This function is INTTM00 interrupt service routine.
-  50:../src/r_cg_timer_user.c **** * Arguments    : None
-  51:../src/r_cg_timer_user.c **** * Return Value : None
-  52:../src/r_cg_timer_user.c **** ***************************************************************************************************
-  53:../src/r_cg_timer_user.c **** void r_tau0_channel0_interrupt(void)
-  54:../src/r_cg_timer_user.c **** {
-  47                             		.loc 1 54 0
-  48                             		; start of function
-  49                             		; push 8: ax bc de hl
-  50 0000 61 CF                   		sel	rb0
-  51 0002 C1                      		push	ax
-  52                             	.LCFI0:
-  53 0003 C3                      		push	bc
-  54                             	.LCFI1:
-  55 0004 C5                      		push	de
-  56                             	.LCFI2:
-  57 0005 C7                      		push	hl
-  58                             	.LCFI3:
-  55:../src/r_cg_timer_user.c ****     /* Start user code. Do not edit comment generated here */
-  56:../src/r_cg_timer_user.c ****     /* End user code. Do not edit comment generated here */
-  57:../src/r_cg_timer_user.c **** }
-  59                             		.loc 1 57 0
-  60 0006 C6                      		pop	hl
-  61 0007 C4                      		pop	de
-  62 0008 C2                      		pop	bc
-  63 0009 C0                      		pop	ax
-  64 000a 61 FC                   		reti
-  65                             	.LFE0:
-  67                             		.global	_r_tau0_channel1_interrupt
-  69                             	_r_tau0_channel1_interrupt:
-  70                             	.LFB1:
-  58:../src/r_cg_timer_user.c **** 
-  59:../src/r_cg_timer_user.c **** /**************************************************************************************************
-  60:../src/r_cg_timer_user.c **** * Function Name: r_tau0_channel1_interrupt
-  61:../src/r_cg_timer_user.c **** * Description  : This function is INTTM01 interrupt service routine.
-  62:../src/r_cg_timer_user.c **** * Arguments    : None
-  63:../src/r_cg_timer_user.c **** * Return Value : None
-  64:../src/r_cg_timer_user.c **** ***************************************************************************************************
-  65:../src/r_cg_timer_user.c **** void r_tau0_channel1_interrupt(void)
-  66:../src/r_cg_timer_user.c **** {
-  71                             		.loc 1 66 0
-  72                             		; start of function
-  73                             		; push 8: ax bc de hl
-  74 000c 61 CF                   		sel	rb0
-  75 000e C1                      		push	ax
-  76                             	.LCFI4:
-  77 000f C3                      		push	bc
-  78                             	.LCFI5:
-  79 0010 C5                      		push	de
-  80                             	.LCFI6:
-  81 0011 C7                      		push	hl
-  82                             	.LCFI7:
-  67:../src/r_cg_timer_user.c ****     /* Start user code. Do not edit comment generated here */
-  68:../src/r_cg_timer_user.c **** 	switch_edge = 1;
-  83                             		.loc 1 68 0
-  84 0012 E5 00 00                		oneb	!_switch_edge
-  69:../src/r_cg_timer_user.c **** 	check_btns = 1;
-  85                             		.loc 1 69 0
-  86 0015 E5 00 00                		oneb	!_check_btns
-  70:../src/r_cg_timer_user.c ****     /* End user code. Do not edit comment generated here */
-  71:../src/r_cg_timer_user.c **** }
-  87                             		.loc 1 71 0
-  88 0018 C6                      		pop	hl
-  89 0019 C4                      		pop	de
-  90 001a C2                      		pop	bc
-  91 001b C0                      		pop	ax
-  92 001c 61 FC                   		reti
-  93                             	.LFE1:
-  95                             		.global	_r_tau0_channel2_interrupt
-  97                             	_r_tau0_channel2_interrupt:
-  98                             	.LFB2:
-  72:../src/r_cg_timer_user.c **** 
-  73:../src/r_cg_timer_user.c **** /**************************************************************************************************
-  74:../src/r_cg_timer_user.c **** * Function Name: r_tau0_channel2_interrupt
-  75:../src/r_cg_timer_user.c **** * Description  : This function is INTTM02 interrupt service routine.
-  76:../src/r_cg_timer_user.c **** * Arguments    : None
-  77:../src/r_cg_timer_user.c **** * Return Value : None
-  78:../src/r_cg_timer_user.c **** ***************************************************************************************************
-  79:../src/r_cg_timer_user.c **** void r_tau0_channel2_interrupt(void)
-  80:../src/r_cg_timer_user.c **** {
-  99                             		.loc 1 80 0
- 100                             		; start of function
- 101                             		; push 8: ax bc de hl
- 102 001e 61 CF                   		sel	rb0
- 103 0020 C1                      		push	ax
- 104                             	.LCFI8:
- 105 0021 C3                      		push	bc
- 106                             	.LCFI9:
- 107 0022 C5                      		push	de
- 108                             	.LCFI10:
- 109 0023 C7                      		push	hl
- 110                             	.LCFI11:
-  81:../src/r_cg_timer_user.c ****     /* Start user code. Do not edit comment generated here */
-  82:../src/r_cg_timer_user.c **** 	pwm_edge = 1;
- 111                             		.loc 1 82 0
- 112 0024 E5 00 00                		oneb	!_pwm_edge
-  83:../src/r_cg_timer_user.c ****     /* End user code. Do not edit comment generated here */
-  84:../src/r_cg_timer_user.c **** }
- 113                             		.loc 1 84 0
- 114 0027 C6                      		pop	hl
- 115 0028 C4                      		pop	de
- 116 0029 C2                      		pop	bc
- 117 002a C0                      		pop	ax
- 118 002b 61 FC                   		reti
- 119                             	.LFE2:
- 121                             		.global	_r_tau0_channel3_interrupt
- 123                             	_r_tau0_channel3_interrupt:
- 124                             	.LFB3:
-  85:../src/r_cg_timer_user.c **** 
-  86:../src/r_cg_timer_user.c **** /**************************************************************************************************
-  87:../src/r_cg_timer_user.c **** * Function Name: r_tau0_channel3_interrupt
-  88:../src/r_cg_timer_user.c **** * Description  : This function is INTTM03 interrupt service routine.
-  89:../src/r_cg_timer_user.c **** * Arguments    : None
-  90:../src/r_cg_timer_user.c **** * Return Value : None
-  91:../src/r_cg_timer_user.c **** ***************************************************************************************************
-  92:../src/r_cg_timer_user.c **** void r_tau0_channel3_interrupt(void)
-  93:../src/r_cg_timer_user.c **** {
- 125                             		.loc 1 93 0
- 126                             		; start of function
- 127                             		; push 16: ax bc de hl r8 r10 r12 r14
- 128 002d 61 CF                   		sel	rb0
- 129 002f C1                      		push	ax
- 130                             	.LCFI12:
- 131 0030 C3                      		push	bc
- 132                             	.LCFI13:
- 133 0031 C5                      		push	de
- 134                             	.LCFI14:
- 135 0032 C7                      		push	hl
- 136                             	.LCFI15:
- 137 0033 61 DF                   		sel	rb1
- 138 0035 C1                      		push	ax ; r8
- 139                             	.LCFI16:
- 140 0036 C3                      		push	bc ; r10
- 141                             	.LCFI17:
- 142 0037 C5                      		push	de ; r12
- 143                             	.LCFI18:
- 144 0038 C7                      		push	hl ; r14
- 145                             	.LCFI19:
- 146 0039 61 CF                   		sel	rb0
-  94:../src/r_cg_timer_user.c ****     /* Start user code. Do not edit comment generated here */
-  95:../src/r_cg_timer_user.c **** 	receive();
- 147                             		.loc 1 95 0
- 148 003b FC 00 00 00             		call	!!%code(_receive)
-  96:../src/r_cg_timer_user.c **** 	P7 ^= 0x80;
- 149                             		.loc 1 96 0
- 150 003f C9 F2 07 FF             		movw	r10, #-249
- 151 0043 C9 F0 07 FF             		movw	r8, #-249
- 152 0047 AD F0                   		movw	ax, r8
- 153 0049 BD F4                   		movw	r12, ax
- 154 004b FA F4                   		movw	hl, r12
- 155 004d 8B                      		mov	a, [hl]
- 156 004e 9D F0                   		mov	r8, a
- 157 0050 7A F0 80                		xor	r8, #-128
- 158 0053 AD F2                   		movw	ax, r10
- 159 0055 BD F4                   		movw	r12, ax
- 160 0057 DA F4                   		movw	bc, r12
- 161 0059 8D F0                   		mov	a, r8
- 162 005b 48 00 00                		mov	[bc], a
-  97:../src/r_cg_timer_user.c ****     /* End user code. Do not edit comment generated here */
-  98:../src/r_cg_timer_user.c **** }
- 163                             		.loc 1 98 0
- 164 005e 61 DF                   		sel	rb1
- 165 0060 C6                      		pop	hl ; r14
- 166 0061 C4                      		pop	de ; r12
- 167 0062 C2                      		pop	bc ; r10
- 168 0063 C0                      		pop	ax ; r8
- 169 0064 61 CF                   		sel	rb0
- 170 0066 C6                      		pop	hl
- 171 0067 C4                      		pop	de
- 172 0068 C2                      		pop	bc
- 173 0069 C0                      		pop	ax
- 174 006a 61 FC                   		reti
- 175                             	.LFE3:
- 177                             		.global	_r_tmr_rd0_interrupt
- 179                             	_r_tmr_rd0_interrupt:
- 180                             	.LFB4:
-  99:../src/r_cg_timer_user.c **** 
- 100:../src/r_cg_timer_user.c **** /**************************************************************************************************
- 101:../src/r_cg_timer_user.c **** * Function Name: r_tmr_rd0_interrupt
- 102:../src/r_cg_timer_user.c **** * Description  : This function is INTTRD0 interrupt service routine.
- 103:../src/r_cg_timer_user.c **** * Arguments    : None
- 104:../src/r_cg_timer_user.c **** * Return Value : None
- 105:../src/r_cg_timer_user.c **** ***************************************************************************************************
- 106:../src/r_cg_timer_user.c **** void r_tmr_rd0_interrupt(void)
- 107:../src/r_cg_timer_user.c **** {
- 181                             		.loc 1 107 0
- 182                             		; start of function
- 183                             		; push 8: ax bc de hl
- 184 006c 61 CF                   		sel	rb0
- 185 006e C1                      		push	ax
- 186                             	.LCFI20:
- 187 006f C3                      		push	bc
- 188                             	.LCFI21:
- 189 0070 C5                      		push	de
- 190                             	.LCFI22:
- 191 0071 C7                      		push	hl
- 192                             	.LCFI23:
- 108:../src/r_cg_timer_user.c ****     /* Start user code. Do not edit comment generated here */
- 109:../src/r_cg_timer_user.c ****     /* End user code. Do not edit comment generated here */
- 110:../src/r_cg_timer_user.c **** }
- 193                             		.loc 1 110 0
- 194 0072 C6                      		pop	hl
- 195 0073 C4                      		pop	de
- 196 0074 C2                      		pop	bc
- 197 0075 C0                      		pop	ax
- 198 0076 61 FC                   		reti
- 199                             	.LFE4:
- 355                             	.Letext0:
- 356                             		.file 2 "../src/iodefine.h"
- 357                             		.file 3 "../src/r_cg_macrodriver.h"
- 358                             		.file 4 "../src/r_cg_rtc.h"
- 359                             		.file 5 "../src/r_cg_userdefine.h"
- 360                             		.file 6 "../src/global.c"
+  35:../src/r_cg_timer_user.c **** #include "global.h"
+  36:../src/r_cg_timer_user.c **** /* End user code. Do not edit comment generated here */
+  37:../src/r_cg_timer_user.c **** #include "r_cg_userdefine.h"
+  38:../src/r_cg_timer_user.c **** 
+  39:../src/r_cg_timer_user.c **** /**************************************************************************************************
+  40:../src/r_cg_timer_user.c **** Global variables and functions
+  41:../src/r_cg_timer_user.c **** ***************************************************************************************************
+  42:../src/r_cg_timer_user.c **** /* Start user code for global. Do not edit comment generated here */
+  43:../src/r_cg_timer_user.c **** 
+  44:../src/r_cg_timer_user.c **** /* End user code. Do not edit comment generated here */
+  45:../src/r_cg_timer_user.c **** 
+  46:../src/r_cg_timer_user.c **** /**************************************************************************************************
+  47:../src/r_cg_timer_user.c **** * Function Name: r_tau0_channel0_interrupt
+  48:../src/r_cg_timer_user.c **** * Description  : This function is INTTM00 interrupt service routine.
+  49:../src/r_cg_timer_user.c **** * Arguments    : None
+  50:../src/r_cg_timer_user.c **** * Return Value : None
+  51:../src/r_cg_timer_user.c **** ***************************************************************************************************
+  52:../src/r_cg_timer_user.c **** void r_tau0_channel0_interrupt(void)
+  53:../src/r_cg_timer_user.c **** {
+  68                             		.loc 1 53 0
+  69                             		; start of function
+  70                             		; push 8: ax bc de hl
+  71 0000 61 CF                   		sel	rb0
+  72 0002 C1                      		push	ax
+  73                             	.LCFI0:
+  74 0003 C3                      		push	bc
+  75                             	.LCFI1:
+  76 0004 C5                      		push	de
+  77                             	.LCFI2:
+  78 0005 C7                      		push	hl
+  79                             	.LCFI3:
+  54:../src/r_cg_timer_user.c ****     /* Start user code. Do not edit comment generated here */
+  55:../src/r_cg_timer_user.c ****     /* End user code. Do not edit comment generated here */
+  56:../src/r_cg_timer_user.c **** }
+  80                             		.loc 1 56 0
+  81 0006 C6                      		pop	hl
+  82 0007 C4                      		pop	de
+  83 0008 C2                      		pop	bc
+  84 0009 C0                      		pop	ax
+  85 000a 61 FC                   		reti
+  86                             	.LFE0:
+  88                             		.global	_r_tau0_channel1_interrupt
+  90                             	_r_tau0_channel1_interrupt:
+  91                             	.LFB1:
+  57:../src/r_cg_timer_user.c **** 
+  58:../src/r_cg_timer_user.c **** /**************************************************************************************************
+  59:../src/r_cg_timer_user.c **** * Function Name: r_tau0_channel1_interrupt
+  60:../src/r_cg_timer_user.c **** * Description  : This function is INTTM01 interrupt service routine.
+  61:../src/r_cg_timer_user.c **** * Arguments    : None
+  62:../src/r_cg_timer_user.c **** * Return Value : None
+  63:../src/r_cg_timer_user.c **** ***************************************************************************************************
+  64:../src/r_cg_timer_user.c **** void r_tau0_channel1_interrupt(void)
+  65:../src/r_cg_timer_user.c **** {
+  92                             		.loc 1 65 0
+  93                             		; start of function
+  94                             		; push 10: ax bc de hl r8
+  95 000c 61 CF                   		sel	rb0
+  96 000e C1                      		push	ax
+  97                             	.LCFI4:
+  98 000f C3                      		push	bc
+  99                             	.LCFI5:
+ 100 0010 C5                      		push	de
+ 101                             	.LCFI6:
+ 102 0011 C7                      		push	hl
+ 103                             	.LCFI7:
+ 104 0012 61 DF                   		sel	rb1
+ 105 0014 C1                      		push	ax ; r8
+ 106                             	.LCFI8:
+ 107 0015 61 CF                   		sel	rb0
+  66:../src/r_cg_timer_user.c ****     /* Start user code. Do not edit comment generated here */
+  67:../src/r_cg_timer_user.c **** 	switch_edge = 1;
+ 108                             		.loc 1 67 0
+ 109 0017 E5 00 00                		oneb	!_switch_edge
+  68:../src/r_cg_timer_user.c **** 	check_btns = 1;
+ 110                             		.loc 1 68 0
+ 111 001a E5 00 00                		oneb	!_check_btns
+  69:../src/r_cg_timer_user.c **** 	ADC_counter++;
+ 112                             		.loc 1 69 0
+ 113 001d 8F 00 00                		mov	a, !_ADC_counter
+ 114 0020 9D F0                   		mov	r8, a
+ 115 0022 A4 F0                   		inc	r8
+ 116 0024 8D F0                   		mov	a, r8
+ 117 0026 9F 00 00                		mov	!_ADC_counter, a
+  70:../src/r_cg_timer_user.c **** 	if (ADC_counter == 100)
+ 118                             		.loc 1 70 0
+ 119 0029 8F 00 00                		mov	a, !_ADC_counter
+ 120 002c 9D F0                   		mov	r8, a
+ 121 002e 4A F0 64                		cmp	r8, #100
+ 122 0031 61 E8                   		 skz
+ 123 0033 EC 3D 00 00             		 br	!!.L3
+  71:../src/r_cg_timer_user.c **** 	{
+  72:../src/r_cg_timer_user.c **** 		ADC_counter = 0;
+ 124                             		.loc 1 72 0
+ 125 0037 F5 00 00                		clrb	!_ADC_counter
+  73:../src/r_cg_timer_user.c **** 		timer_adc_reader_10Hz_interrupt = 1;
+ 126                             		.loc 1 73 0
+ 127 003a E5 00 00                		oneb	!_timer_adc_reader_10Hz_interrupt
+ 128                             	.L3:
+  74:../src/r_cg_timer_user.c **** 	}
+  75:../src/r_cg_timer_user.c **** 
+  76:../src/r_cg_timer_user.c **** 	if(auto_close)
+ 129                             		.loc 1 76 0
+ 130 003d 8F 00 00                		mov	a, !_auto_close
+ 131 0040 9D F0                   		mov	r8, a
+ 132 0042 D4 F0                   		cmp0	r8
+ 133 0044 61 F8                   		 sknz
+ 134 0046 EC 56 00 00             		 br	!!.L2
+  77:../src/r_cg_timer_user.c **** 	{
+  78:../src/r_cg_timer_user.c **** 		auto_close_cntr++;
+ 135                             		.loc 1 78 0
+ 136 004a 8F 00 00                		mov	a, !_auto_close_cntr
+ 137 004d 9D F0                   		mov	r8, a
+ 138 004f A4 F0                   		inc	r8
+ 139 0051 8D F0                   		mov	a, r8
+ 140 0053 9F 00 00                		mov	!_auto_close_cntr, a
+ 141                             	.L2:
+  79:../src/r_cg_timer_user.c **** 		if (auto_close_cntr >= AUTO_CLOSE_DELAY)
+  80:../src/r_cg_timer_user.c **** 		{
+  81:../src/r_cg_timer_user.c **** 			auto_close_cntr = 0;
+  82:../src/r_cg_timer_user.c **** 			closeGate();
+  83:../src/r_cg_timer_user.c **** 			print_lcd("Auto close");
+  84:../src/r_cg_timer_user.c **** 		}
+  85:../src/r_cg_timer_user.c **** 	}
+  86:../src/r_cg_timer_user.c **** 
+  87:../src/r_cg_timer_user.c **** 	//if (gate_cmd) collision_det_counter++;
+  88:../src/r_cg_timer_user.c **** 	//if (collision_det_counter == COLLISION_DET_DELAY)
+  89:../src/r_cg_timer_user.c **** 	//{
+  90:../src/r_cg_timer_user.c **** 		//collision_det_counter = 0;
+  91:../src/r_cg_timer_user.c **** 		//collision_det = 1;
+  92:../src/r_cg_timer_user.c **** 	//}
+  93:../src/r_cg_timer_user.c ****     /* End user code. Do not edit comment generated here */
+  94:../src/r_cg_timer_user.c **** }
+ 142                             		.loc 1 94 0
+ 143 0056 61 DF                   		sel	rb1
+ 144 0058 C0                      		pop	ax ; r8
+ 145 0059 61 CF                   		sel	rb0
+ 146 005b C6                      		pop	hl
+ 147 005c C4                      		pop	de
+ 148 005d C2                      		pop	bc
+ 149 005e C0                      		pop	ax
+ 150 005f 61 FC                   		reti
+ 151                             	.LFE1:
+ 153                             		.global	_r_tau0_channel2_interrupt
+ 155                             	_r_tau0_channel2_interrupt:
+ 156                             	.LFB2:
+  95:../src/r_cg_timer_user.c **** 
+  96:../src/r_cg_timer_user.c **** /**************************************************************************************************
+  97:../src/r_cg_timer_user.c **** * Function Name: r_tau0_channel2_interrupt
+  98:../src/r_cg_timer_user.c **** * Description  : This function is INTTM02 interrupt service routine.
+  99:../src/r_cg_timer_user.c **** * Arguments    : None
+ 100:../src/r_cg_timer_user.c **** * Return Value : None
+ 101:../src/r_cg_timer_user.c **** ***************************************************************************************************
+ 102:../src/r_cg_timer_user.c **** void r_tau0_channel2_interrupt(void)
+ 103:../src/r_cg_timer_user.c **** {
+ 157                             		.loc 1 103 0
+ 158                             		; start of function
+ 159                             		; push 8: ax bc de hl
+ 160 0061 61 CF                   		sel	rb0
+ 161 0063 C1                      		push	ax
+ 162                             	.LCFI9:
+ 163 0064 C3                      		push	bc
+ 164                             	.LCFI10:
+ 165 0065 C5                      		push	de
+ 166                             	.LCFI11:
+ 167 0066 C7                      		push	hl
+ 168                             	.LCFI12:
+ 104:../src/r_cg_timer_user.c ****     /* Start user code. Do not edit comment generated here */
+ 105:../src/r_cg_timer_user.c **** 	pwm_edge = 1;
+ 169                             		.loc 1 105 0
+ 170 0067 E5 00 00                		oneb	!_pwm_edge
+ 106:../src/r_cg_timer_user.c ****     /* End user code. Do not edit comment generated here */
+ 107:../src/r_cg_timer_user.c **** }
+ 171                             		.loc 1 107 0
+ 172 006a C6                      		pop	hl
+ 173 006b C4                      		pop	de
+ 174 006c C2                      		pop	bc
+ 175 006d C0                      		pop	ax
+ 176 006e 61 FC                   		reti
+ 177                             	.LFE2:
+ 179                             		.global	_r_tau0_channel3_interrupt
+ 181                             	_r_tau0_channel3_interrupt:
+ 182                             	.LFB3:
+ 108:../src/r_cg_timer_user.c **** 
+ 109:../src/r_cg_timer_user.c **** /**************************************************************************************************
+ 110:../src/r_cg_timer_user.c **** * Function Name: r_tau0_channel3_interrupt
+ 111:../src/r_cg_timer_user.c **** * Description  : This function is INTTM03 interrupt service routine.
+ 112:../src/r_cg_timer_user.c **** * Arguments    : None
+ 113:../src/r_cg_timer_user.c **** * Return Value : None
+ 114:../src/r_cg_timer_user.c **** ***************************************************************************************************
+ 115:../src/r_cg_timer_user.c **** void r_tau0_channel3_interrupt(void)
+ 116:../src/r_cg_timer_user.c **** {
+ 183                             		.loc 1 116 0
+ 184                             		; start of function
+ 185                             		; push 16: ax bc de hl r8 r10 r12 r14
+ 186 0070 61 CF                   		sel	rb0
+ 187 0072 C1                      		push	ax
+ 188                             	.LCFI13:
+ 189 0073 C3                      		push	bc
+ 190                             	.LCFI14:
+ 191 0074 C5                      		push	de
+ 192                             	.LCFI15:
+ 193 0075 C7                      		push	hl
+ 194                             	.LCFI16:
+ 195 0076 61 DF                   		sel	rb1
+ 196 0078 C1                      		push	ax ; r8
+ 197                             	.LCFI17:
+ 198 0079 C3                      		push	bc ; r10
+ 199                             	.LCFI18:
+ 200 007a C5                      		push	de ; r12
+ 201                             	.LCFI19:
+ 202 007b C7                      		push	hl ; r14
+ 203                             	.LCFI20:
+ 204 007c 61 CF                   		sel	rb0
+ 117:../src/r_cg_timer_user.c ****     /* Start user code. Do not edit comment generated here */
+ 118:../src/r_cg_timer_user.c **** 	receive(); //IR receive
+ 205                             		.loc 1 118 0
+ 206 007e FC 00 00 00             		call	!!%code(_receive)
+ 119:../src/r_cg_timer_user.c **** 	P7 ^= 0x80;
+ 207                             		.loc 1 119 0
+ 208 0082 C9 F2 07 FF             		movw	r10, #-249
+ 209 0086 C9 F0 07 FF             		movw	r8, #-249
+ 210 008a AD F0                   		movw	ax, r8
+ 211 008c BD F4                   		movw	r12, ax
+ 212 008e FA F4                   		movw	hl, r12
+ 213 0090 8B                      		mov	a, [hl]
+ 214 0091 9D F0                   		mov	r8, a
+ 215 0093 7A F0 80                		xor	r8, #-128
+ 216 0096 AD F2                   		movw	ax, r10
+ 217 0098 BD F4                   		movw	r12, ax
+ 218 009a DA F4                   		movw	bc, r12
+ 219 009c 8D F0                   		mov	a, r8
+ 220 009e 48 00 00                		mov	[bc], a
+ 120:../src/r_cg_timer_user.c ****     /* End user code. Do not edit comment generated here */
+ 121:../src/r_cg_timer_user.c **** }
+ 221                             		.loc 1 121 0
+ 222 00a1 61 DF                   		sel	rb1
+ 223 00a3 C6                      		pop	hl ; r14
+ 224 00a4 C4                      		pop	de ; r12
+ 225 00a5 C2                      		pop	bc ; r10
+ 226 00a6 C0                      		pop	ax ; r8
+ 227 00a7 61 CF                   		sel	rb0
+ 228 00a9 C6                      		pop	hl
+ 229 00aa C4                      		pop	de
+ 230 00ab C2                      		pop	bc
+ 231 00ac C0                      		pop	ax
+ 232 00ad 61 FC                   		reti
+ 233                             	.LFE3:
+ 235                             		.global	_r_tmr_rd0_interrupt
+ 237                             	_r_tmr_rd0_interrupt:
+ 238                             	.LFB4:
+ 122:../src/r_cg_timer_user.c **** 
+ 123:../src/r_cg_timer_user.c **** /**************************************************************************************************
+ 124:../src/r_cg_timer_user.c **** * Function Name: r_tmr_rd0_interrupt
+ 125:../src/r_cg_timer_user.c **** * Description  : This function is INTTRD0 interrupt service routine.
+ 126:../src/r_cg_timer_user.c **** * Arguments    : None
+ 127:../src/r_cg_timer_user.c **** * Return Value : None
+ 128:../src/r_cg_timer_user.c **** ***************************************************************************************************
+ 129:../src/r_cg_timer_user.c **** void r_tmr_rd0_interrupt(void)
+ 130:../src/r_cg_timer_user.c **** {
+ 239                             		.loc 1 130 0
+ 240                             		; start of function
+ 241                             		; push 8: ax bc de hl
+ 242 00af 61 CF                   		sel	rb0
+ 243 00b1 C1                      		push	ax
+ 244                             	.LCFI21:
+ 245 00b2 C3                      		push	bc
+ 246                             	.LCFI22:
+ 247 00b3 C5                      		push	de
+ 248                             	.LCFI23:
+ 249 00b4 C7                      		push	hl
+ 250                             	.LCFI24:
+ 131:../src/r_cg_timer_user.c ****     /* Start user code. Do not edit comment generated here */
+ 132:../src/r_cg_timer_user.c ****     /* End user code. Do not edit comment generated here */
+ 133:../src/r_cg_timer_user.c **** }
+ 251                             		.loc 1 133 0
+ 252 00b5 C6                      		pop	hl
+ 253 00b6 C4                      		pop	de
+ 254 00b7 C2                      		pop	bc
+ 255 00b8 C0                      		pop	ax
+ 256 00b9 61 FC                   		reti
+ 257                             	.LFE4:
+ 417                             	.Letext0:
+ 418                             		.file 2 "../src/iodefine.h"
+ 419                             		.file 3 "../src/r_cg_macrodriver.h"
+ 420                             		.file 4 "../src/r_cg_rtc.h"
+ 421                             		.file 5 "../src/infrared.h"
+ 422                             		.file 6 "../src/adc.h"
+ 423                             		.file 7 "../src/global.h"

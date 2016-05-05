@@ -7,7 +7,7 @@
 
 #include "infrared.h"
 #include "lcd.h"
-#include "r_cg_userdefine.h"
+#include "global.h"
 
 
 void receive(void)
@@ -74,21 +74,21 @@ void IRcmd(void)
 				switch(cmd)
 				{
 					case 0x1: // OPEN
-						//if (mode) echo(0x88);
-						DVR_PHASE = 0;
-						DVR_nSLEEP = 1;
-						gate_status = GS_UNKNOWN;
+						if (!mode)
+						{
+							buzzerBeep(3);
+							openGate();
+						}
 						break;
 					case 0x2: // CLOSE
-						//if (mode) echo(0x90);
-						DVR_PHASE = 1;
-						DVR_nSLEEP = 1;
-						gate_status = GS_UNKNOWN;
+						if (!mode)
+						{
+							buzzerBeep(3);
+							closeGate();
+						}
 						break;
 					case 0x3: //ESTOP
-						//if (mode) echo(0x84);
-						DVR_nSLEEP = 0;
-						gate_status = GS_ESTOP;
+						if (!mode) stopGate();
 						break;
 				}
 			}

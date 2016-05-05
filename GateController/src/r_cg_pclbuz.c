@@ -23,7 +23,7 @@
 * Device(s)    : R5F104LE
 * Tool-Chain   : GCCRL78
 * Description  : This file implements device driver for PCLBUZ module.
-* Creation Date: 5/2/2016
+* Creation Date: 5/4/2016
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
@@ -50,7 +50,7 @@ Global variables and functions
 void R_PCLBUZ0_Create(void)
 {
     PCLOE0 = 0U;    /* disable PCLBUZ0 operation */
-    CKS0 = _0D_PCLBUZ_OUTCLK_fSUB5;
+    CKS0 = _0C_PCLBUZ_OUTCLK_fSUB4;
     /* Set PCLBUZ0 pin */
     P14 &= 0xFEU;
     PM14 &= 0xFEU;

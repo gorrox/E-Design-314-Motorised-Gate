@@ -1,0 +1,491 @@
+/*
+ * global.c
+ *
+ *  Created on: Feb 21, 2016
+ *      Author: Tristan Nel - 18179460
+ */
+
+#include "global.h"
+#include "r_cg_rtc.h"
+
+//Functions
+void init(void)
+{
+	//Open connections
+	EI();
+	R_RTC_Start();
+	R_UART1_Start();
+	R_TAU0_Channel0_Start();
+	R_TAU0_Channel2_Start();
+	R_TAU0_Channel1_Lower8bits_Start();
+
+	R_ADC_Start();
+
+	R_TMR_RD0_Start();
+
+	myCounter = 0;
+	dataPrint = 1;
+	dataResponse = 1;
+	dataReady = 0;
+	R_INTC7_Start();
+
+	//Init flags
+	uart1RxFlag = 0U;
+	uart1TxFlag = 0U;
+
+	//Welcome user
+	initLcd();
+	welcome();
+	initLcd();
+
+	gate_status = GS_UNKNOWN;
+	//Start in Normal mode
+	mode = 0;
+	echo(0x80);
+	delayNoInt(100);
+	uart1TxFlag = 0U; // clear tx flag
+	print_lcd("Normal mode");
+
+	//Motor off
+	DVR_nSLEEP = 0;
+}
+
+void core(void)
+{
+	uart1RxBuf[0] = 'r'; 								//Init to non-arbitrary
+	uart1Status = R_UART1_Receive(&uart1RxBuf[0],1); 	//Prime UART to receive
+	//PM7&=0x7F;
+	ir_rxMessage = 0x0000;
+	while (1U)
+	{
+		mtrBtn();			//Check and react: switch pressed
+
+		boardBtn();			//Check and react: board buttons
+
+		IRcmd();			//Check and react: IR command
+
+		if (dataReady && dataPrint && mode)	//Check and react: print to LCD
+		{
+			uint8_t ascii_word[16];
+			word_to_ascii(ir_rxMessage, ascii_word);
+			print_lcd(ascii_word);
+			dataPrint = 0;
+		}
+
+		ADC();
+
+		if (uart1RxFlag)	//Input received
+		{
+			uart1RxFlag = 0U;
+
+			if(uart1RxBuf[0] == 0x81)		//TEST MODE
+			{
+				mode = 1;
+				echo(0x81);
+				dataPrint = 0;
+				print_lcd("Test mode");
+				buzzerBeep(3);
+
+			}
+
+			else if(uart1RxBuf[0] == 0x80)	//NORMAL MODE
+			{
+				mode = 0;
+				echo(0x80);
+				dataPrint = 0;
+				print_lcd("Normal mode");
+			}
+
+			else if(uart1RxBuf[0] == 0xF0)	//BUZZER ON
+			{
+				echo(0xF0);
+				R_PCLBUZ0_Start();
+			}
+
+			else if(uart1RxBuf[0] == 0xF1)	//BUZZER OFF
+			{
+				echo(0xF1);
+				R_PCLBUZ0_Stop();
+			}
+
+			else if(uart1RxBuf[0] == 0xF9)	//OPEN GATE
+			{
+				echo(0xF9);
+				openGate();
+				print_lcd("Gate opening...");
+			}
+
+			else if(uart1RxBuf[0] == 0xF8)	//CLOSE GATE
+			{
+				echo(0xF8);
+				closeGate();
+				print_lcd("Gate closing...");
+			}
+
+			else if(uart1RxBuf[0] == 0xF7)	//READ CURRENT
+			{
+				echoData(0xF7, initial_current/5);
+			}
+
+			else if(uart1RxBuf[0] == 0xFF)	//READ STATUS
+			{
+				//echo(0xFF);
+				msDelay(10);
+				switch(gate_status)
+				{
+					case GS_OPENED:
+						echoData(0xFF, 0x82);
+						print_lcd("Opened");
+						break;
+					case GS_CLOSED:
+						echoData(0xFF, 0x81);
+						print_lcd("Closed");
+						break;
+					case GS_UNKNOWN:
+						echo(0xFF, 0x00);
+						print_lcd("Unknown");
+						break;
+					case GS_ESTOP:
+						echoData(0xFF, 0x84);
+						print_lcd("Emergency stop");
+						break;
+				}
+			}
+
+			else if (uart1RxBuf[0] == 0xFC)	//READ IR CMD
+			{
+				echo(0xFC);
+				msDelay(10);
+				//Wait for complete message?
+				//echo(ir_rxMessage);
+				uint8_t cmd = ir_rxMessage & 0x7;
+				uint8_t addr = (ir_rxMessage >> 3) & 0xFF;
+				uint8_t tog = (ir_rxMessage >> 11) & 0x1;
+				echoData(addr, ((tog<<7) + cmd));
+				//echo(addr);
+				//echo((tog<<6) + cmd);
+			}
+
+			else if (uart1RxBuf[0] == 0xF2) //SET RTC TO PREV 5 BYTES
+			{
+				echo(0xF2);
+				time_now.sec = toBCD(myBuffer[myCounter - 1]);
+				time_now.min = toBCD(myBuffer[myCounter - 2]);
+				time_now.hour = toBCD(myBuffer[myCounter - 3]);
+				time_now.day = toBCD(myBuffer[myCounter - 4]);
+				time_now.month = toBCD(myBuffer[myCounter - 5]);
+				R_RTC_Stop();
+				R_RTC_Set_CounterValue(time_now);
+				R_RTC_Start();
+				int i;
+				for (i = 0; i < RX_BUF_LEN; i++)
+				{
+					myBuffer[i] = 0x0;
+				}
+				myCounter = 0;
+			}
+
+			else if (uart1RxBuf[0] == 0xF3) //SEND RTC VIA UART
+			{
+				int i;
+				for (i = 0; i < RX_BUF_LEN; i++)
+				{
+					myBuffer[i] = 0x0;
+				}
+				myCounter = 0;
+				R_RTC_Get_CounterValue(&time_now);
+				myBuffer[0] = 0xF3;
+				myBuffer[1] = toHex(time_now.month);
+				myBuffer[2] = toHex(time_now.day);
+				myBuffer[3] = toHex(time_now.hour);
+				myBuffer[4] = toHex(time_now.min);
+				myBuffer[5] = toHex(time_now.sec);
+
+				R_UART1_Send(myBuffer, 6);
+			}
+
+			//Buffer not full and input is not a command
+			else if((myCounter < RX_BUF_LEN)&&(uart1RxBuf[0] < 0x7F))
+			{
+				myBuffer[myCounter] = uart1RxBuf[0];
+				myCounter++;
+			}
+			//'Display to LCD' is activated during Test Mode
+			else if((mode == 1)&&(uart1RxBuf[0] == 0xF4))
+			{
+				echo(0xF4);
+				initLcd();
+				int display_x = 0;
+				int display_y = 0;
+				int display_scroll = 0;
+				int display_length = 16;
+				int display_loop = 1;
+				int overflow;
+
+				//Determine overflow
+				if (myCounter > 15) {
+					overflow = myCounter - 15;
+				}
+				else {
+					overflow = 1;
+				}
+
+				//For LCD index i
+				for(display_y = 0 ; display_y < overflow ; display_y++)
+				{
+					//For message character j
+					for (display_x = 0 ; display_x < myCounter ; display_x++)
+					{
+						writeByteLcd(1U, myBuffer[(display_x+display_scroll)]);
+						delayNoInt(3250);
+						if (display_x == 7){
+							writeByteLcd(0U, LCD_HOME_L2);
+							delayNoInt(100);
+						}
+					}
+					display_scroll++;
+					writeByteLcd(0U, LCD_HOME_L1);
+					delayNoInt(100);
+					msDelay(350);
+				}
+				myCounter = 0;
+			}
+
+			uart1Status = R_UART1_Receive(uart1RxBuf,1);			// Prime UART2 Rx
+		}
+
+		if (uart1TxFlag)	//Output sent
+		{
+			uart1TxFlag = 0U; //Clear Tx flag
+		}
+
+		pwm(100, 25); 		//PWM always running, motor toggled by DVR_nSLEEP
+
+	}
+}
+
+/**
+ * Display a char on the LCD
+ */
+void displayCharLCD(char c)
+{
+	writeByteLcd(1U, c);
+	delayNoInt(100);
+}
+
+/**
+ * Welcome the user on LCD
+ */
+void welcome(void)
+{
+	int scrollCount = 0;
+	int j = 0;
+	int i = 0;
+
+	char msg[] = {"                Nel T. 18179460"};
+
+	int length = sizeof(msg)/sizeof(char);
+
+	//For LCD index i
+	for(i = 0 ; i < (length-16) ; i++)
+	{
+		//For message character j
+		for (j = 0 ; j < 16 ; j++)
+		{
+			//Offset message for scroll effect
+			writeByteLcd(1U, msg[(j+scrollCount)]);
+			delayNoInt(100);
+			//Jump to second line of LCD due to memory gap
+			if (j == 7)
+			{
+				writeByteLcd(0U, LCD_HOME_L2);
+				delayNoInt(100);
+			}
+		}
+		scrollCount++;
+		writeByteLcd(0U, LCD_HOME_L1);
+		delayNoInt(100);
+		msDelay(350);
+	}
+	msDelay(500);
+}
+
+/**
+ * Delay for t milliseconds
+ */
+void msDelay(int t)
+{
+	int a = 0;
+	for(a = 0; a < t; a++)
+	{
+		delayNoInt(1000);
+	}
+}
+
+void openGate()
+{
+	DVR_PHASE = 0;
+	DVR_nSLEEP = 1;
+	gate_status = GS_UNKNOWN;
+}
+
+void closeGate()
+{
+	DVR_PHASE = 1;
+	DVR_nSLEEP = 1;
+	gate_status = GS_UNKNOWN;
+
+}
+
+void stopGate()
+{
+	DVR_nSLEEP = 0;
+	gate_status = GS_ESTOP;
+}
+
+void echo(uint8_t hex)
+{
+	uart1TxBuf[0] = hex;
+	uart1Status = R_UART1_Send(uart1TxBuf,1);
+}
+
+void echoData(uint8_t hex, uint8_t hex2)
+{
+	uart1TxBuf[0] = hex;
+	uart1TxBuf[1] = hex2;
+	uart1Status = R_UART1_Send(uart1TxBuf,2);
+}
+
+void buzzerBeep(uint8_t beeps)
+{
+	while (beeps){
+		R_PCLBUZ0_Start();
+		msDelay(20);
+		R_PCLBUZ0_Stop();
+		beeps--;
+		if (beeps) msDelay(40);
+	}
+}
+
+/**
+ * takes in a binary coded decimal
+ */
+uint8_t toHex(uint8_t decimal){
+	return (decimal & 0x0F) + ((decimal >> 4) * 10);
+}
+
+/**
+ * converts from hex to binary coded decimal
+ * max input/output is 99
+ */
+uint8_t toBCD(uint8_t hex){
+	uint8_t nibble_l = hex % 10; //Isolate lower nibble
+	uint8_t nibble_h = ((hex / 10) % 10) << 4; //Isolate higher nibble
+	uint8_t byte = nibble_h | nibble_l; //Combine them as two consecutive values
+	return byte;
+}
+
+/**
+ * Software PWM implementation
+ * Causes motor to rotate
+ */
+void pwm(int cycles_per_second, int divisor)
+{
+	if (pwm_edge){
+		pwm_edge=0;
+		//P4_bit.no3^=1;
+		pwm_counter++;
+		//P7^=0x80;
+		//P4^=0x04;
+
+		pwm_counter%=cycles_per_second; // 100 cycles per second
+
+		if (pwm_counter < divisor) // div/cycles% duty cycle
+		{
+			//P4_bit.no3 = 1;
+			DVR_ENABLE = 1;
+		}
+		else
+		{
+			DVR_ENABLE = 0;
+		}
+	}
+}
+
+/**
+ * Inspect the gate collision buttons
+ */
+void mtrBtn()
+{
+	if (switch_edge)
+	{
+		switch_edge = 0;
+
+		if (SWITCH_OPENED)
+		{
+			if (DVR_PHASE == 0)
+			{
+				DVR_nSLEEP = 0;
+				gate_status = GS_OPENED;
+				print_lcd("Opened");
+				msDelay(5);
+			}
+
+		}
+		else if (SWITCH_CLOSED)
+		{
+			if (DVR_PHASE == 1) // if opening activated
+			{
+				DVR_nSLEEP = 0;
+				gate_status = GS_CLOSED;
+				print_lcd("Closed");
+				msDelay(5);
+			}
+		}
+	}
+}
+
+/**
+ * Inspect the board button values
+ */
+void boardBtn()
+{
+	if (check_btns)
+	{
+		check_btns = 0; //Reset
+
+		if (!mode) //Normal mode
+		{
+			if (!BTN_STOP)
+			{
+				dataPrint = 0;
+				stopGate();
+				print_lcd("Gate stopped.");
+				return;
+			}
+
+			if (!BTN_STEP)
+			{
+				//TODO
+				return;
+			}
+		}
+
+		else //Test mode
+		{
+			if (!BTN_OPEN)
+			{
+				openGate();
+				print_lcd("Gate opening...");
+				return;
+			}
+
+			if (!BTN_CLOSE)
+			{
+				closeGate();
+				print_lcd("Gate closing...");
+				return;
+			}
+		}
+	}
+}

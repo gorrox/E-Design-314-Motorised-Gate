@@ -1,0 +1,239 @@
+/*
+ * global.c
+ *
+ *  Created on: Feb 21, 2016
+ *      Author: Tristan Nel - 18179460
+ */
+
+#include "r_cg_userdefine.h"
+#include "r_cg_rtc.h"
+//Functions
+/*
+ * Display a char on the LCD
+ */
+void displayCharLCD(char c)
+{
+	writeByteLcd(1U, c);
+	delayNoInt(100);
+}
+
+/*
+ * Welcome the user on LCD
+ */
+void welcome(void)
+{
+	int scrollCount = 0;
+	int j = 0;
+	int i = 0;
+
+	char msg[] = {"                Nel T. 18179460"};
+
+	int length = sizeof(msg)/sizeof(char);
+
+	//For LCD index i
+	for(i = 0 ; i < (length-16) ; i++)
+	{
+		//For message character j
+		for (j = 0 ; j < 16 ; j++)
+		{
+			//Offset message for scroll effect
+			writeByteLcd(1U, msg[(j+scrollCount)]);
+			delayNoInt(100);
+			//Jump to second line of LCD due to memory gap
+			if (j == 7)
+			{
+				writeByteLcd(0U, LCD_HOME_L2);
+				delayNoInt(100);
+			}
+		}
+		scrollCount++;
+		writeByteLcd(0U, LCD_HOME_L1);
+		delayNoInt(100);
+		msDelay(350);
+	}
+	msDelay(500);
+}
+
+/*
+ * Delay for t milliseconds
+ */
+void msDelay(int t)
+{
+	int a = 0;
+	for(a = 0; a < t; a++)
+	{
+		delayNoInt(1000);
+	}
+}
+
+/*
+ * Use to echo a received command back to sender
+ */
+
+void openGate()
+{
+	DVR_PHASE = 0;
+	DVR_nSLEEP = 1;
+	gate_status = GS_UNKNOWN;
+}
+
+void closeGate()
+{
+	DVR_PHASE = 1;
+	DVR_nSLEEP = 1;
+	gate_status = GS_UNKNOWN;
+
+}
+
+void stopGate()
+{
+	DVR_nSLEEP = 0;
+	gate_status = GS_ESTOP;
+}
+
+void echo(uint8_t hex)
+{
+	uart1TxBuf[0] = hex;
+	uart1Status = R_UART1_Send(uart1TxBuf,1);
+}
+
+void echoData(uint8_t hex, uint8_t hex2)
+{
+	uart1TxBuf[0] = hex;
+	uart1TxBuf[1] = hex2;
+	uart1Status = R_UART1_Send(uart1TxBuf,2);
+}
+
+void buzzerBeep(uint8_t beeps)
+{
+	while (beeps){
+		R_PCLBUZ0_Start();
+		msDelay(20);
+		R_PCLBUZ0_Stop();
+		beeps--;
+		if (beeps) msDelay(40);
+	}
+}
+
+/**
+ * takes in a binary coded decimal
+ */
+uint8_t toHex(uint8_t decimal){
+	return (decimal & 0x0F) + ((decimal >> 4) * 10);
+}
+
+/**
+ * converts from hex to binary coded decimal
+ * max input/output is 99
+ */
+uint8_t toBCD(uint8_t hex){
+	uint8_t nibble_l = hex % 10; //Isolate lower nibble
+	uint8_t nibble_h = ((hex / 10) % 10) << 4; //Isolate higher nibble
+	uint8_t byte = nibble_h | nibble_l; //Combine them as two consecutive values
+	return byte;
+}
+
+/*
+ * Software PWM implementation
+ * Causes motor to rotate
+ */
+void pwm(int cycles_per_second, int divisor)
+{
+	if (pwm_edge){
+		pwm_edge=0;
+		//P4_bit.no3^=1;
+		pwm_counter++;
+		//P7^=0x80;
+		//P4^=0x04;
+
+		pwm_counter%=cycles_per_second; // 100 cycles per second
+
+		if (pwm_counter < divisor) // div/cycles% duty cycle
+		{
+			//P4_bit.no3 = 1;
+			DVR_ENABLE = 1;
+		}
+		else
+		{
+			DVR_ENABLE = 0;
+		}
+	}
+}
+
+
+/*
+ * Inspect the gate collision buttons
+ */
+void mtrBtn()
+{
+	if (switch_edge)
+	{
+		switch_edge = 0;
+
+		if (SWITCH_OPENED)
+		{
+			if (DVR_PHASE == 0)
+			{
+				DVR_nSLEEP = 0;
+				gate_status = GS_OPENED;
+				print_lcd("Opened");
+				msDelay(5);
+			}
+
+		}
+		else if (SWITCH_CLOSED)
+		{
+			if (DVR_PHASE == 1) // if opening activated
+			{
+				DVR_nSLEEP = 0;
+				gate_status = GS_CLOSED;
+				print_lcd("Closed");
+				msDelay(5);
+			}
+		}
+	}
+}
+
+/*
+ * Inspect the board button values
+ */
+void boardBtn()
+{
+	if (check_btns)
+	{
+		check_btns = 0; //Reset
+
+		if (!mode) //Normal mode
+		{
+			if (!BTN_STOP)
+			{
+				stopGate();
+				print_lcd("Gate stopped.");
+				return;
+			}
+
+			if (!BTN_STEP)
+			{
+				//TODO
+				return;
+			}
+		}
+
+		else //Test mode
+		{
+			if (!BTN_OPEN)
+			{
+				openGate();
+				print_lcd("Gate opening...");
+				return;
+			}
+
+			if (!BTN_CLOSE)
+			{
+				closeGate();
+				print_lcd("Gate closing...");
+				return;
+			}
+		}
+	}
+}

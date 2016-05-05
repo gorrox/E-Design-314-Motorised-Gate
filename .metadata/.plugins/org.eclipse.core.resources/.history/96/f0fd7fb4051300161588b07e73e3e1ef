@@ -1,0 +1,41 @@
+/*
+ * adc.h
+ *
+ *  Created on: May 5, 2016
+ *      Author: trist
+ */
+
+#ifndef ADC_H_
+#define ADC_H_
+
+#include "global.h"
+#include "lcd.h"
+#include "iodefine.h"
+#include "iodefine_ext.h"
+#include "r_cg_macrodriver.h"
+#include "string.h"
+
+#define NUM_CHANNELS (4)
+#define AD_SAMPLING (1)
+#define AD_IDLE (0)
+#define MTR_CURRENT_THRSH 55
+#define COLLISION_DET_DELAY 500
+
+volatile uint8_t ADC_done; /* Flag: conversion complete */
+volatile uint16_t ADC_value[NUM_CHANNELS];
+volatile uint8_t INTAD_FSM_state;
+volatile uint8_t adc_ready;
+volatile uint8_t latest_current_reading;
+volatile uint8_t ADC_counter; //100 ms intervals
+volatile uint8_t timer_adc_reader_10Hz_interrupt; //flag
+volatile uint8_t initial_current;
+volatile uint8_t collision_det_counter;
+volatile uint8_t collision_det;
+
+void ADC(void);
+uint16_t adc_get_reading();
+void adc_get_multiple_channels(void);
+void adc_multi_channel_interrupt_service_routine();
+char *adc_ascii_current(uint16_t *adc_val);
+
+#endif /* ADC_H_ */

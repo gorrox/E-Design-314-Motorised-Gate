@@ -1,10 +1,16 @@
-01:33:34 **** Incremental Build of configuration HardwareDebug for project GateController ****
+23:55:53 **** Incremental Build of configuration HardwareDebug for project GateController ****
 make -j4 all 
-'Scanning and building file: ../src/r_main.c'
+'Scanning and building file: ../src/adc.c'
+'Scanning and building file: ../src/global.c'
 'Invoking: Scanner and Compiler'
-rl78-elf-gcc -MM -MP -MF "src/r_main.d" -MT"src/r_main.o" -MT"src/r_main.d" -x c   -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g "../src/r_main.c"
-rl78-elf-gcc -c -x c  -Wa,-adlhn="r_main.lst" -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g -o "src/r_main.o" "../src/r_main.c"
-'Finished scanning and building: ../src/r_main.c'
+'Invoking: Scanner and Compiler'
+rl78-elf-gcc -MM -MP -MF "src/adc.d" -MT"src/adc.o" -MT"src/adc.d" -x c   -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g "../src/adc.c"
+rl78-elf-gcc -MM -MP -MF "src/global.d" -MT"src/global.o" -MT"src/global.d" -x c   -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g "../src/global.c"
+rl78-elf-gcc -c -x c  -Wa,-adlhn="adc.lst" -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g -o "src/adc.o" "../src/adc.c"
+'Finished scanning and building: ../src/adc.c'
+
+rl78-elf-gcc -c -x c  -Wa,-adlhn="global.lst" -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g -o "src/global.o" "../src/global.c"
+'Finished scanning and building: ../src/global.c'
 
 'Invoking: Linker'
 'Building target:'
@@ -18,5 +24,5 @@ rl78-elf-objcopy -O srec   GateController.x "GateController.mot"
 
 'Build complete.'
 
-01:33:35 Build Finished. 0 errors, 0 warnings. (took 1s.262ms)
+23:55:55 Build Finished. 0 errors, 0 warnings. (took 1s.420ms)
 

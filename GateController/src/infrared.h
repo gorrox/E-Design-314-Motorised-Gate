@@ -11,7 +11,7 @@
 #include "iodefine.h"
 #include "iodefine_ext.h"
 #include "r_cg_macrodriver.h"
-#include "r_cg_userdefine.h"
+//#include "global.h"
 
 #define ir_64bitMessage_inHalfBits_total 128
 #define ir_14bitMessage_inHalfBits_total 28

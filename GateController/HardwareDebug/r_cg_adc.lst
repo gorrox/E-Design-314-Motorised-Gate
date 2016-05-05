@@ -24,22 +24,10 @@
   24                             	r31	=	0xffee7
   25                             	.text
   26                             	.Ltext0:
-  27                             		.comm	_gate_status,2,2
-  28                             		.comm	_mode,2,2
-  29                             		.comm	_uart1RxBuf,16,1
-  30                             		.comm	_uart1RxCnt,2,2
-  31                             		.comm	_uart1RxFlag,1,1
-  32                             		.comm	_uart1RxErrFlag,1,1
-  33                             		.comm	_uart1RxOvrFlag,1,1
-  34                             		.comm	_uart1TxBuf,16,1
-  35                             		.comm	_uart1TxCnt,2,2
-  36                             		.comm	_uart1TxFlag,1,1
-  37                             		.comm	_time_now,7,1
-  38                             		.comm	_uart1Status,2,2
-  39                             		.global	_R_ADC_Create
-  41                             	_R_ADC_Create:
-  42                             	.LFB0:
-  43                             		.file 1 "../src/r_cg_adc.c"
+  27                             		.global	_R_ADC_Create
+  29                             	_R_ADC_Create:
+  30                             	.LFB0:
+  31                             		.file 1 "../src/r_cg_adc.c"
    1:../src/r_cg_adc.c **** /**************************************************************************************************
    2:../src/r_cg_adc.c **** * DISCLAIMER
    3:../src/r_cg_adc.c **** * This software is supplied by Renesas Electronics Corporation and is only intended for use with Re
@@ -65,7 +53,7 @@
   23:../src/r_cg_adc.c **** * Device(s)    : R5F104LE
   24:../src/r_cg_adc.c **** * Tool-Chain   : GCCRL78
   25:../src/r_cg_adc.c **** * Description  : This file implements device driver for ADC module.
-  26:../src/r_cg_adc.c **** * Creation Date: 5/2/2016
+  26:../src/r_cg_adc.c **** * Creation Date: 5/4/2016
   27:../src/r_cg_adc.c **** ***************************************************************************************************
   28:../src/r_cg_adc.c **** 
   29:../src/r_cg_adc.c **** /**************************************************************************************************
@@ -91,228 +79,228 @@
   49:../src/r_cg_adc.c **** ***************************************************************************************************
   50:../src/r_cg_adc.c **** void R_ADC_Create(void)
   51:../src/r_cg_adc.c **** {    
-  44                             		.loc 1 51 0
+  32                             		.loc 1 51 0
   52:../src/r_cg_adc.c ****     ADCEN = 1U;  /* supply AD clock */
-  45                             		.loc 1 52 0
-  46 0000 C9 F0 F0 00             		movw	r8, #240
-  47 0004 AD F0                   		movw	ax, r8
-  48 0006 BD F4                   		movw	r12, ax
-  49 0008 FA F4                   		movw	hl, r12
-  50 000a 8B                      		mov	a, [hl]
-  51 000b 9D F2                   		mov	r10, a
-  52 000d 6A F2 20                		or	r10, #32
-  53 0010 AD F0                   		movw	ax, r8
-  54 0012 DA F4                   		movw	bc, r12
-  55 0014 8D F2                   		mov	a, r10
-  56 0016 48 00 00                		mov	[bc], a
+  33                             		.loc 1 52 0
+  34 0000 C9 F0 F0 00             		movw	r8, #240
+  35 0004 AD F0                   		movw	ax, r8
+  36 0006 BD F4                   		movw	r12, ax
+  37 0008 FA F4                   		movw	hl, r12
+  38 000a 8B                      		mov	a, [hl]
+  39 000b 9D F2                   		mov	r10, a
+  40 000d 6A F2 20                		or	r10, #32
+  41 0010 AD F0                   		movw	ax, r8
+  42 0012 DA F4                   		movw	bc, r12
+  43 0014 8D F2                   		mov	a, r10
+  44 0016 48 00 00                		mov	[bc], a
   53:../src/r_cg_adc.c ****     ADM0 = _00_AD_ADM0_INITIALVALUE;  /* disable AD conversion and clear ADM0 register */
-  57                             		.loc 1 53 0
-  58 0019 C9 F0 30 FF             		movw	r8, #-208
-  59 001d AD F0                   		movw	ax, r8
-  60 001f BD F2                   		movw	r10, ax
-  61 0021 DA F2                   		movw	bc, r10
-  62 0023 F1                      		clrb	a
-  63 0024 48 00 00                		mov	[bc], a
+  45                             		.loc 1 53 0
+  46 0019 C9 F0 30 FF             		movw	r8, #-208
+  47 001d AD F0                   		movw	ax, r8
+  48 001f BD F2                   		movw	r10, ax
+  49 0021 DA F2                   		movw	bc, r10
+  50 0023 F1                      		clrb	a
+  51 0024 48 00 00                		mov	[bc], a
   54:../src/r_cg_adc.c ****     ADMK = 1U;  /* disable INTAD interrupt */
-  64                             		.loc 1 54 0
-  65 0027 C9 F0 E7 FF             		movw	r8, #-25
-  66 002b AD F0                   		movw	ax, r8
-  67 002d BD F4                   		movw	r12, ax
-  68 002f FA F4                   		movw	hl, r12
-  69 0031 8B                      		mov	a, [hl]
-  70 0032 9D F2                   		mov	r10, a
-  71 0034 6A F2 01                		or	r10, #1
-  72 0037 AD F0                   		movw	ax, r8
-  73 0039 DA F4                   		movw	bc, r12
-  74 003b 8D F2                   		mov	a, r10
-  75 003d 48 00 00                		mov	[bc], a
+  52                             		.loc 1 54 0
+  53 0027 C9 F0 E7 FF             		movw	r8, #-25
+  54 002b AD F0                   		movw	ax, r8
+  55 002d BD F4                   		movw	r12, ax
+  56 002f FA F4                   		movw	hl, r12
+  57 0031 8B                      		mov	a, [hl]
+  58 0032 9D F2                   		mov	r10, a
+  59 0034 6A F2 01                		or	r10, #1
+  60 0037 AD F0                   		movw	ax, r8
+  61 0039 DA F4                   		movw	bc, r12
+  62 003b 8D F2                   		mov	a, r10
+  63 003d 48 00 00                		mov	[bc], a
   55:../src/r_cg_adc.c ****     ADIF = 0U;  /* clear INTAD interrupt flag */
-  76                             		.loc 1 55 0
-  77 0040 C9 F0 E3 FF             		movw	r8, #-29
-  78 0044 AD F0                   		movw	ax, r8
-  79 0046 BD F4                   		movw	r12, ax
-  80 0048 FA F4                   		movw	hl, r12
-  81 004a 8B                      		mov	a, [hl]
-  82 004b 9D F2                   		mov	r10, a
-  83 004d 5A F2 FE                		and	r10, #-2
-  84 0050 AD F0                   		movw	ax, r8
-  85 0052 DA F4                   		movw	bc, r12
-  86 0054 8D F2                   		mov	a, r10
-  87 0056 48 00 00                		mov	[bc], a
+  64                             		.loc 1 55 0
+  65 0040 C9 F0 E3 FF             		movw	r8, #-29
+  66 0044 AD F0                   		movw	ax, r8
+  67 0046 BD F4                   		movw	r12, ax
+  68 0048 FA F4                   		movw	hl, r12
+  69 004a 8B                      		mov	a, [hl]
+  70 004b 9D F2                   		mov	r10, a
+  71 004d 5A F2 FE                		and	r10, #-2
+  72 0050 AD F0                   		movw	ax, r8
+  73 0052 DA F4                   		movw	bc, r12
+  74 0054 8D F2                   		mov	a, r10
+  75 0056 48 00 00                		mov	[bc], a
   56:../src/r_cg_adc.c ****     /* Set INTAD low priority */
   57:../src/r_cg_adc.c ****     ADPR1 = 1U;
-  88                             		.loc 1 57 0
-  89 0059 C9 F0 EF FF             		movw	r8, #-17
-  90 005d AD F0                   		movw	ax, r8
-  91 005f BD F4                   		movw	r12, ax
-  92 0061 FA F4                   		movw	hl, r12
-  93 0063 8B                      		mov	a, [hl]
-  94 0064 9D F2                   		mov	r10, a
-  95 0066 6A F2 01                		or	r10, #1
-  96 0069 AD F0                   		movw	ax, r8
-  97 006b DA F4                   		movw	bc, r12
-  98 006d 8D F2                   		mov	a, r10
-  99 006f 48 00 00                		mov	[bc], a
+  76                             		.loc 1 57 0
+  77 0059 C9 F0 EF FF             		movw	r8, #-17
+  78 005d AD F0                   		movw	ax, r8
+  79 005f BD F4                   		movw	r12, ax
+  80 0061 FA F4                   		movw	hl, r12
+  81 0063 8B                      		mov	a, [hl]
+  82 0064 9D F2                   		mov	r10, a
+  83 0066 6A F2 01                		or	r10, #1
+  84 0069 AD F0                   		movw	ax, r8
+  85 006b DA F4                   		movw	bc, r12
+  86 006d 8D F2                   		mov	a, r10
+  87 006f 48 00 00                		mov	[bc], a
   58:../src/r_cg_adc.c ****     ADPR0 = 1U;
- 100                             		.loc 1 58 0
- 101 0072 C9 F0 EB FF             		movw	r8, #-21
- 102 0076 AD F0                   		movw	ax, r8
- 103 0078 BD F4                   		movw	r12, ax
- 104 007a FA F4                   		movw	hl, r12
- 105 007c 8B                      		mov	a, [hl]
- 106 007d 9D F2                   		mov	r10, a
- 107 007f 6A F2 01                		or	r10, #1
- 108 0082 AD F0                   		movw	ax, r8
- 109 0084 DA F4                   		movw	bc, r12
- 110 0086 8D F2                   		mov	a, r10
- 111 0088 48 00 00                		mov	[bc], a
+  88                             		.loc 1 58 0
+  89 0072 C9 F0 EB FF             		movw	r8, #-21
+  90 0076 AD F0                   		movw	ax, r8
+  91 0078 BD F4                   		movw	r12, ax
+  92 007a FA F4                   		movw	hl, r12
+  93 007c 8B                      		mov	a, [hl]
+  94 007d 9D F2                   		mov	r10, a
+  95 007f 6A F2 01                		or	r10, #1
+  96 0082 AD F0                   		movw	ax, r8
+  97 0084 DA F4                   		movw	bc, r12
+  98 0086 8D F2                   		mov	a, r10
+  99 0088 48 00 00                		mov	[bc], a
   59:../src/r_cg_adc.c ****     /* The reset status of ADPC is analog input, so it's unnecessary to set. */
   60:../src/r_cg_adc.c ****     /* Set ANI0 - ANI4 pin as analog input */
   61:../src/r_cg_adc.c ****     PM2 |= 0x1FU;
- 112                             		.loc 1 61 0
- 113 008b C9 F2 22 FF             		movw	r10, #-222
- 114 008f C9 F0 22 FF             		movw	r8, #-222
- 115 0093 AD F0                   		movw	ax, r8
- 116 0095 BD F4                   		movw	r12, ax
- 117 0097 FA F4                   		movw	hl, r12
- 118 0099 8B                      		mov	a, [hl]
- 119 009a 9D F0                   		mov	r8, a
- 120 009c 6A F0 1F                		or	r8, #31
- 121 009f AD F2                   		movw	ax, r10
- 122 00a1 BD F4                   		movw	r12, ax
- 123 00a3 DA F4                   		movw	bc, r12
- 124 00a5 8D F0                   		mov	a, r8
- 125 00a7 48 00 00                		mov	[bc], a
+ 100                             		.loc 1 61 0
+ 101 008b C9 F2 22 FF             		movw	r10, #-222
+ 102 008f C9 F0 22 FF             		movw	r8, #-222
+ 103 0093 AD F0                   		movw	ax, r8
+ 104 0095 BD F4                   		movw	r12, ax
+ 105 0097 FA F4                   		movw	hl, r12
+ 106 0099 8B                      		mov	a, [hl]
+ 107 009a 9D F0                   		mov	r8, a
+ 108 009c 6A F0 1F                		or	r8, #31
+ 109 009f AD F2                   		movw	ax, r10
+ 110 00a1 BD F4                   		movw	r12, ax
+ 111 00a3 DA F4                   		movw	bc, r12
+ 112 00a5 8D F0                   		mov	a, r8
+ 113 00a7 48 00 00                		mov	[bc], a
   62:../src/r_cg_adc.c ****     /* Set ANI18 pin */
   63:../src/r_cg_adc.c ****     PMC14 |= 0x80U;
- 126                             		.loc 1 63 0
- 127 00aa C9 F2 6E 00             		movw	r10, #110
- 128 00ae C9 F0 6E 00             		movw	r8, #110
- 129 00b2 AD F0                   		movw	ax, r8
- 130 00b4 BD F4                   		movw	r12, ax
- 131 00b6 FA F4                   		movw	hl, r12
- 132 00b8 8B                      		mov	a, [hl]
- 133 00b9 9D F0                   		mov	r8, a
- 134 00bb 6A F0 80                		or	r8, #-128
- 135 00be AD F2                   		movw	ax, r10
- 136 00c0 BD F4                   		movw	r12, ax
- 137 00c2 DA F4                   		movw	bc, r12
- 138 00c4 8D F0                   		mov	a, r8
- 139 00c6 48 00 00                		mov	[bc], a
+ 114                             		.loc 1 63 0
+ 115 00aa C9 F2 6E 00             		movw	r10, #110
+ 116 00ae C9 F0 6E 00             		movw	r8, #110
+ 117 00b2 AD F0                   		movw	ax, r8
+ 118 00b4 BD F4                   		movw	r12, ax
+ 119 00b6 FA F4                   		movw	hl, r12
+ 120 00b8 8B                      		mov	a, [hl]
+ 121 00b9 9D F0                   		mov	r8, a
+ 122 00bb 6A F0 80                		or	r8, #-128
+ 123 00be AD F2                   		movw	ax, r10
+ 124 00c0 BD F4                   		movw	r12, ax
+ 125 00c2 DA F4                   		movw	bc, r12
+ 126 00c4 8D F0                   		mov	a, r8
+ 127 00c6 48 00 00                		mov	[bc], a
   64:../src/r_cg_adc.c ****     PM14 |= 0x80U;
- 140                             		.loc 1 64 0
- 141 00c9 C9 F2 2E FF             		movw	r10, #-210
- 142 00cd C9 F0 2E FF             		movw	r8, #-210
- 143 00d1 AD F0                   		movw	ax, r8
- 144 00d3 BD F4                   		movw	r12, ax
- 145 00d5 FA F4                   		movw	hl, r12
- 146 00d7 8B                      		mov	a, [hl]
- 147 00d8 9D F0                   		mov	r8, a
- 148 00da 6A F0 80                		or	r8, #-128
- 149 00dd AD F2                   		movw	ax, r10
- 150 00df BD F4                   		movw	r12, ax
- 151 00e1 DA F4                   		movw	bc, r12
- 152 00e3 8D F0                   		mov	a, r8
- 153 00e5 48 00 00                		mov	[bc], a
+ 128                             		.loc 1 64 0
+ 129 00c9 C9 F2 2E FF             		movw	r10, #-210
+ 130 00cd C9 F0 2E FF             		movw	r8, #-210
+ 131 00d1 AD F0                   		movw	ax, r8
+ 132 00d3 BD F4                   		movw	r12, ax
+ 133 00d5 FA F4                   		movw	hl, r12
+ 134 00d7 8B                      		mov	a, [hl]
+ 135 00d8 9D F0                   		mov	r8, a
+ 136 00da 6A F0 80                		or	r8, #-128
+ 137 00dd AD F2                   		movw	ax, r10
+ 138 00df BD F4                   		movw	r12, ax
+ 139 00e1 DA F4                   		movw	bc, r12
+ 140 00e3 8D F0                   		mov	a, r8
+ 141 00e5 48 00 00                		mov	[bc], a
   65:../src/r_cg_adc.c ****     /* Set ANI19 pin */
   66:../src/r_cg_adc.c ****     PMC12 |= 0x01U;
- 154                             		.loc 1 66 0
- 155 00e8 C9 F2 6C 00             		movw	r10, #108
- 156 00ec C9 F0 6C 00             		movw	r8, #108
- 157 00f0 AD F0                   		movw	ax, r8
- 158 00f2 BD F4                   		movw	r12, ax
- 159 00f4 FA F4                   		movw	hl, r12
- 160 00f6 8B                      		mov	a, [hl]
- 161 00f7 9D F0                   		mov	r8, a
- 162 00f9 6A F0 01                		or	r8, #1
- 163 00fc AD F2                   		movw	ax, r10
- 164 00fe BD F4                   		movw	r12, ax
- 165 0100 DA F4                   		movw	bc, r12
- 166 0102 8D F0                   		mov	a, r8
- 167 0104 48 00 00                		mov	[bc], a
+ 142                             		.loc 1 66 0
+ 143 00e8 C9 F2 6C 00             		movw	r10, #108
+ 144 00ec C9 F0 6C 00             		movw	r8, #108
+ 145 00f0 AD F0                   		movw	ax, r8
+ 146 00f2 BD F4                   		movw	r12, ax
+ 147 00f4 FA F4                   		movw	hl, r12
+ 148 00f6 8B                      		mov	a, [hl]
+ 149 00f7 9D F0                   		mov	r8, a
+ 150 00f9 6A F0 01                		or	r8, #1
+ 151 00fc AD F2                   		movw	ax, r10
+ 152 00fe BD F4                   		movw	r12, ax
+ 153 0100 DA F4                   		movw	bc, r12
+ 154 0102 8D F0                   		mov	a, r8
+ 155 0104 48 00 00                		mov	[bc], a
   67:../src/r_cg_adc.c ****     PM12 |= 0x01U;
- 168                             		.loc 1 67 0
- 169 0107 C9 F2 2C FF             		movw	r10, #-212
- 170 010b C9 F0 2C FF             		movw	r8, #-212
- 171 010f AD F0                   		movw	ax, r8
- 172 0111 BD F4                   		movw	r12, ax
- 173 0113 FA F4                   		movw	hl, r12
- 174 0115 8B                      		mov	a, [hl]
- 175 0116 9D F0                   		mov	r8, a
- 176 0118 6A F0 01                		or	r8, #1
- 177 011b AD F2                   		movw	ax, r10
- 178 011d BD F4                   		movw	r12, ax
- 179 011f DA F4                   		movw	bc, r12
- 180 0121 8D F0                   		mov	a, r8
- 181 0123 48 00 00                		mov	[bc], a
+ 156                             		.loc 1 67 0
+ 157 0107 C9 F2 2C FF             		movw	r10, #-212
+ 158 010b C9 F0 2C FF             		movw	r8, #-212
+ 159 010f AD F0                   		movw	ax, r8
+ 160 0111 BD F4                   		movw	r12, ax
+ 161 0113 FA F4                   		movw	hl, r12
+ 162 0115 8B                      		mov	a, [hl]
+ 163 0116 9D F0                   		mov	r8, a
+ 164 0118 6A F0 01                		or	r8, #1
+ 165 011b AD F2                   		movw	ax, r10
+ 166 011d BD F4                   		movw	r12, ax
+ 167 011f DA F4                   		movw	bc, r12
+ 168 0121 8D F0                   		mov	a, r8
+ 169 0123 48 00 00                		mov	[bc], a
   68:../src/r_cg_adc.c ****     ADM0 = _08_AD_CONVERSION_CLOCK_32 | _00_AD_TIME_MODE_NORMAL_1 | _00_AD_OPERMODE_SELECT;
- 182                             		.loc 1 68 0
- 183 0126 C9 F0 30 FF             		movw	r8, #-208
- 184 012a AD F0                   		movw	ax, r8
- 185 012c BD F2                   		movw	r10, ax
- 186 012e DA F2                   		movw	bc, r10
- 187 0130 51 08                   		mov	a, #8
- 188 0132 48 00 00                		mov	[bc], a
+ 170                             		.loc 1 68 0
+ 171 0126 C9 F0 30 FF             		movw	r8, #-208
+ 172 012a AD F0                   		movw	ax, r8
+ 173 012c BD F2                   		movw	r10, ax
+ 174 012e DA F2                   		movw	bc, r10
+ 175 0130 51 08                   		mov	a, #8
+ 176 0132 48 00 00                		mov	[bc], a
   69:../src/r_cg_adc.c ****     ADM1 = _00_AD_TRIGGER_SOFTWARE | _20_AD_CONVMODE_ONESELECT;
- 189                             		.loc 1 69 0
- 190 0135 C9 F0 32 FF             		movw	r8, #-206
- 191 0139 AD F0                   		movw	ax, r8
- 192 013b BD F4                   		movw	r12, ax
- 193 013d DA F4                   		movw	bc, r12
- 194 013f 51 20                   		mov	a, #32
- 195 0141 48 00 00                		mov	[bc], a
+ 177                             		.loc 1 69 0
+ 178 0135 C9 F0 32 FF             		movw	r8, #-206
+ 179 0139 AD F0                   		movw	ax, r8
+ 180 013b BD F4                   		movw	r12, ax
+ 181 013d DA F4                   		movw	bc, r12
+ 182 013f 51 20                   		mov	a, #32
+ 183 0141 48 00 00                		mov	[bc], a
   70:../src/r_cg_adc.c ****     ADM2 = _00_AD_POSITIVE_VDD | _00_AD_NEGATIVE_VSS | _00_AD_AREA_MODE_1 | _00_AD_RESOLUTION_10BIT
- 196                             		.loc 1 70 0
- 197 0144 C9 F0 10 00             		movw	r8, #16
- 198 0148 AD F0                   		movw	ax, r8
- 199 014a BD F2                   		movw	r10, ax
- 200 014c DA F2                   		movw	bc, r10
- 201 014e F1                      		clrb	a
- 202 014f 48 00 00                		mov	[bc], a
+ 184                             		.loc 1 70 0
+ 185 0144 C9 F0 10 00             		movw	r8, #16
+ 186 0148 AD F0                   		movw	ax, r8
+ 187 014a BD F2                   		movw	r10, ax
+ 188 014c DA F2                   		movw	bc, r10
+ 189 014e F1                      		clrb	a
+ 190 014f 48 00 00                		mov	[bc], a
   71:../src/r_cg_adc.c ****     ADUL = _FF_AD_ADUL_VALUE;
- 203                             		.loc 1 71 0
- 204 0152 C9 F0 11 00             		movw	r8, #17
- 205 0156 AD F0                   		movw	ax, r8
- 206 0158 BD F4                   		movw	r12, ax
- 207 015a DA F4                   		movw	bc, r12
- 208 015c 51 FF                   		mov	a, #-1
- 209 015e 48 00 00                		mov	[bc], a
+ 191                             		.loc 1 71 0
+ 192 0152 C9 F0 11 00             		movw	r8, #17
+ 193 0156 AD F0                   		movw	ax, r8
+ 194 0158 BD F4                   		movw	r12, ax
+ 195 015a DA F4                   		movw	bc, r12
+ 196 015c 51 FF                   		mov	a, #-1
+ 197 015e 48 00 00                		mov	[bc], a
   72:../src/r_cg_adc.c ****     ADLL = _00_AD_ADLL_VALUE;
- 210                             		.loc 1 72 0
- 211 0161 C9 F0 12 00             		movw	r8, #18
- 212 0165 AD F0                   		movw	ax, r8
- 213 0167 BD F2                   		movw	r10, ax
- 214 0169 DA F2                   		movw	bc, r10
- 215 016b F1                      		clrb	a
- 216 016c 48 00 00                		mov	[bc], a
+ 198                             		.loc 1 72 0
+ 199 0161 C9 F0 12 00             		movw	r8, #18
+ 200 0165 AD F0                   		movw	ax, r8
+ 201 0167 BD F2                   		movw	r10, ax
+ 202 0169 DA F2                   		movw	bc, r10
+ 203 016b F1                      		clrb	a
+ 204 016c 48 00 00                		mov	[bc], a
   73:../src/r_cg_adc.c ****     ADS = _04_AD_INPUT_CHANNEL_4;
- 217                             		.loc 1 73 0
- 218 016f C9 F0 31 FF             		movw	r8, #-207
- 219 0173 AD F0                   		movw	ax, r8
- 220 0175 BD F4                   		movw	r12, ax
- 221 0177 DA F4                   		movw	bc, r12
- 222 0179 51 04                   		mov	a, #4
- 223 017b 48 00 00                		mov	[bc], a
+ 205                             		.loc 1 73 0
+ 206 016f C9 F0 31 FF             		movw	r8, #-207
+ 207 0173 AD F0                   		movw	ax, r8
+ 208 0175 BD F4                   		movw	r12, ax
+ 209 0177 DA F4                   		movw	bc, r12
+ 210 0179 51 04                   		mov	a, #4
+ 211 017b 48 00 00                		mov	[bc], a
   74:../src/r_cg_adc.c ****     ADCE = 1U;  /* enable AD comparator */
- 224                             		.loc 1 74 0
- 225 017e C9 F0 30 FF             		movw	r8, #-208
- 226 0182 AD F0                   		movw	ax, r8
- 227 0184 BD F4                   		movw	r12, ax
- 228 0186 FA F4                   		movw	hl, r12
- 229 0188 8B                      		mov	a, [hl]
- 230 0189 9D F2                   		mov	r10, a
- 231 018b 6A F2 01                		or	r10, #1
- 232 018e AD F0                   		movw	ax, r8
- 233 0190 DA F4                   		movw	bc, r12
- 234 0192 8D F2                   		mov	a, r10
- 235 0194 48 00 00                		mov	[bc], a
+ 212                             		.loc 1 74 0
+ 213 017e C9 F0 30 FF             		movw	r8, #-208
+ 214 0182 AD F0                   		movw	ax, r8
+ 215 0184 BD F4                   		movw	r12, ax
+ 216 0186 FA F4                   		movw	hl, r12
+ 217 0188 8B                      		mov	a, [hl]
+ 218 0189 9D F2                   		mov	r10, a
+ 219 018b 6A F2 01                		or	r10, #1
+ 220 018e AD F0                   		movw	ax, r8
+ 221 0190 DA F4                   		movw	bc, r12
+ 222 0192 8D F2                   		mov	a, r10
+ 223 0194 48 00 00                		mov	[bc], a
   75:../src/r_cg_adc.c **** }
- 236                             		.loc 1 75 0
- 237 0197 D7                      		ret
- 238                             	.LFE0:
- 240                             		.global	_R_ADC_Start
- 242                             	_R_ADC_Start:
- 243                             	.LFB1:
+ 224                             		.loc 1 75 0
+ 225 0197 D7                      		ret
+ 226                             	.LFE0:
+ 228                             		.global	_R_ADC_Start
+ 230                             	_R_ADC_Start:
+ 231                             	.LFB1:
   76:../src/r_cg_adc.c **** 
   77:../src/r_cg_adc.c **** /**************************************************************************************************
   78:../src/r_cg_adc.c **** * Function Name: R_ADC_Start
@@ -322,53 +310,53 @@
   82:../src/r_cg_adc.c **** ***************************************************************************************************
   83:../src/r_cg_adc.c **** void R_ADC_Start(void)
   84:../src/r_cg_adc.c **** {
- 244                             		.loc 1 84 0
+ 232                             		.loc 1 84 0
   85:../src/r_cg_adc.c ****     ADIF = 0U;  /* clear INTAD interrupt flag */
- 245                             		.loc 1 85 0
- 246 0198 C9 F0 E3 FF             		movw	r8, #-29
- 247 019c AD F0                   		movw	ax, r8
- 248 019e BD F4                   		movw	r12, ax
- 249 01a0 FA F4                   		movw	hl, r12
- 250 01a2 8B                      		mov	a, [hl]
- 251 01a3 9D F2                   		mov	r10, a
- 252 01a5 5A F2 FE                		and	r10, #-2
- 253 01a8 AD F0                   		movw	ax, r8
- 254 01aa DA F4                   		movw	bc, r12
- 255 01ac 8D F2                   		mov	a, r10
- 256 01ae 48 00 00                		mov	[bc], a
+ 233                             		.loc 1 85 0
+ 234 0198 C9 F0 E3 FF             		movw	r8, #-29
+ 235 019c AD F0                   		movw	ax, r8
+ 236 019e BD F4                   		movw	r12, ax
+ 237 01a0 FA F4                   		movw	hl, r12
+ 238 01a2 8B                      		mov	a, [hl]
+ 239 01a3 9D F2                   		mov	r10, a
+ 240 01a5 5A F2 FE                		and	r10, #-2
+ 241 01a8 AD F0                   		movw	ax, r8
+ 242 01aa DA F4                   		movw	bc, r12
+ 243 01ac 8D F2                   		mov	a, r10
+ 244 01ae 48 00 00                		mov	[bc], a
   86:../src/r_cg_adc.c ****     ADMK = 0U;  /* enable INTAD interrupt */
- 257                             		.loc 1 86 0
- 258 01b1 C9 F0 E7 FF             		movw	r8, #-25
- 259 01b5 AD F0                   		movw	ax, r8
- 260 01b7 BD F4                   		movw	r12, ax
- 261 01b9 FA F4                   		movw	hl, r12
- 262 01bb 8B                      		mov	a, [hl]
- 263 01bc 9D F2                   		mov	r10, a
- 264 01be 5A F2 FE                		and	r10, #-2
- 265 01c1 AD F0                   		movw	ax, r8
- 266 01c3 DA F4                   		movw	bc, r12
- 267 01c5 8D F2                   		mov	a, r10
- 268 01c7 48 00 00                		mov	[bc], a
+ 245                             		.loc 1 86 0
+ 246 01b1 C9 F0 E7 FF             		movw	r8, #-25
+ 247 01b5 AD F0                   		movw	ax, r8
+ 248 01b7 BD F4                   		movw	r12, ax
+ 249 01b9 FA F4                   		movw	hl, r12
+ 250 01bb 8B                      		mov	a, [hl]
+ 251 01bc 9D F2                   		mov	r10, a
+ 252 01be 5A F2 FE                		and	r10, #-2
+ 253 01c1 AD F0                   		movw	ax, r8
+ 254 01c3 DA F4                   		movw	bc, r12
+ 255 01c5 8D F2                   		mov	a, r10
+ 256 01c7 48 00 00                		mov	[bc], a
   87:../src/r_cg_adc.c ****     ADCS = 1U;  /* enable AD conversion */
- 269                             		.loc 1 87 0
- 270 01ca C9 F0 30 FF             		movw	r8, #-208
- 271 01ce AD F0                   		movw	ax, r8
- 272 01d0 BD F4                   		movw	r12, ax
- 273 01d2 FA F4                   		movw	hl, r12
- 274 01d4 8B                      		mov	a, [hl]
- 275 01d5 9D F2                   		mov	r10, a
- 276 01d7 6A F2 80                		or	r10, #-128
- 277 01da AD F0                   		movw	ax, r8
- 278 01dc DA F4                   		movw	bc, r12
- 279 01de 8D F2                   		mov	a, r10
- 280 01e0 48 00 00                		mov	[bc], a
+ 257                             		.loc 1 87 0
+ 258 01ca C9 F0 30 FF             		movw	r8, #-208
+ 259 01ce AD F0                   		movw	ax, r8
+ 260 01d0 BD F4                   		movw	r12, ax
+ 261 01d2 FA F4                   		movw	hl, r12
+ 262 01d4 8B                      		mov	a, [hl]
+ 263 01d5 9D F2                   		mov	r10, a
+ 264 01d7 6A F2 80                		or	r10, #-128
+ 265 01da AD F0                   		movw	ax, r8
+ 266 01dc DA F4                   		movw	bc, r12
+ 267 01de 8D F2                   		mov	a, r10
+ 268 01e0 48 00 00                		mov	[bc], a
   88:../src/r_cg_adc.c **** }
- 281                             		.loc 1 88 0
- 282 01e3 D7                      		ret
- 283                             	.LFE1:
- 285                             		.global	_R_ADC_Stop
- 287                             	_R_ADC_Stop:
- 288                             	.LFB2:
+ 269                             		.loc 1 88 0
+ 270 01e3 D7                      		ret
+ 271                             	.LFE1:
+ 273                             		.global	_R_ADC_Stop
+ 275                             	_R_ADC_Stop:
+ 276                             	.LFB2:
   89:../src/r_cg_adc.c **** 
   90:../src/r_cg_adc.c **** /**************************************************************************************************
   91:../src/r_cg_adc.c **** * Function Name: R_ADC_Stop
@@ -378,53 +366,53 @@
   95:../src/r_cg_adc.c **** ***************************************************************************************************
   96:../src/r_cg_adc.c **** void R_ADC_Stop(void)
   97:../src/r_cg_adc.c **** {
- 289                             		.loc 1 97 0
+ 277                             		.loc 1 97 0
   98:../src/r_cg_adc.c ****     ADCS = 0U;  /* disable AD conversion */
- 290                             		.loc 1 98 0
- 291 01e4 C9 F0 30 FF             		movw	r8, #-208
- 292 01e8 AD F0                   		movw	ax, r8
- 293 01ea BD F4                   		movw	r12, ax
- 294 01ec FA F4                   		movw	hl, r12
- 295 01ee 8B                      		mov	a, [hl]
- 296 01ef 9D F2                   		mov	r10, a
- 297 01f1 5A F2 7F                		and	r10, #127
- 298 01f4 AD F0                   		movw	ax, r8
- 299 01f6 DA F4                   		movw	bc, r12
- 300 01f8 8D F2                   		mov	a, r10
- 301 01fa 48 00 00                		mov	[bc], a
+ 278                             		.loc 1 98 0
+ 279 01e4 C9 F0 30 FF             		movw	r8, #-208
+ 280 01e8 AD F0                   		movw	ax, r8
+ 281 01ea BD F4                   		movw	r12, ax
+ 282 01ec FA F4                   		movw	hl, r12
+ 283 01ee 8B                      		mov	a, [hl]
+ 284 01ef 9D F2                   		mov	r10, a
+ 285 01f1 5A F2 7F                		and	r10, #127
+ 286 01f4 AD F0                   		movw	ax, r8
+ 287 01f6 DA F4                   		movw	bc, r12
+ 288 01f8 8D F2                   		mov	a, r10
+ 289 01fa 48 00 00                		mov	[bc], a
   99:../src/r_cg_adc.c ****     ADMK = 1U;  /* disable INTAD interrupt */
- 302                             		.loc 1 99 0
- 303 01fd C9 F0 E7 FF             		movw	r8, #-25
- 304 0201 AD F0                   		movw	ax, r8
- 305 0203 BD F4                   		movw	r12, ax
- 306 0205 FA F4                   		movw	hl, r12
- 307 0207 8B                      		mov	a, [hl]
- 308 0208 9D F2                   		mov	r10, a
- 309 020a 6A F2 01                		or	r10, #1
- 310 020d AD F0                   		movw	ax, r8
- 311 020f DA F4                   		movw	bc, r12
- 312 0211 8D F2                   		mov	a, r10
- 313 0213 48 00 00                		mov	[bc], a
+ 290                             		.loc 1 99 0
+ 291 01fd C9 F0 E7 FF             		movw	r8, #-25
+ 292 0201 AD F0                   		movw	ax, r8
+ 293 0203 BD F4                   		movw	r12, ax
+ 294 0205 FA F4                   		movw	hl, r12
+ 295 0207 8B                      		mov	a, [hl]
+ 296 0208 9D F2                   		mov	r10, a
+ 297 020a 6A F2 01                		or	r10, #1
+ 298 020d AD F0                   		movw	ax, r8
+ 299 020f DA F4                   		movw	bc, r12
+ 300 0211 8D F2                   		mov	a, r10
+ 301 0213 48 00 00                		mov	[bc], a
  100:../src/r_cg_adc.c ****     ADIF = 0U;  /* clear INTAD interrupt flag */
- 314                             		.loc 1 100 0
- 315 0216 C9 F0 E3 FF             		movw	r8, #-29
- 316 021a AD F0                   		movw	ax, r8
- 317 021c BD F4                   		movw	r12, ax
- 318 021e FA F4                   		movw	hl, r12
- 319 0220 8B                      		mov	a, [hl]
- 320 0221 9D F2                   		mov	r10, a
- 321 0223 5A F2 FE                		and	r10, #-2
- 322 0226 AD F0                   		movw	ax, r8
- 323 0228 DA F4                   		movw	bc, r12
- 324 022a 8D F2                   		mov	a, r10
- 325 022c 48 00 00                		mov	[bc], a
+ 302                             		.loc 1 100 0
+ 303 0216 C9 F0 E3 FF             		movw	r8, #-29
+ 304 021a AD F0                   		movw	ax, r8
+ 305 021c BD F4                   		movw	r12, ax
+ 306 021e FA F4                   		movw	hl, r12
+ 307 0220 8B                      		mov	a, [hl]
+ 308 0221 9D F2                   		mov	r10, a
+ 309 0223 5A F2 FE                		and	r10, #-2
+ 310 0226 AD F0                   		movw	ax, r8
+ 311 0228 DA F4                   		movw	bc, r12
+ 312 022a 8D F2                   		mov	a, r10
+ 313 022c 48 00 00                		mov	[bc], a
  101:../src/r_cg_adc.c **** }
- 326                             		.loc 1 101 0
- 327 022f D7                      		ret
- 328                             	.LFE2:
- 330                             		.global	_R_ADC_Set_OperationOn
- 332                             	_R_ADC_Set_OperationOn:
- 333                             	.LFB3:
+ 314                             		.loc 1 101 0
+ 315 022f D7                      		ret
+ 316                             	.LFE2:
+ 318                             		.global	_R_ADC_Set_OperationOn
+ 320                             	_R_ADC_Set_OperationOn:
+ 321                             	.LFB3:
  102:../src/r_cg_adc.c **** 
  103:../src/r_cg_adc.c **** /**************************************************************************************************
  104:../src/r_cg_adc.c **** * Function Name: R_ADC_Set_OperationOn
@@ -434,27 +422,27 @@
  108:../src/r_cg_adc.c **** ***************************************************************************************************
  109:../src/r_cg_adc.c **** void R_ADC_Set_OperationOn(void)
  110:../src/r_cg_adc.c **** {
- 334                             		.loc 1 110 0
+ 322                             		.loc 1 110 0
  111:../src/r_cg_adc.c ****     ADCE = 1U;  /* enable AD comparator */
- 335                             		.loc 1 111 0
- 336 0230 C9 F0 30 FF             		movw	r8, #-208
- 337 0234 AD F0                   		movw	ax, r8
- 338 0236 BD F4                   		movw	r12, ax
- 339 0238 FA F4                   		movw	hl, r12
- 340 023a 8B                      		mov	a, [hl]
- 341 023b 9D F2                   		mov	r10, a
- 342 023d 6A F2 01                		or	r10, #1
- 343 0240 AD F0                   		movw	ax, r8
- 344 0242 DA F4                   		movw	bc, r12
- 345 0244 8D F2                   		mov	a, r10
- 346 0246 48 00 00                		mov	[bc], a
+ 323                             		.loc 1 111 0
+ 324 0230 C9 F0 30 FF             		movw	r8, #-208
+ 325 0234 AD F0                   		movw	ax, r8
+ 326 0236 BD F4                   		movw	r12, ax
+ 327 0238 FA F4                   		movw	hl, r12
+ 328 023a 8B                      		mov	a, [hl]
+ 329 023b 9D F2                   		mov	r10, a
+ 330 023d 6A F2 01                		or	r10, #1
+ 331 0240 AD F0                   		movw	ax, r8
+ 332 0242 DA F4                   		movw	bc, r12
+ 333 0244 8D F2                   		mov	a, r10
+ 334 0246 48 00 00                		mov	[bc], a
  112:../src/r_cg_adc.c **** }
- 347                             		.loc 1 112 0
- 348 0249 D7                      		ret
- 349                             	.LFE3:
- 351                             		.global	_R_ADC_Set_OperationOff
- 353                             	_R_ADC_Set_OperationOff:
- 354                             	.LFB4:
+ 335                             		.loc 1 112 0
+ 336 0249 D7                      		ret
+ 337                             	.LFE3:
+ 339                             		.global	_R_ADC_Set_OperationOff
+ 341                             	_R_ADC_Set_OperationOff:
+ 342                             	.LFB4:
  113:../src/r_cg_adc.c **** 
  114:../src/r_cg_adc.c **** /**************************************************************************************************
  115:../src/r_cg_adc.c **** * Function Name: R_ADC_Set_OperationOff
@@ -464,27 +452,27 @@
  119:../src/r_cg_adc.c **** ***************************************************************************************************
  120:../src/r_cg_adc.c **** void R_ADC_Set_OperationOff(void)
  121:../src/r_cg_adc.c **** {
- 355                             		.loc 1 121 0
+ 343                             		.loc 1 121 0
  122:../src/r_cg_adc.c ****     ADCE = 0U;  /* disable AD comparator */
- 356                             		.loc 1 122 0
- 357 024a C9 F0 30 FF             		movw	r8, #-208
- 358 024e AD F0                   		movw	ax, r8
- 359 0250 BD F4                   		movw	r12, ax
- 360 0252 FA F4                   		movw	hl, r12
- 361 0254 8B                      		mov	a, [hl]
- 362 0255 9D F2                   		mov	r10, a
- 363 0257 5A F2 FE                		and	r10, #-2
- 364 025a AD F0                   		movw	ax, r8
- 365 025c DA F4                   		movw	bc, r12
- 366 025e 8D F2                   		mov	a, r10
- 367 0260 48 00 00                		mov	[bc], a
+ 344                             		.loc 1 122 0
+ 345 024a C9 F0 30 FF             		movw	r8, #-208
+ 346 024e AD F0                   		movw	ax, r8
+ 347 0250 BD F4                   		movw	r12, ax
+ 348 0252 FA F4                   		movw	hl, r12
+ 349 0254 8B                      		mov	a, [hl]
+ 350 0255 9D F2                   		mov	r10, a
+ 351 0257 5A F2 FE                		and	r10, #-2
+ 352 025a AD F0                   		movw	ax, r8
+ 353 025c DA F4                   		movw	bc, r12
+ 354 025e 8D F2                   		mov	a, r10
+ 355 0260 48 00 00                		mov	[bc], a
  123:../src/r_cg_adc.c **** }
- 368                             		.loc 1 123 0
- 369 0263 D7                      		ret
- 370                             	.LFE4:
- 372                             		.global	_R_ADC_Get_Result
- 374                             	_R_ADC_Get_Result:
- 375                             	.LFB5:
+ 356                             		.loc 1 123 0
+ 357 0263 D7                      		ret
+ 358                             	.LFE4:
+ 360                             		.global	_R_ADC_Get_Result
+ 362                             	_R_ADC_Get_Result:
+ 363                             	.LFB5:
  124:../src/r_cg_adc.c **** 
  125:../src/r_cg_adc.c **** /**************************************************************************************************
  126:../src/r_cg_adc.c **** * Function Name: R_ADC_Get_Result
@@ -495,31 +483,28 @@
  131:../src/r_cg_adc.c **** ***************************************************************************************************
  132:../src/r_cg_adc.c **** void R_ADC_Get_Result(uint16_t * const buffer)
  133:../src/r_cg_adc.c **** {
- 376                             		.loc 1 133 0
+ 364                             		.loc 1 133 0
  134:../src/r_cg_adc.c ****     *buffer = (uint16_t)(ADCR >> 6U);
- 377                             		.loc 1 134 0
- 378 0264 C9 F0 1E FF             		movw	r8, #-226
- 379 0268 AD F0                   		movw	ax, r8
- 380 026a BD F2                   		movw	r10, ax
- 381 026c FA F2                   		movw	hl, r10
- 382 026e AB                      		movw	ax, [hl]
- 383 026f BD F0                   		movw	r8, ax
- 384 0271 31 6E                   		shrw	ax, 6
- 385 0273 BD F2                   		movw	r10, ax
- 386 0275 A8 04                   		movw	ax, [sp+4]
- 387 0277 BD F0                   		movw	r8, ax
- 388 0279 BD F4                   		movw	r12, ax
- 389 027b DA F4                   		movw	bc, r12
- 390 027d AD F2                   		movw	ax, r10
- 391 027f 78 00 00                		movw	[bc], ax
+ 365                             		.loc 1 134 0
+ 366 0264 C9 F0 1E FF             		movw	r8, #-226
+ 367 0268 AD F0                   		movw	ax, r8
+ 368 026a BD F2                   		movw	r10, ax
+ 369 026c FA F2                   		movw	hl, r10
+ 370 026e AB                      		movw	ax, [hl]
+ 371 026f BD F0                   		movw	r8, ax
+ 372 0271 31 6E                   		shrw	ax, 6
+ 373 0273 BD F2                   		movw	r10, ax
+ 374 0275 A8 04                   		movw	ax, [sp+4]
+ 375 0277 BD F0                   		movw	r8, ax
+ 376 0279 BD F4                   		movw	r12, ax
+ 377 027b DA F4                   		movw	bc, r12
+ 378 027d AD F2                   		movw	ax, r10
+ 379 027f 78 00 00                		movw	[bc], ax
  135:../src/r_cg_adc.c **** }
- 392                             		.loc 1 135 0
- 393 0282 D7                      		ret
- 394                             	.LFE5:
- 462                             	.Letext0:
- 463                             		.file 2 "../src/iodefine.h"
- 464                             		.file 3 "../src/iodefine_ext.h"
- 465                             		.file 4 "../src/r_cg_macrodriver.h"
- 466                             		.file 5 "../src/r_cg_rtc.h"
- 467                             		.file 6 "../src/r_cg_userdefine.h"
- 468                             		.file 7 "../src/global.c"
+ 380                             		.loc 1 135 0
+ 381 0282 D7                      		ret
+ 382                             	.LFE5:
+ 450                             	.Letext0:
+ 451                             		.file 2 "../src/iodefine.h"
+ 452                             		.file 3 "../src/iodefine_ext.h"
+ 453                             		.file 4 "../src/r_cg_macrodriver.h"

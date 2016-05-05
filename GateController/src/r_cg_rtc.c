@@ -23,7 +23,7 @@
 * Device(s)    : R5F104LE
 * Tool-Chain   : GCCRL78
 * Description  : This file implements device driver for RTC module.
-* Creation Date: 5/2/2016
+* Creation Date: 5/4/2016
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
@@ -53,6 +53,9 @@ void R_RTC_Create(void)
     RTCE = 0U;     /* disable RTC clock operation */
     RTCMK = 1U;    /* disable INTRTC interrupt */
     RTCIF = 0U;    /* clear INTRTC interrupt flag */
+    /* Set INTRTC low priority */
+    RTCPR1 = 1U;
+    RTCPR0 = 1U;
     RTCC0 = _00_RTC_RTC1HZ_DISABLE | _08_RTC_24HOUR_SYSTEM | _00_RTC_INTRTC_NOT_GENERATE;
     /* Set real-time clock */
     SEC = _11_RTC_COUNTER_SEC;

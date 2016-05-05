@@ -23,7 +23,7 @@
 * Device(s)    : R5F104LE
 * Tool-Chain   : GCCRL78
 * Description  : This file implements device driver for ADC module.
-* Creation Date: 5/2/2016
+* Creation Date: 5/4/2016
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
@@ -32,6 +32,7 @@ Includes
 #include "r_cg_macrodriver.h"
 #include "r_cg_adc.h"
 /* Start user code for include. Do not edit comment generated here */
+#include "adc.h"
 /* End user code. Do not edit comment generated here */
 #include "r_cg_userdefine.h"
 
@@ -50,6 +51,7 @@ Global variables and functions
 void r_adc_interrupt(void)
 {
     /* Start user code. Do not edit comment generated here */
+	adc_ready = 1;
     /* End user code. Do not edit comment generated here */
 }
 
