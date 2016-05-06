@@ -8,21 +8,55 @@
 #include "global.h"
 #include "r_cg_rtc.h"
 
-//Functions
+/**
+ * Primary loop function:
+ * - React to proximity switches (poll)
+ * - React to PCB buttons
+ * - React to Infra-red command
+ * - React to IR-data-to-LCD
+ * - Motor Current Measurement (ADC)
+ * - UART data receive
+ * - UART data send
+ * - Pulse Width Modulation for motor
+ */
+void core(void)
+{
+	while (1U)
+	{
+		/* React to flags... */
+		mtrBtn();					/* Proximity switches (poll) */
+		boardBtn();					/* PCB buttons */
+		IRcmd();					/* Infra-red command */
+		IRtoLCD();					/* IR-data-to-LCD */
+		ADC();						/* Motor Current Measurement (ADC) */
+		uartReceive();				/* UART data receive */
+		uartSend();					/* UART data send */
+		pwm(CYC_PER_SEC, DIV); 		/* Motor: Pulse Width Modulation */
+	}
+}
+
+/**
+ * PRIMARY FUNCTIONS
+ */
+
+/**
+ * Function to initialize:
+ * - Variables & Flags
+ * - Interrupts
+ * - UART
+ * - Timers
+ * - ADC
+ * - RTC
+ * - Welcome the user
+ * - Start in Normal Mode
+ * - Prime UART to Receive
+ * - Infra-red Message
+ */
 void init(void)
 {
-	//Open connections
-	EI();
-	R_RTC_Start();
-	R_UART1_Start();
-	R_TAU0_Channel0_Start();
-	R_TAU0_Channel2_Start();
-	R_TAU0_Channel1_Lower8bits_Start();
-
-	R_ADC_Start();
-
-	R_TMR_RD0_Start();
-
+	/* Variables & Flags */
+	uart1RxFlag = 0U;
+	uart1TxFlag = 0U;
 	gate_cmd = 0;
 	auto_close_cntr = 0;
 	auto_close = 0;
@@ -32,407 +66,44 @@ void init(void)
 	dataPrint = 0;
 	dataResponse = 1;
 	dataReady = 0;
+	prev_gate_status = UNKNOWN;
+	gate_status = UNKNOWN;
+	DVR_nSLEEP = 0;
+	/* Interrupts*/
+	EI();
 	R_INTC7_Start();
-
-	//Init flags
-	uart1RxFlag = 0U;
-	uart1TxFlag = 0U;
-
-	//Welcome user
+	/* UART */
+	R_UART1_Start();
+	/* Timers */
+	R_TAU0_Channel0_Start();
+	R_TAU0_Channel1_Lower8bits_Start();
+	R_TAU0_Channel2_Start();
+	R_TMR_RD0_Start();
+	/* ADC */
+	R_ADC_Start();
+	/* RTC */
+	R_RTC_Start();
+	/* Welcome user */
 	initLcd();
 	welcome();
 	initLcd();
-
-	GS_PREV_STATE = gate_status;
-	gate_status = GS_UNKNOWN;
-	//Start in Normal mode
-	mode = 0;
+	/* Start in Normal mode */
+	ctrlMode = NORMAL;
 	echo(0x80);
 	delayNoInt(100);
-	uart1TxFlag = 0U; // clear tx flag
+	uart1TxFlag = 0U;
 	print_lcd("Normal mode");
-
-	//Motor off
-	DVR_nSLEEP = 0;
-}
-
-void core(void)
-{
-	uart1RxBuf[0] = 'r'; 								//Init to non-arbitrary
-	uart1Status = R_UART1_Receive(&uart1RxBuf[0],1); 	//Prime UART to receive
-	//PM7&=0x7F;
+	/* Prime UART to Receive */
+	uart1RxBuf[0] = 'r';
+	uart1Status = R_UART1_Receive(&uart1RxBuf[0],1);
+	/* Infra-red Message */
 	ir_rxMessage = 0x0000;
-	while (1U)
-	{
-		mtrBtn();			//Check and react: switch pressed
-
-		boardBtn();			//Check and react: board buttons
-
-		IRcmd();			//Check and react: IR command
-
-		if (dataReady && dataPrint && mode)	//Check and react: print to LCD
-		{
-			uint8_t ascii_word[16];
-			word_to_ascii(ir_rxMessage, ascii_word);
-			print_lcd(ascii_word);
-			dataPrint = 0;
-		}
-
-		ADC();
-
-		if (uart1RxFlag)	//Input received
-		{
-			uart1RxFlag = 0U;
-
-			if(uart1RxBuf[0] == 0x81)		//TEST MODE
-			{
-				mode = 1;
-				echo(0x81);
-				dataPrint = 0;
-				print_lcd("Test mode");
-				buzzerBeep(3);
-
-			}
-
-			else if(uart1RxBuf[0] == 0x80)	//NORMAL MODE
-			{
-				mode = 0;
-				echo(0x80);
-				dataPrint = 0;
-				print_lcd("Normal mode");
-			}
-
-			else if(uart1RxBuf[0] == 0xF0)	//BUZZER ON
-			{
-				echo(0xF0);
-				R_PCLBUZ0_Start();
-			}
-
-			else if(uart1RxBuf[0] == 0xF1)	//BUZZER OFF
-			{
-				echo(0xF1);
-				R_PCLBUZ0_Stop();
-			}
-
-			else if(uart1RxBuf[0] == 0xF9)	//OPEN GATE
-			{
-				echo(0xF9);
-				openGate();
-				print_lcd("Gate opening...");
-			}
-
-			else if(uart1RxBuf[0] == 0xF8)	//CLOSE GATE
-			{
-				echo(0xF8);
-				closeGate();
-				print_lcd("Gate closing...");
-			}
-
-			else if(uart1RxBuf[0] == 0xF7)	//READ CURRENT
-			{
-				echoData(0xF7, initial_current/5);
-			}
-
-			else if(uart1RxBuf[0] == 0xFF)	//READ STATUS
-			{
-				//echo(0xFF);
-				msDelay(10);
-				switch(gate_status)
-				{
-					case GS_OPENED:
-						echoData(0xFF, 0x82);
-						print_lcd("Opened");
-						break;
-					case GS_CLOSED:
-						echoData(0xFF, 0x81);
-						print_lcd("Closed");
-						break;
-					case GS_UNKNOWN:
-						echoData(0xFF, 0x00);
-						print_lcd("Unknown");
-						break;
-					case GS_ESTOP:
-						echoData(0xFF, 0x84);
-						print_lcd("Emergency stop");
-						break;
-				}
-			}
-
-			else if (uart1RxBuf[0] == 0xFC)	//READ IR CMD
-			{
-				echo(0xFC);
-				msDelay(10);
-				//Wait for complete message?
-				//echo(ir_rxMessage);
-				uint8_t cmd = ir_rxMessage & 0x7;
-				uint8_t addr = (ir_rxMessage >> 3) & 0xFF;
-				uint8_t tog = (ir_rxMessage >> 11) & 0x1;
-				echoData(addr, ((tog<<7) + cmd));
-				//echo(addr);
-				//echo((tog<<6) + cmd);
-			}
-
-			else if (uart1RxBuf[0] == 0xF2) //SET RTC TO PREV 5 BYTES
-			{
-				echo(0xF2);
-				time_now.sec = toBCD(myBuffer[myCounter - 1]);
-				time_now.min = toBCD(myBuffer[myCounter - 2]);
-				time_now.hour = toBCD(myBuffer[myCounter - 3]);
-				time_now.day = toBCD(myBuffer[myCounter - 4]);
-				time_now.month = toBCD(myBuffer[myCounter - 5]);
-				R_RTC_Stop();
-				R_RTC_Set_CounterValue(time_now);
-				R_RTC_Start();
-				int i;
-				for (i = 0; i < RX_BUF_LEN; i++)
-				{
-					myBuffer[i] = 0x0;
-				}
-				myCounter = 0;
-			}
-
-			else if (uart1RxBuf[0] == 0xF3) //SEND RTC VIA UART
-			{
-				int i;
-				for (i = 0; i < RX_BUF_LEN; i++)
-				{
-					myBuffer[i] = 0x0;
-				}
-				myCounter = 0;
-				R_RTC_Get_CounterValue(&time_now);
-				myBuffer[0] = 0xF3;
-				myBuffer[1] = toHex(time_now.month);
-				myBuffer[2] = toHex(time_now.day);
-				myBuffer[3] = toHex(time_now.hour);
-				myBuffer[4] = toHex(time_now.min);
-				myBuffer[5] = toHex(time_now.sec);
-
-				R_UART1_Send(myBuffer, 6);
-			}
-
-			//Buffer not full and input is not a command
-			else if((myCounter < RX_BUF_LEN)&&(uart1RxBuf[0] < 0x7F))
-			{
-				myBuffer[myCounter] = uart1RxBuf[0];
-				myCounter++;
-			}
-			//'Display to LCD' is activated during Test Mode
-			else if((mode == 1)&&(uart1RxBuf[0] == 0xF4))
-			{
-				echo(0xF4);
-				initLcd();
-				int display_x = 0;
-				int display_y = 0;
-				int display_scroll = 0;
-				int display_length = 16;
-				int display_loop = 1;
-				int overflow;
-
-				//Determine overflow
-				if (myCounter > 15) {
-					overflow = myCounter - 15;
-				}
-				else {
-					overflow = 1;
-				}
-
-				//For LCD index i
-				for(display_y = 0 ; display_y < overflow ; display_y++)
-				{
-					//For message character j
-					for (display_x = 0 ; display_x < myCounter ; display_x++)
-					{
-						writeByteLcd(1U, myBuffer[(display_x+display_scroll)]);
-						delayNoInt(3250);
-						if (display_x == 7){
-							writeByteLcd(0U, LCD_HOME_L2);
-							delayNoInt(100);
-						}
-					}
-					display_scroll++;
-					writeByteLcd(0U, LCD_HOME_L1);
-					delayNoInt(100);
-					msDelay(350);
-				}
-				myCounter = 0;
-			}
-
-			uart1Status = R_UART1_Receive(uart1RxBuf,1);			// Prime UART2 Rx
-		}
-
-		if (uart1TxFlag)	//Output sent
-		{
-			uart1TxFlag = 0U; //Clear Tx flag
-		}
-
-		pwm(100, 25); 		//PWM always running, motor toggled by DVR_nSLEEP
-
-	}
 }
 
 /**
- * Display a char on the LCD
+ * Function to process proximity switch presses
  */
-void displayCharLCD(char c)
-{
-	writeByteLcd(1U, c);
-	delayNoInt(100);
-}
-
-/**
- * Welcome the user on LCD
- */
-void welcome(void)
-{
-	int scrollCount = 0;
-	int j = 0;
-	int i = 0;
-
-	char msg[] = {"                Nel T. 18179460"};
-
-	int length = sizeof(msg)/sizeof(char);
-
-	//For LCD index i
-	for(i = 0 ; i < (length-16) ; i++)
-	{
-		//For message character j
-		for (j = 0 ; j < 16 ; j++)
-		{
-			//Offset message for scroll effect
-			writeByteLcd(1U, msg[(j+scrollCount)]);
-			delayNoInt(100);
-			//Jump to second line of LCD due to memory gap
-			if (j == 7)
-			{
-				writeByteLcd(0U, LCD_HOME_L2);
-				delayNoInt(100);
-			}
-		}
-		scrollCount++;
-		writeByteLcd(0U, LCD_HOME_L1);
-		delayNoInt(100);
-		msDelay(350);
-	}
-	msDelay(500);
-}
-
-/**
- * Delay for t milliseconds
- */
-void msDelay(int t)
-{
-	int a = 0;
-	for(a = 0; a < t; a++)
-	{
-		delayNoInt(1000);
-	}
-}
-
-void openGate()
-{
-	//gate_cmd = 1;
-	DVR_PHASE = 0;
-	DVR_nSLEEP = 1;
-	GS_PREV_STATE = gate_status;
-	gate_status = GS_UNKNOWN;
-	//msDelay(COLLISION_DET_DELAY);
-}
-
-void closeGate()
-{
-	//gate_cmd = 1;
-	DVR_PHASE = 1;
-	DVR_nSLEEP = 1;
-	GS_PREV_STATE = gate_status;
-	gate_status = GS_UNKNOWN;
-	if (auto_close)
-	{
-		auto_close = 0;
-		auto_close_cntr = 0;
-	}
-	//msDelay(COLLISION_DET_DELAY);
-}
-
-void stopGate()
-{
-	DVR_nSLEEP = 0;
-	GS_PREV_STATE = gate_status;
-	gate_status = GS_ESTOP;
-}
-
-void echo(uint8_t hex)
-{
-	uart1TxBuf[0] = hex;
-	uart1Status = R_UART1_Send(uart1TxBuf,1);
-}
-
-void echoData(uint8_t hex, uint8_t hex2)
-{
-	uart1TxBuf[0] = hex;
-	uart1TxBuf[1] = hex2;
-	uart1Status = R_UART1_Send(uart1TxBuf,2);
-}
-
-void buzzerBeep(uint8_t beeps)
-{
-	while (beeps){
-		R_PCLBUZ0_Start();
-		msDelay(20);
-		R_PCLBUZ0_Stop();
-		beeps--;
-		if (beeps) msDelay(40);
-	}
-}
-
-/**
- * takes in a binary coded decimal
- */
-uint8_t toHex(uint8_t decimal){
-	return (decimal & 0x0F) + ((decimal >> 4) * 10);
-}
-
-/**
- * converts from hex to binary coded decimal
- * max input/output is 99
- */
-uint8_t toBCD(uint8_t hex){
-	uint8_t nibble_l = hex % 10; //Isolate lower nibble
-	uint8_t nibble_h = ((hex / 10) % 10) << 4; //Isolate higher nibble
-	uint8_t byte = nibble_h | nibble_l; //Combine them as two consecutive values
-	return byte;
-}
-
-/**
- * Software PWM implementation
- * Causes motor to rotate
- */
-void pwm(int cycles_per_second, int divisor)
-{
-	if (pwm_edge){
-		pwm_edge=0;
-		//P4_bit.no3^=1;
-		pwm_counter++;
-		//P7^=0x80;
-		//P4^=0x04;
-
-		pwm_counter%=cycles_per_second; // 100 cycles per second
-
-		if (pwm_counter < divisor) // div/cycles% duty cycle
-		{
-			//P4_bit.no3 = 1;
-			DVR_ENABLE = 1;
-		}
-		else
-		{
-			DVR_ENABLE = 0;
-		}
-	}
-}
-
-/**
- * Inspect the gate collision buttons
- */
-void mtrBtn()
+void mtrBtn(void)
 {
 	if (switch_edge)
 	{
@@ -440,11 +111,11 @@ void mtrBtn()
 
 		if (SWITCH_OPENED)
 		{
-			if (DVR_PHASE == 0)
+			if (DVR_PHASE == DVR_PHASE_OPEN)
 			{
-				GS_PREV_STATE = gate_status;
-				gate_status = GS_OPENED;
-				if (GS_PREV_STATE != gate_status)
+				prev_gate_status = gate_status;
+				gate_status = OPENED;
+				if (prev_gate_status != gate_status)
 				{
 					dataPrint = 0;
 					DVR_nSLEEP = 0;
@@ -457,11 +128,11 @@ void mtrBtn()
 		}
 		else if (SWITCH_CLOSED)
 		{
-			if (DVR_PHASE == 1) // if opening activated
+			if (DVR_PHASE == DVR_PHASE_CLOSE) // if opening activated
 			{
-				GS_PREV_STATE = gate_status;
-				gate_status = GS_CLOSED;
-				if (GS_PREV_STATE != gate_status)
+				prev_gate_status = gate_status;
+				gate_status = CLOSED;
+				if (prev_gate_status != gate_status)
 				{
 					dataPrint = 0;
 					DVR_nSLEEP = 0;
@@ -474,15 +145,15 @@ void mtrBtn()
 }
 
 /**
- * Inspect the board button values
+ * Function to process PCB button presses
  */
-void boardBtn()
+void boardBtn(void)
 {
 	if (check_btns)
 	{
-		check_btns = 0; //Reset
+		check_btns = 0;
 
-		if (!mode) //Normal mode
+		if (ctrlMode == NORMAL)
 		{
 			if (!BTN_STOP)
 			{
@@ -499,7 +170,7 @@ void boardBtn()
 			}
 		}
 
-		else //Test mode
+		else if(ctrlMode == TEST)
 		{
 			if (!BTN_OPEN)
 			{
@@ -517,3 +188,360 @@ void boardBtn()
 		}
 	}
 }
+
+/**
+ * Function to display last IR command to LCD
+ */
+void IRtoLCD(void)
+{
+	if (dataReady && dataPrint && (ctrlMode == TEST))
+	{
+		uint8_t ascii_word[16];
+		word_to_ascii(ir_rxMessage, ascii_word);
+		print_lcd(ascii_word);
+		dataPrint = 0;
+	}
+}
+
+/**
+ * Function to process UART Receive flag
+ */
+void uartReceive(void)
+{
+	if (uart1RxFlag)
+	{
+		uart1RxFlag = 0U;
+		switch(uart1RxBuf[0])
+		{
+			case 0x80: /*Enter Normal mode */
+				ctrlMode = NORMAL;
+				echo(0x80);
+				dataPrint = 0;
+				print_lcd("Normal mode");
+				break;
+			case 0x81:	/* Enter Test mode */
+				ctrlMode = TEST;
+				echo(0x81);
+				dataPrint = 0;
+				print_lcd("Test mode");
+				buzzerBeep(3);
+				break;
+			case 0xF0:	/* Buzzer on */
+				echo(0xF0);
+				R_PCLBUZ0_Start();
+				break;
+			case 0xF1:	/* Buzzer off */
+				echo(0xF1);
+				R_PCLBUZ0_Stop();
+				break;
+			case 0xF2:	/* Set Real Time Clock to buffered 5 Bytes */
+				echo(0xF2);
+				setRTC();
+				break;
+			case 0xF3:	/* Report current Real Time Clock via UART */
+				sendRTC();
+				break;
+			case 0xF4:	/* Display buffered data to LCD */
+				if(ctrlMode == TEST)
+				{
+					bufferToLCD();
+				}
+				break;
+			case 0xF7:	/* Report current via UART */
+				echoData(0xF7, initial_current/5);
+				break;
+			case 0xF8:	/* Close gate */
+				echo(0xF8);
+				closeGate();
+				print_lcd("Gate closing...");
+				break;
+			case 0xF9:	/* Open gate */
+				echo(0xF9);
+				openGate();
+				print_lcd("Gate opening...");
+				break;
+			case 0xFC:	/* Report Infra-red command via UART */
+				echo(0xFC);
+				msDelay(10);
+				/* Separate data */
+				uint8_t cmd = ir_rxMessage & 0x7;
+				uint8_t addr = (ir_rxMessage >> 3) & 0xFF;
+				uint8_t tog = (ir_rxMessage >> 11) & 0x1;
+				echoData(addr, ((tog<<7) + cmd));
+				break;
+			case 0xFF:	/* Report gate status via UART */
+				msDelay(10);
+				switch(gate_status)
+				{
+					case OPENED:
+						echoData(0xFF, 0x82);
+						print_lcd("Opened");
+						break;
+					case CLOSED:
+						echoData(0xFF, 0x81);
+						print_lcd("Closed");
+						break;
+					case UNKNOWN:
+						echoData(0xFF, 0x00);
+						print_lcd("Unknown");
+						break;
+					case ESTOP:
+						echoData(0xFF, 0x84);
+						print_lcd("Emergency stop");
+						break;
+				}
+				break;
+			default:	/* Store data in buffer if not full */
+				if(myCounter < RX_BUF_LEN)
+				{
+					myBuffer[myCounter] = uart1RxBuf[0];
+					myCounter++;
+				}
+		}
+		uart1Status = R_UART1_Receive(uart1RxBuf,1);	/* Prime to Receive next data */
+	}
+}
+
+/**
+ * Function to process the UART Send flag
+ */
+void uartSend(void)
+{
+	if (uart1TxFlag)
+	{
+		uart1TxFlag = 0U;
+	}
+}
+
+/**
+ * Function to output Pulse Width Modulation signal to motor
+ * The output is constant, and the motor's utilisation of the PWM
+ * is toggled by its nSLEEP
+ * @param cycles_per_second
+ * @param divisor
+ * @see global.h
+ */
+void pwm(int cycles_per_second, int divisor)
+{
+	if (pwm_edge)
+	{
+		pwm_edge=0;
+		pwm_counter++;
+		pwm_counter%=cycles_per_second;					/*Rolls over*/
+		if (pwm_counter < divisor) DVR_ENABLE = 1;		/*Reaches max of 'divisor'*/
+		else DVR_ENABLE = 0;
+	}
+}
+
+/**
+ * END PRIMARY FUNCTIONS
+ */
+
+/**
+ * AUXILIARY FUNCTIONS
+ */
+
+/**
+ * Delay for t milliseconds
+ */
+void msDelay(int t)
+{
+	int a = 0;
+	for(a = 0; a < t; a++)
+	{
+		delayNoInt(1000);
+	}
+}
+
+/**
+ * Function to echo one Byte of data via UART
+ * @param hex byte to be sent
+ */
+void echo(uint8_t hex)
+{
+	uart1TxBuf[0] = hex;
+	uart1Status = R_UART1_Send(uart1TxBuf,1);
+}
+
+/**
+ * Function to echo two Bytes of data via UART
+ * @param hex first Byte to be sent
+ * @param hex2 second Byte to be sent
+ */
+void echoData(uint8_t hex, uint8_t hex2)
+{
+	uart1TxBuf[0] = hex;
+	uart1TxBuf[1] = hex2;
+	uart1Status = R_UART1_Send(uart1TxBuf,2);
+}
+
+/**
+ * Function to write data in the buffer to the LCD
+ */
+void bufferToLCD(void)
+{
+	echo(0xF4);
+	initLcd();
+	int display_x = 0;
+	int display_y = 0;
+	int display_scroll = 0;
+	int display_length = 16;
+	int display_loop = 1;
+	int overflow;
+
+	//Determine overflow
+	if (myCounter > 15) {
+		overflow = myCounter - 15;
+	}
+	else {
+		overflow = 1;
+	}
+
+	//For LCD index i
+	for(display_y = 0 ; display_y < overflow ; display_y++)
+	{
+		//For message character j
+		for (display_x = 0 ; display_x < myCounter ; display_x++)
+		{
+			writeByteLcd(1U, myBuffer[(display_x+display_scroll)]);
+			delayNoInt(3250);
+			if (display_x == 7){
+				writeByteLcd(0U, LCD_HOME_L2);
+				delayNoInt(100);
+			}
+		}
+		display_scroll++;
+		writeByteLcd(0U, LCD_HOME_L1);
+		delayNoInt(100);
+		msDelay(350);
+	}
+	myCounter = 0;
+}
+
+/**
+ * Opens the gate
+ */
+void openGate(void)
+{
+	//gate_cmd = 1;
+	DVR_PHASE = DVR_PHASE_OPEN;
+	DVR_nSLEEP = 1;
+	prev_gate_status = gate_status;
+	gate_status = UNKNOWN;
+	//msDelay(COLLISION_DET_DELAY);
+}
+
+/**
+ * Closes the gate
+ */
+void closeGate(void)
+{
+	//gate_cmd = 1;
+	DVR_PHASE = DVR_PHASE_CLOSE;
+	DVR_nSLEEP = 1;
+	prev_gate_status = gate_status;
+	gate_status = UNKNOWN;
+	if (auto_close)
+	{
+		auto_close = 0;
+		auto_close_cntr = 0;
+	}
+	//msDelay(COLLISION_DET_DELAY);
+}
+
+/**
+ * Stops the gate (emergency stop)
+ */
+void stopGate(void)
+{
+	DVR_nSLEEP = 0;
+	prev_gate_status = gate_status;
+	gate_status = ESTOP;
+}
+
+/**
+ * Sets the Real Time Clock to the last 5 Bytes stored in the UART Receive buffer
+ */
+void setRTC(void)
+{
+	time_now.sec = toBCD(myBuffer[myCounter - 1]);
+	time_now.min = toBCD(myBuffer[myCounter - 2]);
+	time_now.hour = toBCD(myBuffer[myCounter - 3]);
+	time_now.day = toBCD(myBuffer[myCounter - 4]);
+	time_now.month = toBCD(myBuffer[myCounter - 5]);
+	R_RTC_Stop();
+	R_RTC_Set_CounterValue(time_now);
+	R_RTC_Start();
+	int i;
+	for (i = 0; i < RX_BUF_LEN; i++)
+	{
+		myBuffer[i] = 0x0;
+	}
+	myCounter = 0;
+}
+
+/**
+ * Sends the current Real Time Clock value via UART
+ */
+void sendRTC(void)
+{
+	int i;
+	for (i = 0; i < RX_BUF_LEN; i++)
+	{
+		myBuffer[i] = 0x0;
+	}
+	myCounter = 0;
+	R_RTC_Get_CounterValue(&time_now);
+	myBuffer[0] = 0xF3;
+	myBuffer[1] = toHex(time_now.month);
+	myBuffer[2] = toHex(time_now.day);
+	myBuffer[3] = toHex(time_now.hour);
+	myBuffer[4] = toHex(time_now.min);
+	myBuffer[5] = toHex(time_now.sec);
+
+	R_UART1_Send(myBuffer, 6);
+}
+
+/**
+ * Causes the buzzer to emit a series of beeps at 20 millisecond intervals
+ * @param beeps number of consecutive beeps
+ */
+void buzzerBeep(uint8_t beeps)
+{
+	while (beeps){
+		R_PCLBUZ0_Start();
+		msDelay(20);
+		R_PCLBUZ0_Stop();
+		beeps--;
+		if (beeps) msDelay(40);
+	}
+}
+
+/**
+ * Converts Binary Coded Decimal to Hexadecimal
+ * Maximum input/output value is 99
+ * @param decimal BCD value
+ * @return Hexadecimal value
+ */
+uint8_t toHex(uint8_t decimal)
+{
+	return (decimal & 0x0F) + ((decimal >> 4) * 10);
+}
+
+/**
+ * Converts Hexadecimal to Binary Coded Decimal
+ * Maximum input/output value is 99
+ * @param hex Hexadecimal value
+ * @return Binary Coded Decimal value
+ */
+uint8_t toBCD(uint8_t hex)
+{
+	uint8_t nibble_l = hex % 10; //Isolate lower nibble
+	uint8_t nibble_h = ((hex / 10) % 10) << 4; //Isolate higher nibble
+	uint8_t byte = nibble_h | nibble_l; //Combine them as two consecutive values
+	return byte;
+}
+
+/**
+ * END AUXILIARY FUNCTIONS
+ */

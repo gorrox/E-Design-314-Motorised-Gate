@@ -45,8 +45,11 @@
 
 #include "r_cg_userdefine.h"
 #include "r_cg_macrodriver.h"
+#include "string.h"
 
-	// Prototypes
+/**
+ * FUNCTIONS
+ */
 void initLcd(void);
 void writeNibbleLcd(uint8_t reg, uint8_t nibble);
 void writeByteLcd(uint8_t reg, uint8_t value);
@@ -57,5 +60,8 @@ void delay(uint16_t delay);
 void lcd_clear();
 void print_lcd(uint8_t *message);
 void word_to_ascii(uint16_t word, uint8_t *lcd_word);
-
+void welcome(void);
+/**
+ * END FUNCTIONS
+ */
 #endif /* LCD_H_ */

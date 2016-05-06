@@ -38,32 +38,30 @@
   38                             		.comm	_initial_current,1,1
   39                             		.comm	_collision_det_counter,1,1
   40                             		.comm	_collision_det,1,1
-  41                             		.comm	_gate_status,2,2
-  42                             		.comm	_mode,1,1
-  43                             		.comm	_GS_PREV_STATE,1,1
-  44                             		.comm	_uart1RxBuf,16,1
-  45                             		.comm	_uart1RxCnt,2,2
+  41                             		.comm	_ctrlMode,2,2
+  42                             		.comm	_gate_status,2,2
+  43                             		.comm	_prev_gate_status,2,2
+  44                             		.comm	_time_now,7,1
+  45                             		.comm	_uart1Status,2,2
   46                             		.comm	_uart1RxFlag,1,1
-  47                             		.comm	_uart1RxErrFlag,1,1
-  48                             		.comm	_uart1RxOvrFlag,1,1
-  49                             		.comm	_uart1TxBuf,16,1
-  50                             		.comm	_uart1TxCnt,2,2
-  51                             		.comm	_uart1TxFlag,1,1
-  52                             		.comm	_time_now,7,1
-  53                             		.comm	_uart1Status,2,2
-  54                             		.comm	_myBuffer,16,1
-  55                             		.comm	_myCounter,2,2
-  56                             		.comm	_pwm_counter,2,2
-  57                             		.comm	_pwm_edge,1,1
-  58                             		.comm	_switch_edge,1,1
-  59                             		.comm	_check_btns,1,1
-  60                             		.comm	_gate_cmd,1,1
-  61                             		.comm	_auto_close,1,1
-  62                             		.comm	_auto_close_cntr,1,1
-  63                             		.global	_main
-  65                             	_main:
-  66                             	.LFB0:
-  67                             		.file 1 "../src/r_main.c"
+  47                             		.comm	_uart1RxBuf,16,1
+  48                             		.comm	_uart1RxCnt,2,2
+  49                             		.comm	_uart1TxFlag,1,1
+  50                             		.comm	_uart1TxBuf,16,1
+  51                             		.comm	_uart1TxCnt,2,2
+  52                             		.comm	_myBuffer,16,1
+  53                             		.comm	_myCounter,2,2
+  54                             		.comm	_pwm_counter,2,2
+  55                             		.comm	_pwm_edge,2,2
+  56                             		.comm	_switch_edge,2,2
+  57                             		.comm	_check_btns,2,2
+  58                             		.comm	_gate_cmd,1,1
+  59                             		.comm	_auto_close,1,1
+  60                             		.comm	_auto_close_cntr,1,1
+  61                             		.global	_main
+  63                             	_main:
+  64                             	.LFB0:
+  65                             		.file 1 "../src/r_main.c"
    1:../src/r_main.c **** /**************************************************************************************************
    2:../src/r_main.c **** * DISCLAIMER
    3:../src/r_main.c **** * This software is supplied by Renesas Electronics Corporation and is only intended for use with Re
@@ -105,68 +103,65 @@
   39:../src/r_main.c **** #include "r_cg_rtc.h"
   40:../src/r_main.c **** #include "r_cg_pclbuz.h"
   41:../src/r_main.c **** /* Start user code for include. Do not edit comment generated here */
-  42:../src/r_main.c **** //#include "lcd.h"
-  43:../src/r_main.c **** //#include "string.h"
-  44:../src/r_main.c **** //#include "infrared.h"
-  45:../src/r_main.c **** #include "global.h"
-  46:../src/r_main.c **** /* End user code. Do not edit comment generated here */
-  47:../src/r_main.c **** #include "r_cg_userdefine.h"
-  48:../src/r_main.c **** 
-  49:../src/r_main.c **** /**************************************************************************************************
-  50:../src/r_main.c **** Global variables and functions
-  51:../src/r_main.c **** ***************************************************************************************************
-  52:../src/r_main.c **** /* Start user code for global. Do not edit comment generated here */
+  42:../src/r_main.c **** #include "global.h"
+  43:../src/r_main.c **** /* End user code. Do not edit comment generated here */
+  44:../src/r_main.c **** #include "r_cg_userdefine.h"
+  45:../src/r_main.c **** 
+  46:../src/r_main.c **** /**************************************************************************************************
+  47:../src/r_main.c **** Global variables and functions
+  48:../src/r_main.c **** ***************************************************************************************************
+  49:../src/r_main.c **** /* Start user code for global. Do not edit comment generated here */
+  50:../src/r_main.c **** 
+  51:../src/r_main.c **** /* End user code. Do not edit comment generated here */
+  52:../src/r_main.c **** void R_MAIN_UserInit(void);
   53:../src/r_main.c **** 
-  54:../src/r_main.c **** /* End user code. Do not edit comment generated here */
-  55:../src/r_main.c **** void R_MAIN_UserInit(void);
-  56:../src/r_main.c **** 
-  57:../src/r_main.c **** /**************************************************************************************************
-  58:../src/r_main.c **** * Function Name: main
-  59:../src/r_main.c **** * Description  : This function implements main function.
-  60:../src/r_main.c **** * Arguments    : None
-  61:../src/r_main.c **** * Return Value : None
-  62:../src/r_main.c **** ***************************************************************************************************
-  63:../src/r_main.c **** void main(void)
-  64:../src/r_main.c **** {
-  68                             		.loc 1 64 0
-  65:../src/r_main.c ****     R_MAIN_UserInit();
-  69                             		.loc 1 65 0
-  70 0000 FC 00 00 00             		call	!!%code(_R_MAIN_UserInit)
-  66:../src/r_main.c ****     /* Start user code. Do not edit comment generated here */
-  67:../src/r_main.c ****     core();
-  71                             		.loc 1 67 0
-  72 0004 FC 00 00 00             		call	!!%code(_core)
-  68:../src/r_main.c ****     /* End user code. Do not edit comment generated here */
-  69:../src/r_main.c **** }
-  73                             		.loc 1 69 0
-  74 0008 D7                      		ret
-  75                             	.LFE0:
-  77                             		.global	_R_MAIN_UserInit
-  79                             	_R_MAIN_UserInit:
-  80                             	.LFB1:
-  70:../src/r_main.c **** 
-  71:../src/r_main.c **** 
-  72:../src/r_main.c **** /**************************************************************************************************
-  73:../src/r_main.c **** * Function Name: R_MAIN_UserInit
-  74:../src/r_main.c **** * Description  : This function adds user code before implementing main function.
-  75:../src/r_main.c **** * Arguments    : None
-  76:../src/r_main.c **** * Return Value : None
-  77:../src/r_main.c **** ***************************************************************************************************
-  78:../src/r_main.c **** void R_MAIN_UserInit(void)
-  79:../src/r_main.c **** {
-  81                             		.loc 1 79 0
-  80:../src/r_main.c ****     /* Start user code. Do not edit comment generated here */
-  81:../src/r_main.c **** 	init();
-  82                             		.loc 1 81 0
-  83 0009 FC 00 00 00             		call	!!%code(_init)
-  82:../src/r_main.c ****     /* End user code. Do not edit comment generated here */
-  83:../src/r_main.c **** }
-  84                             		.loc 1 83 0
-  85 000d D7                      		ret
-  86                             	.LFE1:
- 122                             	.Letext0:
- 123                             		.file 2 "../src/r_cg_macrodriver.h"
- 124                             		.file 3 "../src/r_cg_rtc.h"
- 125                             		.file 4 "../src/infrared.h"
- 126                             		.file 5 "../src/adc.h"
- 127                             		.file 6 "../src/global.h"
+  54:../src/r_main.c **** /**************************************************************************************************
+  55:../src/r_main.c **** * Function Name: main
+  56:../src/r_main.c **** * Description  : This function implements main function.
+  57:../src/r_main.c **** * Arguments    : None
+  58:../src/r_main.c **** * Return Value : None
+  59:../src/r_main.c **** ***************************************************************************************************
+  60:../src/r_main.c **** void main(void)
+  61:../src/r_main.c **** {
+  66                             		.loc 1 61 0
+  62:../src/r_main.c ****     R_MAIN_UserInit();
+  67                             		.loc 1 62 0
+  68 0000 FC 00 00 00             		call	!!%code(_R_MAIN_UserInit)
+  63:../src/r_main.c ****     /* Start user code. Do not edit comment generated here */
+  64:../src/r_main.c ****     core();
+  69                             		.loc 1 64 0
+  70 0004 FC 00 00 00             		call	!!%code(_core)
+  65:../src/r_main.c ****     /* End user code. Do not edit comment generated here */
+  66:../src/r_main.c **** }
+  71                             		.loc 1 66 0
+  72 0008 D7                      		ret
+  73                             	.LFE0:
+  75                             		.global	_R_MAIN_UserInit
+  77                             	_R_MAIN_UserInit:
+  78                             	.LFB1:
+  67:../src/r_main.c **** 
+  68:../src/r_main.c **** 
+  69:../src/r_main.c **** /**************************************************************************************************
+  70:../src/r_main.c **** * Function Name: R_MAIN_UserInit
+  71:../src/r_main.c **** * Description  : This function adds user code before implementing main function.
+  72:../src/r_main.c **** * Arguments    : None
+  73:../src/r_main.c **** * Return Value : None
+  74:../src/r_main.c **** ***************************************************************************************************
+  75:../src/r_main.c **** void R_MAIN_UserInit(void)
+  76:../src/r_main.c **** {
+  79                             		.loc 1 76 0
+  77:../src/r_main.c ****     /* Start user code. Do not edit comment generated here */
+  78:../src/r_main.c **** 	init();
+  80                             		.loc 1 78 0
+  81 0009 FC 00 00 00             		call	!!%code(_init)
+  79:../src/r_main.c ****     /* End user code. Do not edit comment generated here */
+  80:../src/r_main.c **** }
+  82                             		.loc 1 80 0
+  83 000d D7                      		ret
+  84                             	.LFE1:
+ 120                             	.Letext0:
+ 121                             		.file 2 "../src/r_cg_macrodriver.h"
+ 122                             		.file 3 "../src/r_cg_rtc.h"
+ 123                             		.file 4 "../src/global.h"
+ 124                             		.file 5 "../src/infrared.h"
+ 125                             		.file 6 "../src/adc.h"

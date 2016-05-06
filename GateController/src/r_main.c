@@ -39,9 +39,6 @@ Includes
 #include "r_cg_rtc.h"
 #include "r_cg_pclbuz.h"
 /* Start user code for include. Do not edit comment generated here */
-//#include "lcd.h"
-//#include "string.h"
-//#include "infrared.h"
 #include "global.h"
 /* End user code. Do not edit comment generated here */
 #include "r_cg_userdefine.h"

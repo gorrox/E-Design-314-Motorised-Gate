@@ -28,42 +28,40 @@
   28                             		.comm	_dataReady,1,1
   29                             		.comm	_dataPrint,1,1
   30                             		.comm	_dataResponse,1,1
-  31                             		.comm	_gate_status,2,2
-  32                             		.comm	_mode,1,1
-  33                             		.comm	_GS_PREV_STATE,1,1
-  34                             		.comm	_uart1RxBuf,16,1
-  35                             		.comm	_uart1RxCnt,2,2
+  31                             		.comm	_ctrlMode,2,2
+  32                             		.comm	_gate_status,2,2
+  33                             		.comm	_prev_gate_status,2,2
+  34                             		.comm	_time_now,7,1
+  35                             		.comm	_uart1Status,2,2
   36                             		.comm	_uart1RxFlag,1,1
-  37                             		.comm	_uart1RxErrFlag,1,1
-  38                             		.comm	_uart1RxOvrFlag,1,1
-  39                             		.comm	_uart1TxBuf,16,1
-  40                             		.comm	_uart1TxCnt,2,2
-  41                             		.comm	_uart1TxFlag,1,1
-  42                             		.comm	_time_now,7,1
-  43                             		.comm	_uart1Status,2,2
-  44                             		.comm	_myBuffer,16,1
-  45                             		.comm	_myCounter,2,2
-  46                             		.comm	_pwm_counter,2,2
-  47                             		.comm	_pwm_edge,1,1
-  48                             		.comm	_switch_edge,1,1
-  49                             		.comm	_check_btns,1,1
-  50                             		.comm	_gate_cmd,1,1
-  51                             		.comm	_auto_close,1,1
-  52                             		.comm	_auto_close_cntr,1,1
-  53                             		.comm	_ADC_done,1,1
-  54                             		.comm	_ADC_value,8,2
-  55                             		.comm	_INTAD_FSM_state,1,1
-  56                             		.comm	_adc_ready,1,1
-  57                             		.comm	_latest_current_reading,1,1
-  58                             		.comm	_ADC_counter,1,1
-  59                             		.comm	_timer_adc_reader_10Hz_interrupt,1,1
-  60                             		.comm	_initial_current,1,1
-  61                             		.comm	_collision_det_counter,1,1
-  62                             		.comm	_collision_det,1,1
-  63                             		.global	_r_adc_interrupt
-  65                             	_r_adc_interrupt:
-  66                             	.LFB0:
-  67                             		.file 1 "../src/r_cg_adc_user.c"
+  37                             		.comm	_uart1RxBuf,16,1
+  38                             		.comm	_uart1RxCnt,2,2
+  39                             		.comm	_uart1TxFlag,1,1
+  40                             		.comm	_uart1TxBuf,16,1
+  41                             		.comm	_uart1TxCnt,2,2
+  42                             		.comm	_myBuffer,16,1
+  43                             		.comm	_myCounter,2,2
+  44                             		.comm	_pwm_counter,2,2
+  45                             		.comm	_pwm_edge,2,2
+  46                             		.comm	_switch_edge,2,2
+  47                             		.comm	_check_btns,2,2
+  48                             		.comm	_gate_cmd,1,1
+  49                             		.comm	_auto_close,1,1
+  50                             		.comm	_auto_close_cntr,1,1
+  51                             		.comm	_ADC_done,1,1
+  52                             		.comm	_ADC_value,8,2
+  53                             		.comm	_INTAD_FSM_state,1,1
+  54                             		.comm	_adc_ready,1,1
+  55                             		.comm	_latest_current_reading,1,1
+  56                             		.comm	_ADC_counter,1,1
+  57                             		.comm	_timer_adc_reader_10Hz_interrupt,1,1
+  58                             		.comm	_initial_current,1,1
+  59                             		.comm	_collision_det_counter,1,1
+  60                             		.comm	_collision_det,1,1
+  61                             		.global	_r_adc_interrupt
+  63                             	_r_adc_interrupt:
+  64                             	.LFB0:
+  65                             		.file 1 "../src/r_cg_adc_user.c"
    1:../src/r_cg_adc_user.c **** /**************************************************************************************************
    2:../src/r_cg_adc_user.c **** * DISCLAIMER
    3:../src/r_cg_adc_user.c **** * This software is supplied by Renesas Electronics Corporation and is only intended for use with Re
@@ -116,34 +114,34 @@
   50:../src/r_cg_adc_user.c **** ***************************************************************************************************
   51:../src/r_cg_adc_user.c **** void r_adc_interrupt(void)
   52:../src/r_cg_adc_user.c **** {
-  68                             		.loc 1 52 0
-  69                             		; start of function
-  70                             		; push 8: ax bc de hl
-  71 0000 61 CF                   		sel	rb0
-  72 0002 C1                      		push	ax
-  73                             	.LCFI0:
-  74 0003 C3                      		push	bc
-  75                             	.LCFI1:
-  76 0004 C5                      		push	de
-  77                             	.LCFI2:
-  78 0005 C7                      		push	hl
-  79                             	.LCFI3:
+  66                             		.loc 1 52 0
+  67                             		; start of function
+  68                             		; push 8: ax bc de hl
+  69 0000 61 CF                   		sel	rb0
+  70 0002 C1                      		push	ax
+  71                             	.LCFI0:
+  72 0003 C3                      		push	bc
+  73                             	.LCFI1:
+  74 0004 C5                      		push	de
+  75                             	.LCFI2:
+  76 0005 C7                      		push	hl
+  77                             	.LCFI3:
   53:../src/r_cg_adc_user.c ****     /* Start user code. Do not edit comment generated here */
   54:../src/r_cg_adc_user.c **** 	adc_ready = 1;
-  80                             		.loc 1 54 0
-  81 0006 E5 00 00                		oneb	!_adc_ready
+  78                             		.loc 1 54 0
+  79 0006 E5 00 00                		oneb	!_adc_ready
   55:../src/r_cg_adc_user.c ****     /* End user code. Do not edit comment generated here */
   56:../src/r_cg_adc_user.c **** }
-  82                             		.loc 1 56 0
-  83 0009 C6                      		pop	hl
-  84 000a C4                      		pop	de
-  85 000b C2                      		pop	bc
-  86 000c C0                      		pop	ax
-  87 000d 61 FC                   		reti
-  88                             	.LFE0:
- 132                             	.Letext0:
- 133                             		.file 2 "../src/r_cg_macrodriver.h"
- 134                             		.file 3 "../src/r_cg_rtc.h"
- 135                             		.file 4 "../src/infrared.h"
- 136                             		.file 5 "../src/global.h"
- 137                             		.file 6 "../src/adc.h"
+  80                             		.loc 1 56 0
+  81 0009 C6                      		pop	hl
+  82 000a C4                      		pop	de
+  83 000b C2                      		pop	bc
+  84 000c C0                      		pop	ax
+  85 000d 61 FC                   		reti
+  86                             	.LFE0:
+ 130                             	.Letext0:
+ 131                             		.file 2 "../src/r_cg_macrodriver.h"
+ 132                             		.file 3 "../src/r_cg_rtc.h"
+ 133                             		.file 4 "../src/global.h"
+ 134                             		.file 5 "../src/infrared.h"
+ 135                             		.file 6 "../src/adc.h"

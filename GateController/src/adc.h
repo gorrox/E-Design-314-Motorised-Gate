@@ -15,13 +15,22 @@
 #include "r_cg_macrodriver.h"
 #include "string.h"
 
+/**
+ * CONSTANTS
+ */
 #define NUM_CHANNELS (4)
 #define AD_SAMPLING (1)
 #define AD_IDLE (0)
 #define MTR_CURRENT_THRSH 55
 #define COLLISION_DET_DELAY 200
+/**
+ * END CONSTANTS
+ */
 
-volatile uint8_t ADC_done; /* Flag: conversion complete */
+/**
+ * VARIABLES
+ */
+volatile uint8_t ADC_done;
 volatile uint16_t ADC_value[NUM_CHANNELS];
 volatile uint8_t INTAD_FSM_state;
 volatile uint8_t adc_ready;
@@ -31,11 +40,19 @@ volatile uint8_t timer_adc_reader_10Hz_interrupt; //flag
 volatile uint8_t initial_current;
 volatile uint8_t collision_det_counter;
 volatile uint8_t collision_det;
+/**
+ * END VARIABLES
+ */
 
+/**
+ * FUNCTIONS
+ */
 void ADC(void);
 uint16_t adc_get_reading();
 void adc_get_multiple_channels(void);
 void adc_multi_channel_interrupt_service_routine();
-char *adc_ascii_current(uint16_t *adc_val);
+/**
+ * END FUNCTIONS
+ */
 
 #endif /* ADC_H_ */

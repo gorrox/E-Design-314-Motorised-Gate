@@ -168,6 +168,9 @@ void testLCDConnections(void)
 	P7 &= 0x80; // Make all low
 }
 
+/**
+ * Clears the LCD
+ */
 void lcd_clear()
 {
 	writeByteLcd(LCD_CTRL_WR, LCD_CURSOR_ON);     // Display Cursor ON
@@ -183,6 +186,10 @@ void lcd_clear()
 	delayNoInt(40);					// Start timer with 40 usec delay
 }
 
+/**
+ * Prints a message to the LCD
+ * @param message text to be displayed
+ */
 void print_lcd(uint8_t *message)
 {
 	uint8_t len = strlen(message);
@@ -190,40 +197,75 @@ void print_lcd(uint8_t *message)
 	delay(10000);
 
 	int i;
-	//if (len > lcd_message_max) len = lcd_message_max;
 	for (i = 0; i < len; i++)
 	{
-		if (message[i] <= 0x7F){
-			writeByteLcd(1U, message[i]);
-		}
+		if (message[i] <= 0x7F) writeByteLcd(1U, message[i]);
 		delay(100);
-		if (i == 7){
-//			int k;
-//			for (k = 0; k < 32; k++)
-//			{
-//				writeByteLcd(0U, LCD_CURSOR_RIGHT);
-//				delay(100);
-//			}
+		if (i == 7)
+		{
 			writeByteLcd(0U, 0xC0);
 			delay(100);
 		}
 	}
-
-	// scroll one right
-	//writeByteLcd(0U, 0x1C);
-	//	delay(100);
-	EI();
 }
 
+/**
+ * Approximate for-loop delay.
+ * Delays x processor ticks.
+ * @param delay for-loop ticks to delay
+ */
 void delay(uint16_t delay){
 	for ( ; delay > 0 ; delay--);
 }
 
+/**
+ * Converts Infra-red Manchester Encoding to normal Binary format for LCD display
+ * @param word IR Manchester encoded data
+ * @param lcd_word Text to be displayed to LCD
+ */
 void word_to_ascii(uint16_t word, uint8_t *lcd_word){
 	volatile uint8_t k;
-	for (k = 0; k < 16; k++){
+	for (k = 0; k < 16; k++)
+	{
 		uint8_t shift = word >> (15 - k);
 		uint8_t number = shift & 0x1;
 		lcd_word[k] = number + '0';
 	}
+}
+
+/**
+ * Welcome the user on LCD
+ */
+void welcome(void)
+{
+	int scrollCount = 0;
+	int j = 0;
+	int i = 0;
+
+	char msg[] = {"                Nel T. 18179460"};
+
+	int length = sizeof(msg)/sizeof(char);
+
+	//For LCD index i
+	for(i = 0 ; i < (length-16) ; i++)
+	{
+		//For message character j
+		for (j = 0 ; j < 16 ; j++)
+		{
+			//Offset message for scroll effect
+			writeByteLcd(1U, msg[(j+scrollCount)]);
+			delayNoInt(100);
+			//Jump to second line of LCD due to memory gap
+			if (j == 7)
+			{
+				writeByteLcd(0U, LCD_HOME_L2);
+				delayNoInt(100);
+			}
+		}
+		scrollCount++;
+		writeByteLcd(0U, LCD_HOME_L1);
+		delayNoInt(100);
+		msDelay(350);
+	}
+	msDelay(500);
 }

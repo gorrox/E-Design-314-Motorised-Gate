@@ -38,32 +38,30 @@
   38                             		.comm	_initial_current,1,1
   39                             		.comm	_collision_det_counter,1,1
   40                             		.comm	_collision_det,1,1
-  41                             		.comm	_gate_status,2,2
-  42                             		.comm	_mode,1,1
-  43                             		.comm	_GS_PREV_STATE,1,1
-  44                             		.comm	_uart1RxBuf,16,1
-  45                             		.comm	_uart1RxCnt,2,2
+  41                             		.comm	_ctrlMode,2,2
+  42                             		.comm	_gate_status,2,2
+  43                             		.comm	_prev_gate_status,2,2
+  44                             		.comm	_time_now,7,1
+  45                             		.comm	_uart1Status,2,2
   46                             		.comm	_uart1RxFlag,1,1
-  47                             		.comm	_uart1RxErrFlag,1,1
-  48                             		.comm	_uart1RxOvrFlag,1,1
-  49                             		.comm	_uart1TxBuf,16,1
-  50                             		.comm	_uart1TxCnt,2,2
-  51                             		.comm	_uart1TxFlag,1,1
-  52                             		.comm	_time_now,7,1
-  53                             		.comm	_uart1Status,2,2
-  54                             		.comm	_myBuffer,16,1
-  55                             		.comm	_myCounter,2,2
-  56                             		.comm	_pwm_counter,2,2
-  57                             		.comm	_pwm_edge,1,1
-  58                             		.comm	_switch_edge,1,1
-  59                             		.comm	_check_btns,1,1
-  60                             		.comm	_gate_cmd,1,1
-  61                             		.comm	_auto_close,1,1
-  62                             		.comm	_auto_close_cntr,1,1
-  63                             		.global	_r_intc7_interrupt
-  65                             	_r_intc7_interrupt:
-  66                             	.LFB0:
-  67                             		.file 1 "../src/r_cg_intc_user.c"
+  47                             		.comm	_uart1RxBuf,16,1
+  48                             		.comm	_uart1RxCnt,2,2
+  49                             		.comm	_uart1TxFlag,1,1
+  50                             		.comm	_uart1TxBuf,16,1
+  51                             		.comm	_uart1TxCnt,2,2
+  52                             		.comm	_myBuffer,16,1
+  53                             		.comm	_myCounter,2,2
+  54                             		.comm	_pwm_counter,2,2
+  55                             		.comm	_pwm_edge,2,2
+  56                             		.comm	_switch_edge,2,2
+  57                             		.comm	_check_btns,2,2
+  58                             		.comm	_gate_cmd,1,1
+  59                             		.comm	_auto_close,1,1
+  60                             		.comm	_auto_close_cntr,1,1
+  61                             		.global	_r_intc7_interrupt
+  63                             	_r_intc7_interrupt:
+  64                             	.LFB0:
+  65                             		.file 1 "../src/r_cg_intc_user.c"
    1:../src/r_cg_intc_user.c **** /**************************************************************************************************
    2:../src/r_cg_intc_user.c **** * DISCLAIMER
    3:../src/r_cg_intc_user.c **** * This software is supplied by Renesas Electronics Corporation and is only intended for use with Re
@@ -116,56 +114,56 @@
   50:../src/r_cg_intc_user.c **** ***************************************************************************************************
   51:../src/r_cg_intc_user.c **** void r_intc7_interrupt(void)
   52:../src/r_cg_intc_user.c **** {
-  68                             		.loc 1 52 0
-  69                             		; start of function
-  70                             		; push 16: ax bc de hl r8 r10 r12 r14
-  71 0000 61 CF                   		sel	rb0
-  72 0002 C1                      		push	ax
-  73                             	.LCFI0:
-  74 0003 C3                      		push	bc
-  75                             	.LCFI1:
-  76 0004 C5                      		push	de
-  77                             	.LCFI2:
-  78 0005 C7                      		push	hl
-  79                             	.LCFI3:
-  80 0006 61 DF                   		sel	rb1
-  81 0008 C1                      		push	ax ; r8
-  82                             	.LCFI4:
-  83 0009 C3                      		push	bc ; r10
-  84                             	.LCFI5:
-  85 000a C5                      		push	de ; r12
-  86                             	.LCFI6:
-  87 000b C7                      		push	hl ; r14
-  88                             	.LCFI7:
-  89 000c 61 CF                   		sel	rb0
+  66                             		.loc 1 52 0
+  67                             		; start of function
+  68                             		; push 16: ax bc de hl r8 r10 r12 r14
+  69 0000 61 CF                   		sel	rb0
+  70 0002 C1                      		push	ax
+  71                             	.LCFI0:
+  72 0003 C3                      		push	bc
+  73                             	.LCFI1:
+  74 0004 C5                      		push	de
+  75                             	.LCFI2:
+  76 0005 C7                      		push	hl
+  77                             	.LCFI3:
+  78 0006 61 DF                   		sel	rb1
+  79 0008 C1                      		push	ax ; r8
+  80                             	.LCFI4:
+  81 0009 C3                      		push	bc ; r10
+  82                             	.LCFI5:
+  83 000a C5                      		push	de ; r12
+  84                             	.LCFI6:
+  85 000b C7                      		push	hl ; r14
+  86                             	.LCFI7:
+  87 000c 61 CF                   		sel	rb0
   53:../src/r_cg_intc_user.c ****     /* Start user code. Do not edit comment generated here */
   54:../src/r_cg_intc_user.c **** 	dataReady = 0;
-  90                             		.loc 1 54 0
-  91 000e F5 00 00                		clrb	!_dataReady
+  88                             		.loc 1 54 0
+  89 000e F5 00 00                		clrb	!_dataReady
   55:../src/r_cg_intc_user.c **** 	R_INTC7_Stop();
-  92                             		.loc 1 55 0
-  93 0011 FC 00 00 00             		call	!!%code(_R_INTC7_Stop)
+  90                             		.loc 1 55 0
+  91 0011 FC 00 00 00             		call	!!%code(_R_INTC7_Stop)
   56:../src/r_cg_intc_user.c **** 	R_TAU0_Channel3_Start();
-  94                             		.loc 1 56 0
-  95 0015 FC 00 00 00             		call	!!%code(_R_TAU0_Channel3_Start)
+  92                             		.loc 1 56 0
+  93 0015 FC 00 00 00             		call	!!%code(_R_TAU0_Channel3_Start)
   57:../src/r_cg_intc_user.c ****     /* End user code. Do not edit comment generated here */
   58:../src/r_cg_intc_user.c **** }
-  96                             		.loc 1 58 0
-  97 0019 61 DF                   		sel	rb1
-  98 001b C6                      		pop	hl ; r14
-  99 001c C4                      		pop	de ; r12
- 100 001d C2                      		pop	bc ; r10
- 101 001e C0                      		pop	ax ; r8
- 102 001f 61 CF                   		sel	rb0
- 103 0021 C6                      		pop	hl
- 104 0022 C4                      		pop	de
- 105 0023 C2                      		pop	bc
- 106 0024 C0                      		pop	ax
- 107 0025 61 FC                   		reti
- 108                             	.LFE0:
- 168                             	.Letext0:
- 169                             		.file 2 "../src/r_cg_macrodriver.h"
- 170                             		.file 3 "../src/r_cg_rtc.h"
- 171                             		.file 4 "../src/infrared.h"
- 172                             		.file 5 "../src/adc.h"
- 173                             		.file 6 "../src/global.h"
+  94                             		.loc 1 58 0
+  95 0019 61 DF                   		sel	rb1
+  96 001b C6                      		pop	hl ; r14
+  97 001c C4                      		pop	de ; r12
+  98 001d C2                      		pop	bc ; r10
+  99 001e C0                      		pop	ax ; r8
+ 100 001f 61 CF                   		sel	rb0
+ 101 0021 C6                      		pop	hl
+ 102 0022 C4                      		pop	de
+ 103 0023 C2                      		pop	bc
+ 104 0024 C0                      		pop	ax
+ 105 0025 61 FC                   		reti
+ 106                             	.LFE0:
+ 166                             	.Letext0:
+ 167                             		.file 2 "../src/r_cg_macrodriver.h"
+ 168                             		.file 3 "../src/r_cg_rtc.h"
+ 169                             		.file 4 "../src/global.h"
+ 170                             		.file 5 "../src/infrared.h"
+ 171                             		.file 6 "../src/adc.h"
