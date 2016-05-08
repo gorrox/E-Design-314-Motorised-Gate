@@ -27,9 +27,7 @@ typedef enum mode 	{NORMAL, TEST} 						mode;
  * END ENUMERATORS
  */
 
-/**
- * CONSTANTS
- */
+/*CONSTANTS*/
 	/* Buffer sizes */
 #define RX_BUF_LEN 			16
 #define TX_BUF_LEN 			16
@@ -53,13 +51,9 @@ typedef enum mode 	{NORMAL, TEST} 						mode;
 #define BTN_STOP			P5_bit.no1 	/*Emergency stop: 	INTP2, 	P51	*/
 #define BTN_OPEN			P5_bit.no0 	/*Open gate:		INTP1, 	P50	*/
 #define BTN_CLOSE			P3_bit.no1 	/*Close gate:		INTP4, 	P31	*/
-/**
- * END CONSTANTS
- */
+/*END CONSTANTS*/
 
-/**
- * VARIABLES
- */
+/*VARIABLES*/
 	/* Control */
 mode ctrlMode;							/*Controller mode				*/
 status gate_status;						/*Current state of gate			*/
@@ -85,13 +79,9 @@ volatile volatile check_btns;			/*Motor proximity-check flag	*/
 uint8_t gate_cmd;						/*UART/IR/PCB open/close cmd	*/
 uint8_t auto_close;						/*Auto-close flag				*/
 uint8_t auto_close_cntr;				/*Auto-close counter			*/
-/**
- * END VARIABLES
- */
+/*END VARIABLES*/
 
-/**
- * FUNCTIONS
- */
+/*FUNCTIONS*/
 	/*Primary functions*/
 void init(void);
 void core(void);
@@ -114,8 +104,6 @@ void sendRTC(void);
 void buzzerBeep(uint8_t beeps);
 uint8_t toHex(uint8_t decimal);
 uint8_t toBCD(uint8_t hex);
-/**
- * END FUNCTIONS
- */
+/*END FUNCTIONS*/
 
 #endif /* GLOBAL_H_ */

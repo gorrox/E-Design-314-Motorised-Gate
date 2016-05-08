@@ -6,23 +6,49 @@
  */
 
 #include "global.h"
+/**
+ * Function to initialise the program variables, timers, connections, interrupts etc.
+ */
+void init(void)
+{
+    R_TAU0_Channel0_Start(); 	//PWM carrier
+    R_TAU0_Channel3_Start();	//Manchester RC5 modulator
+    btnOpenTrigger = 0;
+    btnOpenTrigger = 0;
+    R_INTC0_Start(); 			// Buttons
+    R_INTC1_Start();
+    frameBase = frameBaseDef;
+    tx = 0;
+}
 
-/*
- * Transmits an array of 14 bits via IR LED
+/**
+ * Primary loop function, handles event flags (buttons pressed)
+ */
+void core(void)
+{
+	while (1U)
+	{
+		if (btnOpenTrigger) btnOpenTriggered();
+		else if (btnCloseTrigger) btnCloseTriggered();
+	}
+}
+
+/**
+ * Transmits stored array of 14 bits via IR LED
  * Uses Manchester RC5 encoding
  */
 void transmit(void)
 {
 	static volatile uint8_t fullHalfBitCounter = frameHalfBitLength;
 	static volatile uint8_t frameHalfBitCounter = frameHalfBitLength;
-	volatile uint8_t bit; // buffer
+	volatile uint8_t bit; /*Buffer*/
 
-	if (fullHalfBitCounter) // Busy transmitting
+	if (fullHalfBitCounter) /*Busy transmitting*/
 	{
 		if (frameHalfBitCounter)
 		{
-			bit = (msg >> ((frameHalfBitCounter + 1)/2 -1)); //Data bit
-			bit &= 0x1; //Lowest LSB
+			bit = (msg >> ((frameHalfBitCounter + 1)/2 -1)); /*Data bit*/
+			bit &= 0x1; /*Lowest LSB*/
 			modulate = (!bit ^ (frameHalfBitCounter%2));
 			if (!modulate) P1_bit.no0 = 0;
 			frameHalfBitCounter--;
@@ -34,84 +60,85 @@ void transmit(void)
 		}
 		fullHalfBitCounter--;
 	}
-	else // Not busy transmitting
+	else /*Not busy transmitting*/
 	{
-		// Reset
+		/*Reset*/
 		fullHalfBitCounter = fullHalfBitLength;
 		frameHalfBitCounter = frameHalfBitLength;
-		/*
-		if (!IR_BUTTON_TX)
-		{
-			ir_txMessage |= 0x800;
-		}
-		else
-		{
-			ir_txMessage = ir_txMessage_default;
-			R_TAU0_Channel3_Stop();
-			R_INTC1_Start();
-			R_INTC2_Start();
-		}
-		*/
 	}
 
 }
 
-void btnOpenTriggered()
+/**
+ * Function to handle Open Gate button event:
+ * - If pressed alone, open gate
+ * - If let go while Close Gate is not pressed, stop transmitting
+ * - If pressed while Close Gate is pressed, emergency stop
+ * - If let go while Close Gate is pressed, close gate
+ */
+void btnOpenTriggered(void)
 {
 	if (!btnOpen && btnClose)
 	{
-		// Pressed Open alone, just open gate
-		frameBase ^= toggle; 			// Toggle Bit
-		msg = frameBase + openCode; 	// Set transmission to Open Gate command
+		/*Pressed Open alone, just open gate*/
+		frameBase ^= toggle; 			/*Toggle Bit*/
+		msg = frameBase + openCode; 	/*Set transmission to Open Gate command*/
 		tx = 1;
 	}
 	else if (btnOpen && btnClose)
 	{
-		// Let go of Open, Close is not being pressed, stop transmitting
+		/*Let go of Open, Close is not being pressed, stop transmitting*/
 		tx = 0;
 		P1_bit.no0 = 0;
 	}
 	else if (!btnOpen && !btnClose)
 	{
-		// Pressed Open while Open is pressed (both)
-		frameBase ^= toggle; 			// Toggle Bit
-		msg = frameBase + bothCode;		// Set transmission to Emergency stop command
+		/*Pressed Open while Close is pressed (both)*/
+		frameBase ^= toggle; 			/*Toggle Bit*/
+		msg = frameBase + bothCode;		/*Set transmission to Emergency stop command*/
 		tx = 1;
 	}
 	else if (btnOpen && !btnClose)
 	{
-		// Let go of Open while Close is pressed (Idle)
+		/*Let go of Open while Close is pressed (Idle)*/
 		tx = 0;
 		P1_bit.no0 = 0;
 	}
 	btnOpenTrigger = 0;
 }
 
-void btnCloseTriggered()
+/**
+ * Function to handle Close Gate button event:
+ * - If pressed alone, close gate
+ * - If let go while Open Gate is not pressed, stop transmitting
+ * - If pressed while Open Gate is pressed, emergency stop
+ * - If let go while Open Gate is pressed, open gate
+ */
+void btnCloseTriggered(void)
 {
 	if (!btnClose && btnOpen)
 	{
-		// Pressed Close alone, just close gate
-		frameBase ^= toggle; 			// Toggle Bit
-		msg = frameBase + closeCode; 	// Set transmission to Close Gate command
+		/*Pressed Close alone, just close gate*/
+		frameBase ^= toggle; 			/*Toggle Bit*/
+		msg = frameBase + closeCode; 	/*Set transmission to Close Gate command*/
 		tx = 1;
 	}
 	else if (btnClose && btnOpen)
 	{
-		// Let go of Close, Open is not being pressed, stop transmitting
+		/*Let go of Close, Open is not being pressed, stop transmitting*/
 		tx = 0;
 		P1_bit.no0 = 0;
 	}
 	else if (!btnClose && !btnOpen)
 	{
-		// Pressed Close while Open is pressed (both)
-		frameBase ^= toggle; 			// Toggle Bit
-		msg = frameBase + bothCode;		// Set transmission to Emergency stop command
+		/*Pressed Close while Open is pressed (both)*/
+		frameBase ^= toggle; 			/*Toggle Bit*/
+		msg = frameBase + bothCode;		/*Set transmission to Emergency stop command*/
 		tx = 1;
 	}
 	else if (btnClose && !btnOpen)
 	{
-		// Let go of Close while Open is pressed (Idle)
+		/*Let go of Close while Open is pressed (Idle)*/
 		tx = 0;
 		P1_bit.no0 = 0;
 	}

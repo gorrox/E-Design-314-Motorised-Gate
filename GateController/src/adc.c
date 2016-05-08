@@ -7,10 +7,7 @@
 
 #include "adc.h"
 
-/**
- * FUNCTIONS
- */
-
+/*FUNCTIONS*/
 /**
  * Function to handle the motor current reading and display
  */
@@ -75,7 +72,7 @@ void ADC(void)
  * Read via Analog to Digital Conversion.
  * @return: 10 bit ADC result in milli-Ampere
  */
-uint16_t adc_get_reading()
+uint16_t adc_get_reading(void)
 {
 	uint16_t adc_result;
 	R_ADC_Start();
@@ -85,7 +82,4 @@ uint16_t adc_get_reading()
 	R_ADC_Stop();
 	return adc_result;
 }
-
-/**
- * END FUNCTIONS
- */
+/*END FUNCTIONS*/

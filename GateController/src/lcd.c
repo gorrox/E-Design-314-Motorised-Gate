@@ -24,12 +24,21 @@
 //	- write a whole string to the LCD
 //	- write a delay function delayNoInt(delay in usec)
 
+/**
+ * Starts the timer that forms the delay function
+ * @param delay time to delay
+ */
 void startTMR0(int delay)
 {
 	TMIF00 = 0U;					//clears the INTTMOO interrupt flag
 	TDR00 = delay;
 	TS0 = 1U;
 }
+
+/**
+ * Function to delay in microseconds
+ * @param delay number of microseconds to delay
+ */
 void delayNoInt(uint16_t delay)
 {
 	startTMR0(delay);
@@ -38,16 +47,13 @@ void delayNoInt(uint16_t delay)
 	R_TAU0_Channel0_Stop();			//masks the interrupt
 }
 
-/************************************************************************
- * Function Name: writByteLcd()
- * Description  : This function writes 2 nibbles to the LCD.
- * Arguments    :  reg (BOOL) - 0 = register, 1 = data
- *              :  value (BYTE) - first the upper 4 bits and the 4 lower bits
- * Actions      : Nibble bus P70-P73 are set in output mode
- *              : LCD_RS = 1; LCD_RW -> 0; LCD_E is toggled
- * Return Value : None
- ************************************************************************/
-
+/**
+ * This function writes 2 nibbles to the LCD.
+ * Nibble bus P70-P73 are set in output mode
+ * LCD_RS = 1; LCD_RW -> 0; LCD_E is toggled
+ * @param reg (BOOL) - 0 = register, 1 = data
+ * @param value (BYTE) - first the upper 4 bits and the 4 lower bits
+ */
 void writeByteLcd(uint8_t reg, uint8_t value)
 {
 	uint8_t tempReg;
@@ -59,15 +65,13 @@ void writeByteLcd(uint8_t reg, uint8_t value)
 	writeNibbleLcd(reg, tempReg);	// Write lower nibble
 }
 
-/************************************************************************
- * Function Name: writeNibbleLcd()
- * Description  : This function writes a nibble to the LCD.
- * Arguments    : value (BYTE) - only the lower 4 bits are used
- * Actions      : Nibble bus P70-P73 set in output mode
- *              : LCD_RS = 1; LCD_RW -> 0; LCD_E is toggled
- * Return Value : None
- ************************************************************************/
-
+/**
+ * This function writes a nibble to the LCD.
+ * Nibble bus P70-P73 set in output mode
+ * LCD_RS = 1; LCD_RW -> 0; LCD_E is toggled
+ * @param reg (BOOL) - 0 = register, 1 = data
+ * @param nibble (BYTE) - only the lower 4 bits are used
+ */
 void writeNibbleLcd(uint8_t reg, uint8_t nibble)
 {
 	uint8_t tempReg;
@@ -91,15 +95,10 @@ void writeNibbleLcd(uint8_t reg, uint8_t nibble)
 	LCD_RW = 1U;    							// Set to Read mode
 }
 
-
-/************************************************************************
- * Function Name: initLcd()
- * Description  : This function initializes the LCD.
- * Arguments    :  none
- * Actions      : Provide all the init instructions - clear screen
- * Return Value : None
- ************************************************************************/
-
+/**
+ * This function initializes the LCD.
+ * Provide all the init instructions - clear screen
+ */
 void initLcd(void)
 {
 	TMMK00 = 1U;					// Do not use interrupts here, just wait for the flags
@@ -140,6 +139,9 @@ void initLcd(void)
 
 }
 
+/**
+ * Provided function - unknown use
+ */
 void testLCDConnections(void)
 {
 	P7 &= 0x80; // All low
@@ -242,7 +244,7 @@ void welcome(void)
 	int j = 0;
 	int i = 0;
 
-	char msg[] = {"                Nel T. 18179460"};
+	char msg[] = {USERNAME};
 
 	int length = sizeof(msg)/sizeof(char);
 

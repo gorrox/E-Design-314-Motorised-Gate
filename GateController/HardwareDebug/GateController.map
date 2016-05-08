@@ -451,31 +451,31 @@ OUTPUT(GateController.x elf32-rl78)
  .debug_info    0x00004641      0x3f1 ./src/r_main.o
  .debug_info    0x00004a32       0x84 ./src/r_reset_program.o
 
-.debug_abbrev   0x00000000     0x12fa
- .debug_abbrev  0x00000000      0x159 ./src/adc.o
- .debug_abbrev  0x00000159      0x1ec ./src/global.o
- .debug_abbrev  0x00000345      0x12c ./src/infrared.o
- .debug_abbrev  0x00000471      0x1b0 ./src/lcd.o
- .debug_abbrev  0x00000621       0xf1 ./src/r_cg_adc.o
- .debug_abbrev  0x00000712       0xbc ./src/r_cg_adc_user.o
- .debug_abbrev  0x000007ce       0x9a ./src/r_cg_cgc.o
- .debug_abbrev  0x00000868       0x1b ./src/r_cg_cgc_user.o
- .debug_abbrev  0x00000883       0xcd ./src/r_cg_intc.o
- .debug_abbrev  0x00000950       0xbc ./src/r_cg_intc_user.o
- .debug_abbrev  0x00000a0c       0x8f ./src/r_cg_pclbuz.o
- .debug_abbrev  0x00000a9b       0x1b ./src/r_cg_pclbuz_user.o
- .debug_abbrev  0x00000ab6       0x8f ./src/r_cg_port.o
- .debug_abbrev  0x00000b45       0x1b ./src/r_cg_port_user.o
- .debug_abbrev  0x00000b60      0x13a ./src/r_cg_rtc.o
- .debug_abbrev  0x00000c9a       0x1b ./src/r_cg_rtc_user.o
- .debug_abbrev  0x00000cb5      0x147 ./src/r_cg_serial.o
- .debug_abbrev  0x00000dfc      0x13c ./src/r_cg_serial_user.o
- .debug_abbrev  0x00000f38      0x115 ./src/r_cg_timer.o
- .debug_abbrev  0x0000104d      0x105 ./src/r_cg_timer_user.o
- .debug_abbrev  0x00001152       0x7c ./src/r_cg_vector_table.o
- .debug_abbrev  0x000011ce       0x5c ./src/r_hardware_setup.o
- .debug_abbrev  0x0000122a       0xbc ./src/r_main.o
- .debug_abbrev  0x000012e6       0x14 ./src/r_reset_program.o
+.debug_abbrev   0x00000000     0x12fc
+ .debug_abbrev  0x00000000      0x15b ./src/adc.o
+ .debug_abbrev  0x0000015b      0x1ec ./src/global.o
+ .debug_abbrev  0x00000347      0x12c ./src/infrared.o
+ .debug_abbrev  0x00000473      0x1b0 ./src/lcd.o
+ .debug_abbrev  0x00000623       0xf1 ./src/r_cg_adc.o
+ .debug_abbrev  0x00000714       0xbc ./src/r_cg_adc_user.o
+ .debug_abbrev  0x000007d0       0x9a ./src/r_cg_cgc.o
+ .debug_abbrev  0x0000086a       0x1b ./src/r_cg_cgc_user.o
+ .debug_abbrev  0x00000885       0xcd ./src/r_cg_intc.o
+ .debug_abbrev  0x00000952       0xbc ./src/r_cg_intc_user.o
+ .debug_abbrev  0x00000a0e       0x8f ./src/r_cg_pclbuz.o
+ .debug_abbrev  0x00000a9d       0x1b ./src/r_cg_pclbuz_user.o
+ .debug_abbrev  0x00000ab8       0x8f ./src/r_cg_port.o
+ .debug_abbrev  0x00000b47       0x1b ./src/r_cg_port_user.o
+ .debug_abbrev  0x00000b62      0x13a ./src/r_cg_rtc.o
+ .debug_abbrev  0x00000c9c       0x1b ./src/r_cg_rtc_user.o
+ .debug_abbrev  0x00000cb7      0x147 ./src/r_cg_serial.o
+ .debug_abbrev  0x00000dfe      0x13c ./src/r_cg_serial_user.o
+ .debug_abbrev  0x00000f3a      0x115 ./src/r_cg_timer.o
+ .debug_abbrev  0x0000104f      0x105 ./src/r_cg_timer_user.o
+ .debug_abbrev  0x00001154       0x7c ./src/r_cg_vector_table.o
+ .debug_abbrev  0x000011d0       0x5c ./src/r_hardware_setup.o
+ .debug_abbrev  0x0000122c       0xbc ./src/r_main.o
+ .debug_abbrev  0x000012e8       0x14 ./src/r_reset_program.o
 
 .debug_aranges  0x00000000      0x2e0
  .debug_aranges

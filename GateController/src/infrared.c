@@ -9,10 +9,7 @@
 #include "lcd.h"
 #include "global.h"
 
-/**
- * FUNCTIONS
- */
-
+/*FUNCTIONS*/
 /**
  * Function to handle received Infra-red commands
  */
@@ -100,7 +97,4 @@ void receive(void)
 		R_INTC7_Start();
 	}
 }
-
-/**
- * END FUNCTIONS
- */
+/*END FUNCTIONS*/

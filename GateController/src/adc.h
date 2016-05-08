@@ -48,9 +48,7 @@ volatile uint8_t collision_det;
  * FUNCTIONS
  */
 void ADC(void);
-uint16_t adc_get_reading();
-void adc_get_multiple_channels(void);
-void adc_multi_channel_interrupt_service_routine();
+uint16_t adc_get_reading(void);
 /**
  * END FUNCTIONS
  */

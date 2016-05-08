@@ -1,0 +1,87 @@
+/*
+ * adc.c
+ *
+ *  Created on: May 5, 2016
+ *      Author: trist
+ */
+
+#include "adc.h"
+
+/*FUNCTIONS*/
+
+/**
+ * Function to handle the motor current reading and display
+ */
+void ADC(void)
+{
+	if(timer_adc_reader_10Hz_interrupt)
+	{
+		timer_adc_reader_10Hz_interrupt = 0;
+
+		/*Process data*/
+		uint8_t current_plus_status[16];
+		initial_current = adc_get_reading()/10;
+
+		/*Collision detection*/
+		/*
+		//if (collision_det && (initial_current >= MTR_CURRENT_THRSH))
+		if (initial_current >= MTR_CURRENT_THRSH)
+		{
+			//collision_det = 0;
+			DVR_PHASE ^= 0x1; //Toggle motor direction
+			DVR_nSLEEP = 1;
+			prev_gate_status = gate_status;
+			gate_status = UNKNOWN;
+		}
+		*/
+
+		/*Display*/
+		if ((ctrlMode == NORMAL) && dataPrint) //Normal mode
+		{
+			current_plus_status[7] = ' ';
+			current_plus_status[8] = ' ';
+			current_plus_status[9] = initial_current/10 + '0';
+			current_plus_status[10] = (initial_current % 10) + '0';
+			current_plus_status[11] = 'm';
+			current_plus_status[12] = 'A';
+			current_plus_status[13] = '\0';
+			uint8_t i;
+			switch(DVR_PHASE)
+			{
+				case DVR_PHASE_OPEN:
+					for (i = 0; i < 7; i++)
+					{
+						current_plus_status[i] = "Opening"[i];
+					}
+					print_lcd(current_plus_status);
+					break;
+
+				case DVR_PHASE_CLOSE: //closing
+					for (i = 0; i < 7; i++)
+					{
+						current_plus_status[i] = "Closing"[i];
+					}
+					print_lcd(current_plus_status);
+					break;
+			}
+		}
+	}
+}
+
+/**
+ * Get instantaneous current value of motor.
+ * Read via Analog to Digital Conversion.
+ * @return: 10 bit ADC result in milli-Ampere
+ */
+uint16_t adc_get_reading()
+{
+	uint16_t adc_result;
+	R_ADC_Start();
+	while(!adc_ready);
+	adc_ready=0;
+	R_ADC_Get_Result(&adc_result);
+	R_ADC_Stop();
+	return adc_result;
+}
+
+/*END FUNCTIONS*/

@@ -4553,3 +4553,218 @@ rl78-elf-objcopy -O srec   GateController.x "GateController.mot"
 'Finished building target:'
 
 'Build complete.'
+15:13:08 **** Build of configuration HardwareDebug for project GateController ****
+make -j4 all 
+'Scanning and building file: ../src/adc.c'
+'Scanning and building file: ../src/lcd.c'
+'Scanning and building file: ../src/infrared.c'
+'Scanning and building file: ../src/global.c'
+'Invoking: Scanner and Compiler'
+'Invoking: Scanner and Compiler'
+'Invoking: Scanner and Compiler'
+'Invoking: Scanner and Compiler'
+rl78-elf-gcc -MM -MP -MF "src/lcd.d" -MT"src/lcd.o" -MT"src/lcd.d" -x c   -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g "../src/lcd.c"
+rl78-elf-gcc -MM -MP -MF "src/adc.d" -MT"src/adc.o" -MT"src/adc.d" -x c   -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g "../src/adc.c"
+rl78-elf-gcc -MM -MP -MF "src/global.d" -MT"src/global.o" -MT"src/global.d" -x c   -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g "../src/global.c"
+rl78-elf-gcc -MM -MP -MF "src/infrared.d" -MT"src/infrared.o" -MT"src/infrared.d" -x c   -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g "../src/infrared.c"
+../src/lcd.c: In function 'welcome':
+../src/lcd.c:247:16: error: 'USERNAME' undeclared (first use in this function)
+  char msg[] = {USERNAME};
+                ^
+../src/lcd.c:247:16: note: each undeclared identifier is reported only once for each function it appears in
+src/subdir.mk:91: recipe for target 'src/lcd.o' failed
+make: *** [src/lcd.o] Error 1
+make: *** Waiting for unfinished jobs....
+rl78-elf-gcc -c -x c  -Wa,-adlhn="adc.lst" -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g -o "src/adc.o" "../src/adc.c"
+rl78-elf-gcc -c -x c  -Wa,-adlhn="infrared.lst" -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g -o "src/infrared.o" "../src/infrared.c"
+'Finished scanning and building: ../src/adc.c'
+'Finished scanning and building: ../src/infrared.c'
+
+
+rl78-elf-gcc -c -x c  -Wa,-adlhn="global.lst" -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g -o "src/global.o" "../src/global.c"
+'Finished scanning and building: ../src/global.c'
+
+15:14:57 **** Incremental Build of configuration HardwareDebug for project GateController ****
+make -j4 all 
+'Scanning and building file: ../src/adc.c'
+'Scanning and building file: ../src/global.c'
+'Scanning and building file: ../src/infrared.c'
+'Scanning and building file: ../src/lcd.c'
+'Invoking: Scanner and Compiler'
+'Invoking: Scanner and Compiler'
+'Invoking: Scanner and Compiler'
+'Invoking: Scanner and Compiler'
+rl78-elf-gcc -MM -MP -MF "src/adc.d" -MT"src/adc.o" -MT"src/adc.d" -x c   -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g "../src/adc.c"
+rl78-elf-gcc -MM -MP -MF "src/global.d" -MT"src/global.o" -MT"src/global.d" -x c   -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g "../src/global.c"
+rl78-elf-gcc -MM -MP -MF "src/lcd.d" -MT"src/lcd.o" -MT"src/lcd.d" -x c   -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g "../src/lcd.c"
+rl78-elf-gcc -MM -MP -MF "src/infrared.d" -MT"src/infrared.o" -MT"src/infrared.d" -x c   -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g "../src/infrared.c"
+rl78-elf-gcc -c -x c  -Wa,-adlhn="adc.lst" -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g -o "src/adc.o" "../src/adc.c"
+'Finished scanning and building: ../src/adc.c'
+rl78-elf-gcc -c -x c  -Wa,-adlhn="infrared.lst" -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g -o "src/infrared.o" "../src/infrared.c"
+'Finished scanning and building: ../src/infrared.c'
+
+'Scanning and building file: ../src/r_cg_adc_user.c'
+
+'Scanning and building file: ../src/r_cg_intc_user.c'
+'Invoking: Scanner and Compiler'
+rl78-elf-gcc -c -x c  -Wa,-adlhn="lcd.lst" -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g -o "src/lcd.o" "../src/lcd.c"
+'Invoking: Scanner and Compiler'
+'Finished scanning and building: ../src/lcd.c'
+
+rl78-elf-gcc -MM -MP -MF "src/r_cg_adc_user.d" -MT"src/r_cg_adc_user.o" -MT"src/r_cg_adc_user.d" -x c   -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g "../src/r_cg_adc_user.c"
+'Scanning and building file: ../src/r_cg_serial_user.c'
+rl78-elf-gcc -MM -MP -MF "src/r_cg_intc_user.d" -MT"src/r_cg_intc_user.o" -MT"src/r_cg_intc_user.d" -x c   -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g "../src/r_cg_intc_user.c"
+'Invoking: Scanner and Compiler'
+rl78-elf-gcc -c -x c  -Wa,-adlhn="global.lst" -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g -o "src/global.o" "../src/global.c"
+'Finished scanning and building: ../src/global.c'
+rl78-elf-gcc -MM -MP -MF "src/r_cg_serial_user.d" -MT"src/r_cg_serial_user.o" -MT"src/r_cg_serial_user.d" -x c   -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g "../src/r_cg_serial_user.c"
+
+rl78-elf-gcc -c -x c  -Wa,-adlhn="r_cg_adc_user.lst" -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g -o "src/r_cg_adc_user.o" "../src/r_cg_adc_user.c"
+'Scanning and building file: ../src/r_cg_timer_user.c'
+'Finished scanning and building: ../src/r_cg_adc_user.c'
+rl78-elf-gcc -c -x c  -Wa,-adlhn="r_cg_intc_user.lst" -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g -o "src/r_cg_intc_user.o" "../src/r_cg_intc_user.c"
+
+'Invoking: Scanner and Compiler'
+'Finished scanning and building: ../src/r_cg_intc_user.c'
+
+'Scanning and building file: ../src/r_main.c'
+'Invoking: Scanner and Compiler'
+rl78-elf-gcc -MM -MP -MF "src/r_cg_timer_user.d" -MT"src/r_cg_timer_user.o" -MT"src/r_cg_timer_user.d" -x c   -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g "../src/r_cg_timer_user.c"
+rl78-elf-gcc -c -x c  -Wa,-adlhn="r_cg_serial_user.lst" -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g -o "src/r_cg_serial_user.o" "../src/r_cg_serial_user.c"
+'Finished scanning and building: ../src/r_cg_serial_user.c'
+rl78-elf-gcc -MM -MP -MF "src/r_main.d" -MT"src/r_main.o" -MT"src/r_main.d" -x c   -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g "../src/r_main.c"
+
+rl78-elf-gcc -c -x c  -Wa,-adlhn="r_cg_timer_user.lst" -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g -o "src/r_cg_timer_user.o" "../src/r_cg_timer_user.c"
+'Finished scanning and building: ../src/r_cg_timer_user.c'
+rl78-elf-gcc -c -x c  -Wa,-adlhn="r_main.lst" -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g -o "src/r_main.o" "../src/r_main.c"
+
+'Finished scanning and building: ../src/r_main.c'
+
+'Invoking: Linker'
+'Building target:'
+rl78-elf-ld -o "GateController.x" -T"C:\Users\trist\e2_studio\workspace\GateController\HardwareDebug\GateController_HardwareDebug_auto.gsi" @"C:\Users\trist\e2_studio\workspace\GateController\HardwareDebug\LinkerSubCommand.tmp"    -M=GateController.map -L"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/lib/gcc/rl78-elf/4.9-GNURL78_v15.02/g14" -L"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/lib/g14" --start-group -loptm -loptc -lgcc --end-group -e_PowerON_Reset
+'Finished building:'
+
+'Invoking: Objcopy'
+'Building target:'
+rl78-elf-objcopy -O srec   GateController.x "GateController.mot"
+'Finished building target:'
+
+'Build complete.'
+15:21:48 **** Incremental Build of configuration HardwareDebug for project GateController ****
+make -j4 all 
+'Scanning and building file: ../src/adc.c'
+'Scanning and building file: ../src/global.c'
+'Scanning and building file: ../src/infrared.c'
+'Scanning and building file: ../src/r_cg_adc_user.c'
+'Invoking: Scanner and Compiler'
+'Invoking: Scanner and Compiler'
+'Invoking: Scanner and Compiler'
+'Invoking: Scanner and Compiler'
+rl78-elf-gcc -MM -MP -MF "src/adc.d" -MT"src/adc.o" -MT"src/adc.d" -x c   -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g "../src/adc.c"
+rl78-elf-gcc -MM -MP -MF "src/infrared.d" -MT"src/infrared.o" -MT"src/infrared.d" -x c   -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g "../src/infrared.c"
+rl78-elf-gcc -MM -MP -MF "src/global.d" -MT"src/global.o" -MT"src/global.d" -x c   -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g "../src/global.c"
+rl78-elf-gcc -MM -MP -MF "src/r_cg_adc_user.d" -MT"src/r_cg_adc_user.o" -MT"src/r_cg_adc_user.d" -x c   -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g "../src/r_cg_adc_user.c"
+rl78-elf-gcc -c -x c  -Wa,-adlhn="r_cg_adc_user.lst" -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g -o "src/r_cg_adc_user.o" "../src/r_cg_adc_user.c"
+'Finished scanning and building: ../src/r_cg_adc_user.c'
+rl78-elf-gcc -c -x c  -Wa,-adlhn="adc.lst" -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g -o "src/adc.o" "../src/adc.c"
+rl78-elf-gcc -c -x c  -Wa,-adlhn="infrared.lst" -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g -o "src/infrared.o" "../src/infrared.c"
+
+'Finished scanning and building: ../src/adc.c'
+'Finished scanning and building: ../src/infrared.c'
+'Scanning and building file: ../src/r_cg_intc_user.c'
+
+
+'Invoking: Scanner and Compiler'
+'Scanning and building file: ../src/r_cg_serial_user.c'
+'Scanning and building file: ../src/r_cg_timer_user.c'
+'Invoking: Scanner and Compiler'
+'Invoking: Scanner and Compiler'
+rl78-elf-gcc -MM -MP -MF "src/r_cg_intc_user.d" -MT"src/r_cg_intc_user.o" -MT"src/r_cg_intc_user.d" -x c   -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g "../src/r_cg_intc_user.c"
+rl78-elf-gcc -MM -MP -MF "src/r_cg_serial_user.d" -MT"src/r_cg_serial_user.o" -MT"src/r_cg_serial_user.d" -x c   -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g "../src/r_cg_serial_user.c"
+rl78-elf-gcc -MM -MP -MF "src/r_cg_timer_user.d" -MT"src/r_cg_timer_user.o" -MT"src/r_cg_timer_user.d" -x c   -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g "../src/r_cg_timer_user.c"
+rl78-elf-gcc -c -x c  -Wa,-adlhn="global.lst" -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g -o "src/global.o" "../src/global.c"
+rl78-elf-gcc -c -x c  -Wa,-adlhn="r_cg_intc_user.lst" -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g -o "src/r_cg_intc_user.o" "../src/r_cg_intc_user.c"
+'Finished scanning and building: ../src/global.c'
+'Finished scanning and building: ../src/r_cg_intc_user.c'
+
+
+rl78-elf-gcc -c -x c  -Wa,-adlhn="r_cg_serial_user.lst" -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g -o "src/r_cg_serial_user.o" "../src/r_cg_serial_user.c"
+rl78-elf-gcc -c -x c  -Wa,-adlhn="r_cg_timer_user.lst" -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g -o "src/r_cg_timer_user.o" "../src/r_cg_timer_user.c"
+'Scanning and building file: ../src/r_main.c'
+'Finished scanning and building: ../src/r_cg_serial_user.c'
+'Finished scanning and building: ../src/r_cg_timer_user.c'
+'Invoking: Scanner and Compiler'
+
+
+rl78-elf-gcc -MM -MP -MF "src/r_main.d" -MT"src/r_main.o" -MT"src/r_main.d" -x c   -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g "../src/r_main.c"
+rl78-elf-gcc -c -x c  -Wa,-adlhn="r_main.lst" -nostdinc -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mrl78 -g2 -g -o "src/r_main.o" "../src/r_main.c"
+'Finished scanning and building: ../src/r_main.c'
+
+'Invoking: Linker'
+'Building target:'
+rl78-elf-ld -o "GateController.x" -T"C:\Users\trist\e2_studio\workspace\GateController\HardwareDebug\GateController_HardwareDebug_auto.gsi" @"C:\Users\trist\e2_studio\workspace\GateController\HardwareDebug\LinkerSubCommand.tmp"    -M=GateController.map -L"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/lib/gcc/rl78-elf/4.9-GNURL78_v15.02/g14" -L"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/lib/g14" --start-group -loptm -loptc -lgcc --end-group -e_PowerON_Reset
+'Finished building:'
+
+'Invoking: Objcopy'
+'Building target:'
+rl78-elf-objcopy -O srec   GateController.x "GateController.mot"
+'Finished building target:'
+
+'Build complete.'
+16:03:54 **** Incremental Build of configuration Release for project RemoteController ****
+make -j4 all 
+'Scanning and building file: ../src/global.c'
+'Scanning and building file: ../src/r_cg_intc_user.c'
+'Scanning and building file: ../src/r_cg_timer_user.c'
+'Scanning and building file: ../src/r_main.c'
+'Invoking: Scanner and Compiler'
+'Invoking: Scanner and Compiler'
+'Invoking: Scanner and Compiler'
+'Invoking: Scanner and Compiler'
+rl78-elf-gcc -MM -MP -MF "src/r_cg_intc_user.d" -MT"src/r_cg_intc_user.o" -MT"src/r_cg_intc_user.d" -x c   -nostdinc -ffunction-sections -fdata-sections -fno-tree-loop-optimize -fno-cse-follow-jumps -fno-caller-saves -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mg13 -Os -g "../src/r_cg_intc_user.c"
+rl78-elf-gcc -MM -MP -MF "src/r_main.d" -MT"src/r_main.o" -MT"src/r_main.d" -x c   -nostdinc -ffunction-sections -fdata-sections -fno-tree-loop-optimize -fno-cse-follow-jumps -fno-caller-saves -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mg13 -Os -g "../src/r_main.c"
+rl78-elf-gcc -MM -MP -MF "src/global.d" -MT"src/global.o" -MT"src/global.d" -x c   -nostdinc -ffunction-sections -fdata-sections -fno-tree-loop-optimize -fno-cse-follow-jumps -fno-caller-saves -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mg13 -Os -g "../src/global.c"
+rl78-elf-gcc -MM -MP -MF "src/r_cg_timer_user.d" -MT"src/r_cg_timer_user.o" -MT"src/r_cg_timer_user.d" -x c   -nostdinc -ffunction-sections -fdata-sections -fno-tree-loop-optimize -fno-cse-follow-jumps -fno-caller-saves -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mg13 -Os -g "../src/r_cg_timer_user.c"
+rl78-elf-gcc -c -x c  -Wa,-adlhn="r_main.lst" -nostdinc -ffunction-sections -fdata-sections -fno-tree-loop-optimize -fno-cse-follow-jumps -fno-caller-saves -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mg13 -Os -g -o "src/r_main.o" "../src/r_main.c"
+rl78-elf-gcc -c -x c  -Wa,-adlhn="r_cg_timer_user.lst" -nostdinc -ffunction-sections -fdata-sections -fno-tree-loop-optimize -fno-cse-follow-jumps -fno-caller-saves -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mg13 -Os -g -o "src/r_cg_timer_user.o" "../src/r_cg_timer_user.c"
+rl78-elf-gcc -c -x c  -Wa,-adlhn="r_cg_intc_user.lst" -nostdinc -ffunction-sections -fdata-sections -fno-tree-loop-optimize -fno-cse-follow-jumps -fno-caller-saves -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mg13 -Os -g -o "src/r_cg_intc_user.o" "../src/r_cg_intc_user.c"
+'Finished scanning and building: ../src/r_main.c'
+'Finished scanning and building: ../src/r_cg_timer_user.c'
+'Finished scanning and building: ../src/r_cg_intc_user.c'
+
+
+
+rl78-elf-gcc -c -x c  -Wa,-adlhn="global.lst" -nostdinc -ffunction-sections -fdata-sections -fno-tree-loop-optimize -fno-cse-follow-jumps -fno-caller-saves -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mg13 -Os -g -o "src/global.o" "../src/global.c"
+'Finished scanning and building: ../src/global.c'
+
+'Invoking: Linker'
+'Building target:'
+rl78-elf-ld -o "RemoteController.x" -T"C:\Users\trist\e2_studio\workspace\RemoteController\Release\RemoteController_Release_auto.gsi" @"C:\Users\trist\e2_studio\workspace\RemoteController\Release\LinkerSubCommand.tmp"    -M=RemoteController.map --gc-sections -no-keep-memory -S -L"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/lib/gcc/rl78-elf/4.9-GNURL78_v15.02/g13" -L"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/lib/g13" --start-group -loptm -loptc -lgcc --end-group -e_PowerON_Reset
+'Finished building:'
+
+'Invoking: Objcopy'
+'Building target:'
+rl78-elf-objcopy -O srec   RemoteController.x "RemoteController.mot"
+'Finished building target:'
+
+'Build complete.'
+16:07:21 **** Incremental Build of configuration Release for project RemoteController ****
+make -j4 all 
+'Scanning and building file: ../src/global.c'
+'Invoking: Scanner and Compiler'
+rl78-elf-gcc -MM -MP -MF "src/global.d" -MT"src/global.o" -MT"src/global.d" -x c   -nostdinc -ffunction-sections -fdata-sections -fno-tree-loop-optimize -fno-cse-follow-jumps -fno-caller-saves -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mg13 -Os -g "../src/global.c"
+rl78-elf-gcc -c -x c  -Wa,-adlhn="global.lst" -nostdinc -ffunction-sections -fdata-sections -fno-tree-loop-optimize -fno-cse-follow-jumps -fno-caller-saves -I"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/optlibinc" -Wstack-usage=64 -mg13 -Os -g -o "src/global.o" "../src/global.c"
+'Finished scanning and building: ../src/global.c'
+
+'Invoking: Linker'
+'Building target:'
+rl78-elf-ld -o "RemoteController.x" -T"C:\Users\trist\e2_studio\workspace\RemoteController\Release\RemoteController_Release_auto.gsi" @"C:\Users\trist\e2_studio\workspace\RemoteController\Release\LinkerSubCommand.tmp"    -M=RemoteController.map --gc-sections -no-keep-memory -S -L"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/lib/gcc/rl78-elf/4.9-GNURL78_v15.02/g13" -L"C:\PROGRA~2\KPIT\GNURL7~1.02-\rl78-elf/rl78-elf/lib/g13" --start-group -loptm -loptc -lgcc --end-group -e_PowerON_Reset
+'Finished building:'
+
+'Invoking: Objcopy'
+'Building target:'
+rl78-elf-objcopy -O srec   RemoteController.x "RemoteController.mot"
+'Finished building target:'
+
+'Build complete.'

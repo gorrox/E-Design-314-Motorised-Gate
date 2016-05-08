@@ -56,19 +56,7 @@ void main(void)
 {
     R_MAIN_UserInit();
     /* Start user code. Do not edit comment generated here */
-    R_TAU0_Channel0_Start(); 	//PWM carrier
-    R_TAU0_Channel3_Start();	//Manchester RC5 modulator
-    btnOpenTrigger = 0;
-    btnOpenTrigger = 0;
-    R_INTC0_Start(); 			// Buttons
-    R_INTC1_Start();
-    frameBase = frameBaseDef;
-    tx = 0;
-    while (1U)
-    {
-    	if (btnOpenTrigger) btnOpenTriggered();
-    	else if (btnCloseTrigger) btnCloseTriggered();
-    }
+    core();
     /* End user code. Do not edit comment generated here */
 }
 
@@ -83,6 +71,7 @@ void R_MAIN_UserInit(void)
 {
     /* Start user code. Do not edit comment generated here */
     EI();
+    init();
     /* End user code. Do not edit comment generated here */
 }
 

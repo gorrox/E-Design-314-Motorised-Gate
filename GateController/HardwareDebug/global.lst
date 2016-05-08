@@ -136,75 +136,73 @@
  103                             	.LFB1:
   36:../src/global.c **** }
   37:../src/global.c **** 
-  38:../src/global.c **** /**
-  39:../src/global.c ****  * PRIMARY FUNCTIONS
-  40:../src/global.c ****  */
-  41:../src/global.c **** 
-  42:../src/global.c **** /**
-  43:../src/global.c ****  * Function to initialize:
-  44:../src/global.c ****  * - Variables & Flags
-  45:../src/global.c ****  * - Interrupts
-  46:../src/global.c ****  * - UART
-  47:../src/global.c ****  * - Timers
-  48:../src/global.c ****  * - ADC
-  49:../src/global.c ****  * - RTC
-  50:../src/global.c ****  * - Welcome the user
-  51:../src/global.c ****  * - Start in Normal Mode
-  52:../src/global.c ****  * - Prime UART to Receive
-  53:../src/global.c ****  * - Infra-red Message
-  54:../src/global.c ****  */
-  55:../src/global.c **** void init(void)
-  56:../src/global.c **** {
- 104                             		.loc 1 56 0
+  38:../src/global.c **** /*PRIMARY FUNCTIONS*/
+  39:../src/global.c **** 
+  40:../src/global.c **** /**
+  41:../src/global.c ****  * Function to initialize:
+  42:../src/global.c ****  * - Variables & Flags
+  43:../src/global.c ****  * - Interrupts
+  44:../src/global.c ****  * - UART
+  45:../src/global.c ****  * - Timers
+  46:../src/global.c ****  * - ADC
+  47:../src/global.c ****  * - RTC
+  48:../src/global.c ****  * - Welcome the user
+  49:../src/global.c ****  * - Start in Normal Mode
+  50:../src/global.c ****  * - Prime UART to Receive
+  51:../src/global.c ****  * - Infra-red Message
+  52:../src/global.c ****  */
+  53:../src/global.c **** void init(void)
+  54:../src/global.c **** {
+ 104                             		.loc 1 54 0
  105                             		; start of function
  106                             		; outgoing: 4 bytes
  107 0030 20 04                   		subw	sp, #4
  108                             	.LCFI1:
-  57:../src/global.c **** 	/* Variables & Flags */
-  58:../src/global.c **** 	uart1RxFlag = 0U;
- 109                             		.loc 1 58 0
+  55:../src/global.c **** 	/* Variables & Flags */
+  56:../src/global.c **** 	uart1RxFlag = 0U;
+ 109                             		.loc 1 56 0
  110 0032 F5 00 00                		clrb	!_uart1RxFlag
-  59:../src/global.c **** 	uart1TxFlag = 0U;
- 111                             		.loc 1 59 0
+  57:../src/global.c **** 	uart1TxFlag = 0U;
+ 111                             		.loc 1 57 0
  112 0035 F5 00 00                		clrb	!_uart1TxFlag
-  60:../src/global.c **** 	gate_cmd = 0;
- 113                             		.loc 1 60 0
+  58:../src/global.c **** 	gate_cmd = 0;
+ 113                             		.loc 1 58 0
  114 0038 F5 00 00                		clrb	!_gate_cmd
-  61:../src/global.c **** 	auto_close_cntr = 0;
- 115                             		.loc 1 61 0
+  59:../src/global.c **** 	auto_close_cntr = 0;
+ 115                             		.loc 1 59 0
  116 003b F5 00 00                		clrb	!_auto_close_cntr
-  62:../src/global.c **** 	auto_close = 0;
- 117                             		.loc 1 62 0
+  60:../src/global.c **** 	auto_close = 0;
+ 117                             		.loc 1 60 0
  118 003e F5 00 00                		clrb	!_auto_close
-  63:../src/global.c **** 	collision_det_counter = 0;
- 119                             		.loc 1 63 0
+  61:../src/global.c **** 	collision_det_counter = 0;
+ 119                             		.loc 1 61 0
  120 0041 F5 00 00                		clrb	!_collision_det_counter
-  64:../src/global.c **** 	collision_det = 0;
- 121                             		.loc 1 64 0
+  62:../src/global.c **** 	collision_det = 0;
+ 121                             		.loc 1 62 0
  122 0044 F5 00 00                		clrb	!_collision_det
-  65:../src/global.c **** 	myCounter = 0;
- 123                             		.loc 1 65 0
+  63:../src/global.c **** 	myCounter = 0;
+ 123                             		.loc 1 63 0
  124 0047 F6                      		clrw	ax
  125 0048 BF 00 00                		movw	!_myCounter, ax
-  66:../src/global.c **** 	dataPrint = 0;
- 126                             		.loc 1 66 0
+  64:../src/global.c **** 	dataPrint = 0;
+ 126                             		.loc 1 64 0
  127 004b F5 00 00                		clrb	!_dataPrint
-  67:../src/global.c **** 	dataResponse = 1;
- 128                             		.loc 1 67 0
+  65:../src/global.c **** 	dataResponse = 1;
+ 128                             		.loc 1 65 0
  129 004e E5 00 00                		oneb	!_dataResponse
-  68:../src/global.c **** 	dataReady = 0;
- 130                             		.loc 1 68 0
+  66:../src/global.c **** 	dataReady = 0;
+ 130                             		.loc 1 66 0
  131 0051 F5 00 00                		clrb	!_dataReady
-  69:../src/global.c **** 	prev_gate_status = UNKNOWN;
- 132                             		.loc 1 69 0
+  67:../src/global.c **** 	prev_gate_status = UNKNOWN;
+ 132                             		.loc 1 67 0
  133 0054 F6                      		clrw	ax
  134 0055 BF 00 00                		movw	!_prev_gate_status, ax
-  70:../src/global.c **** 	gate_status = UNKNOWN;
- 135                             		.loc 1 70 0
+  68:../src/global.c **** 	gate_status = UNKNOWN;
+ 135                             		.loc 1 68 0
  136 0058 F6                      		clrw	ax
  137 0059 BF 00 00                		movw	!_gate_status, ax
-  71:../src/global.c **** 	DVR_nSLEEP = 0;
- 138                             		.loc 1 71 0
+  69:../src/global.c **** 	DVR_nSLEEP = 0;
+ 138                             		.loc 1 69 0
  139 005c C9 F0 04 FF             		movw	r8, #-252
  140 0060 AD F0                   		movw	ax, r8
  141 0062 BD F4                   		movw	r12, ax
@@ -216,80 +214,80 @@
  147 006e DA F4                   		movw	bc, r12
  148 0070 8D F2                   		mov	a, r10
  149 0072 48 00 00                		mov	[bc], a
-  72:../src/global.c **** 	/* Interrupts*/
-  73:../src/global.c **** 	EI();
- 150                             		.loc 1 73 0
- 151                             	 ; 73 "../src/global.c" 1
+  70:../src/global.c **** 	/* Interrupts*/
+  71:../src/global.c **** 	EI();
+ 150                             		.loc 1 71 0
+ 151                             	 ; 71 "../src/global.c" 1
  152 0075 71 7A FA                		ei
  153                             	 ; 0 "" 2
-  74:../src/global.c **** 	R_INTC7_Start();
- 154                             		.loc 1 74 0
+  72:../src/global.c **** 	R_INTC7_Start();
+ 154                             		.loc 1 72 0
  155 0078 FC 00 00 00             		call	!!%code(_R_INTC7_Start)
-  75:../src/global.c **** 	/* UART */
-  76:../src/global.c **** 	R_UART1_Start();
- 156                             		.loc 1 76 0
+  73:../src/global.c **** 	/* UART */
+  74:../src/global.c **** 	R_UART1_Start();
+ 156                             		.loc 1 74 0
  157 007c FC 00 00 00             		call	!!%code(_R_UART1_Start)
-  77:../src/global.c **** 	/* Timers */
-  78:../src/global.c **** 	R_TAU0_Channel0_Start();
- 158                             		.loc 1 78 0
+  75:../src/global.c **** 	/* Timers */
+  76:../src/global.c **** 	R_TAU0_Channel0_Start();
+ 158                             		.loc 1 76 0
  159 0080 FC 00 00 00             		call	!!%code(_R_TAU0_Channel0_Start)
-  79:../src/global.c **** 	R_TAU0_Channel1_Lower8bits_Start();
- 160                             		.loc 1 79 0
+  77:../src/global.c **** 	R_TAU0_Channel1_Lower8bits_Start();
+ 160                             		.loc 1 77 0
  161 0084 FC 00 00 00             		call	!!%code(_R_TAU0_Channel1_Lower8bits_Start)
-  80:../src/global.c **** 	R_TAU0_Channel2_Start();
- 162                             		.loc 1 80 0
+  78:../src/global.c **** 	R_TAU0_Channel2_Start();
+ 162                             		.loc 1 78 0
  163 0088 FC 00 00 00             		call	!!%code(_R_TAU0_Channel2_Start)
-  81:../src/global.c **** 	R_TMR_RD0_Start();
- 164                             		.loc 1 81 0
+  79:../src/global.c **** 	R_TMR_RD0_Start();
+ 164                             		.loc 1 79 0
  165 008c FC 00 00 00             		call	!!%code(_R_TMR_RD0_Start)
-  82:../src/global.c **** 	/* ADC */
-  83:../src/global.c **** 	R_ADC_Start();
- 166                             		.loc 1 83 0
+  80:../src/global.c **** 	/* ADC */
+  81:../src/global.c **** 	R_ADC_Start();
+ 166                             		.loc 1 81 0
  167 0090 FC 00 00 00             		call	!!%code(_R_ADC_Start)
-  84:../src/global.c **** 	/* RTC */
-  85:../src/global.c **** 	R_RTC_Start();
- 168                             		.loc 1 85 0
+  82:../src/global.c **** 	/* RTC */
+  83:../src/global.c **** 	R_RTC_Start();
+ 168                             		.loc 1 83 0
  169 0094 FC 00 00 00             		call	!!%code(_R_RTC_Start)
-  86:../src/global.c **** 	/* Welcome user */
-  87:../src/global.c **** 	initLcd();
- 170                             		.loc 1 87 0
+  84:../src/global.c **** 	/* Welcome user */
+  85:../src/global.c **** 	initLcd();
+ 170                             		.loc 1 85 0
  171 0098 FC 00 00 00             		call	!!%code(_initLcd)
-  88:../src/global.c **** 	welcome();
- 172                             		.loc 1 88 0
+  86:../src/global.c **** 	welcome();
+ 172                             		.loc 1 86 0
  173 009c FC 00 00 00             		call	!!%code(_welcome)
-  89:../src/global.c **** 	initLcd();
- 174                             		.loc 1 89 0
+  87:../src/global.c **** 	initLcd();
+ 174                             		.loc 1 87 0
  175 00a0 FC 00 00 00             		call	!!%code(_initLcd)
-  90:../src/global.c **** 	/* Start in Normal mode */
-  91:../src/global.c **** 	ctrlMode = NORMAL;
- 176                             		.loc 1 91 0
+  88:../src/global.c **** 	/* Start in Normal mode */
+  89:../src/global.c **** 	ctrlMode = NORMAL;
+ 176                             		.loc 1 89 0
  177 00a4 F6                      		clrw	ax
  178 00a5 BF 00 00                		movw	!_ctrlMode, ax
-  92:../src/global.c **** 	echo(0x80);
- 179                             		.loc 1 92 0
+  90:../src/global.c **** 	echo(0x80);
+ 179                             		.loc 1 90 0
  180 00a8 51 80                   		mov	a, #-128
  181 00aa 98 00                   		mov	[sp], a
  182 00ac FC 00 00 00             		call	!!%code(_echo)
-  93:../src/global.c **** 	delayNoInt(100);
- 183                             		.loc 1 93 0
+  91:../src/global.c **** 	delayNoInt(100);
+ 183                             		.loc 1 91 0
  184 00b0 30 64 00                		movw	ax, #100
  185 00b3 B8 00                   		movw	[sp], ax
  186 00b5 FC 00 00 00             		call	!!%code(_delayNoInt)
-  94:../src/global.c **** 	uart1TxFlag = 0U;
- 187                             		.loc 1 94 0
+  92:../src/global.c **** 	uart1TxFlag = 0U;
+ 187                             		.loc 1 92 0
  188 00b9 F5 00 00                		clrb	!_uart1TxFlag
-  95:../src/global.c **** 	print_lcd("Normal mode");
- 189                             		.loc 1 95 0
+  93:../src/global.c **** 	print_lcd("Normal mode");
+ 189                             		.loc 1 93 0
  190 00bc 30 00 00                		movw	ax, #.LC0
  191 00bf B8 00                   		movw	[sp], ax
  192 00c1 FC 00 00 00             		call	!!%code(_print_lcd)
-  96:../src/global.c **** 	/* Prime UART to Receive */
-  97:../src/global.c **** 	uart1RxBuf[0] = 'r';
- 193                             		.loc 1 97 0
+  94:../src/global.c **** 	/* Prime UART to Receive */
+  95:../src/global.c **** 	uart1RxBuf[0] = 'r';
+ 193                             		.loc 1 95 0
  194 00c5 51 72                   		mov	a, #114
  195 00c7 9F 00 00                		mov	!_uart1RxBuf, a
-  98:../src/global.c **** 	uart1Status = R_UART1_Receive(&uart1RxBuf[0],1);
- 196                             		.loc 1 98 0
+  96:../src/global.c **** 	uart1Status = R_UART1_Receive(&uart1RxBuf[0],1);
+ 196                             		.loc 1 96 0
  197 00ca 30 00 00                		movw	ax, #_uart1RxBuf
  198 00cd B8 00                   		movw	[sp], ax
  199 00cf E6                      		onew	ax
@@ -297,13 +295,13 @@
  201 00d2 FC 00 00 00             		call	!!%code(_R_UART1_Receive)
  202 00d6 AD F0                   		movw	ax, r8
  203 00d8 BF 00 00                		movw	!_uart1Status, ax
-  99:../src/global.c **** 	/* Infra-red Message */
- 100:../src/global.c **** 	ir_rxMessage = 0x0000;
- 204                             		.loc 1 100 0
+  97:../src/global.c **** 	/* Infra-red Message */
+  98:../src/global.c **** 	ir_rxMessage = 0x0000;
+ 204                             		.loc 1 98 0
  205 00db F6                      		clrw	ax
  206 00dc BF 00 00                		movw	!_ir_rxMessage, ax
- 101:../src/global.c **** }
- 207                             		.loc 1 101 0
+  99:../src/global.c **** }
+ 207                             		.loc 1 99 0
  208 00df 10 04                   		addw	sp, #4
  209 00e1 D7                      		ret
  210                             	.LFE1:
@@ -316,32 +314,33 @@
  218                             		.global	_mtrBtn
  220                             	_mtrBtn:
  221                             	.LFB2:
- 102:../src/global.c **** 
- 103:../src/global.c **** /**
- 104:../src/global.c ****  * Function to process proximity switch presses
- 105:../src/global.c ****  */
- 106:../src/global.c **** void mtrBtn(void)
- 107:../src/global.c **** {
- 222                             		.loc 1 107 0
+ 100:../src/global.c **** 
+ 101:../src/global.c **** /**
+ 102:../src/global.c ****  * Function to process proximity switch presses
+ 103:../src/global.c ****  * Stops gate if contact is detected and changes gate status
+ 104:../src/global.c ****  */
+ 105:../src/global.c **** void mtrBtn(void)
+ 106:../src/global.c **** {
+ 222                             		.loc 1 106 0
  223                             		; start of function
  224                             		; outgoing: 2 bytes
  225 00e2 20 02                   		subw	sp, #2
  226                             	.LCFI2:
- 108:../src/global.c **** 	if (switch_edge)
- 227                             		.loc 1 108 0
+ 107:../src/global.c **** 	if (switch_edge)
+ 227                             		.loc 1 107 0
  228 00e4 AF 00 00                		movw	ax, !_switch_edge
  229 00e7 BD F0                   		movw	r8, ax
  230 00e9 44 00 00                		cmpw	ax, #0
  231 00ec 61 F8                   		 sknz
  232 00ee EC 06 02 00             		 br	!!.L4
- 109:../src/global.c **** 	{
- 110:../src/global.c **** 		switch_edge = 0;
- 233                             		.loc 1 110 0
+ 108:../src/global.c **** 	{
+ 109:../src/global.c **** 		switch_edge = 0;
+ 233                             		.loc 1 109 0
  234 00f2 F6                      		clrw	ax
  235 00f3 BF 00 00                		movw	!_switch_edge, ax
- 111:../src/global.c **** 
- 112:../src/global.c **** 		if (SWITCH_OPENED)
- 236                             		.loc 1 112 0
+ 110:../src/global.c **** 
+ 111:../src/global.c **** 		if (SWITCH_OPENED)
+ 236                             		.loc 1 111 0
  237 00f6 C9 F0 00 FF             		movw	r8, #-256
  238 00fa AD F0                   		movw	ax, r8
  239 00fc BD F2                   		movw	r10, ax
@@ -354,9 +353,9 @@
  246 010a 61 F8                   		sknz
  247 010c EC 7F 01 00             		 br	!!.L6
  248                             		 # zero-comparison eliminated
- 113:../src/global.c **** 		{
- 114:../src/global.c **** 			if (DVR_PHASE == DVR_PHASE_OPEN)
- 249                             		.loc 1 114 0
+ 112:../src/global.c **** 		{
+ 113:../src/global.c **** 			if (DVR_PHASE == DVR_PHASE_OPEN)
+ 249                             		.loc 1 113 0
  250 0110 C9 F0 04 FF             		movw	r8, #-252
  251 0114 AD F0                   		movw	ax, r8
  252 0116 BD F4                   		movw	r12, ax
@@ -369,18 +368,18 @@
  259 0124 61 E8                   		skz
  260 0126 EC 06 02 00             		 br	!!.L4
  261                             		 # zero-comparison eliminated
- 115:../src/global.c **** 			{
- 116:../src/global.c **** 				prev_gate_status = gate_status;
- 262                             		.loc 1 116 0
+ 114:../src/global.c **** 			{
+ 115:../src/global.c **** 				prev_gate_status = gate_status;
+ 262                             		.loc 1 115 0
  263 012a AF 00 00                		movw	ax, !_gate_status
  264 012d BD F0                   		movw	r8, ax
  265 012f BF 00 00                		movw	!_prev_gate_status, ax
- 117:../src/global.c **** 				gate_status = OPENED;
- 266                             		.loc 1 117 0
+ 116:../src/global.c **** 				gate_status = OPENED;
+ 266                             		.loc 1 116 0
  267 0132 E6                      		onew	ax
  268 0133 BF 00 00                		movw	!_gate_status, ax
- 118:../src/global.c **** 				if (prev_gate_status != gate_status)
- 269                             		.loc 1 118 0
+ 117:../src/global.c **** 				if (prev_gate_status != gate_status)
+ 269                             		.loc 1 117 0
  270 0136 AF 00 00                		movw	ax, !_prev_gate_status
  271 0139 BD F2                   		movw	r10, ax
  272 013b AF 00 00                		movw	ax, !_gate_status
@@ -389,12 +388,12 @@
  275 0142 46 F0                   		cmpw	ax, r8
  276 0144 61 F8                   		 sknz
  277 0146 EC 06 02 00             		 br	!!.L4
- 119:../src/global.c **** 				{
- 120:../src/global.c **** 					dataPrint = 0;
- 278                             		.loc 1 120 0
+ 118:../src/global.c **** 				{
+ 119:../src/global.c **** 					dataPrint = 0;
+ 278                             		.loc 1 119 0
  279 014a F5 00 00                		clrb	!_dataPrint
- 121:../src/global.c **** 					DVR_nSLEEP = 0;
- 280                             		.loc 1 121 0
+ 120:../src/global.c **** 					DVR_nSLEEP = 0;
+ 280                             		.loc 1 120 0
  281 014d C9 F0 04 FF             		movw	r8, #-252
  282 0151 AD F0                   		movw	ax, r8
  283 0153 BD F4                   		movw	r12, ax
@@ -406,27 +405,27 @@
  289 015f DA F4                   		movw	bc, r12
  290 0161 8D F2                   		mov	a, r10
  291 0163 48 00 00                		mov	[bc], a
- 122:../src/global.c **** 					print_lcd("Opened");
- 292                             		.loc 1 122 0
+ 121:../src/global.c **** 					print_lcd("Opened");
+ 292                             		.loc 1 121 0
  293 0166 30 0C 00                		movw	ax, #.LC1
  294 0169 B8 00                   		movw	[sp], ax
  295 016b FC 00 00 00             		call	!!%code(_print_lcd)
- 123:../src/global.c **** 					msDelay(5);
- 296                             		.loc 1 123 0
+ 122:../src/global.c **** 					msDelay(5);
+ 296                             		.loc 1 122 0
  297 016f 30 05 00                		movw	ax, #5
  298 0172 B8 00                   		movw	[sp], ax
  299 0174 FC 00 00 00             		call	!!%code(_msDelay)
- 124:../src/global.c **** 					auto_close = 1;
- 300                             		.loc 1 124 0
+ 123:../src/global.c **** 					auto_close = 1;
+ 300                             		.loc 1 123 0
  301 0178 E5 00 00                		oneb	!_auto_close
  302 017b EC 06 02 00             		br	!!.L4
  303                             	.L6:
- 125:../src/global.c **** 				}
- 126:../src/global.c **** 			}
- 127:../src/global.c **** 
- 128:../src/global.c **** 		}
- 129:../src/global.c **** 		else if (SWITCH_CLOSED)
- 304                             		.loc 1 129 0
+ 124:../src/global.c **** 				}
+ 125:../src/global.c **** 			}
+ 126:../src/global.c **** 
+ 127:../src/global.c **** 		}
+ 128:../src/global.c **** 		else if (SWITCH_CLOSED)
+ 304                             		.loc 1 128 0
  305 017f C9 F0 00 FF             		movw	r8, #-256
  306 0183 AD F0                   		movw	ax, r8
  307 0185 BD F2                   		movw	r10, ax
@@ -439,9 +438,9 @@
  314 0193 61 F8                   		sknz
  315 0195 EC 06 02 00             		 br	!!.L4
  316                             		 # zero-comparison eliminated
- 130:../src/global.c **** 		{
- 131:../src/global.c **** 			if (DVR_PHASE == DVR_PHASE_CLOSE) // if opening activated
- 317                             		.loc 1 131 0
+ 129:../src/global.c **** 		{
+ 130:../src/global.c **** 			if (DVR_PHASE == DVR_PHASE_CLOSE) // if opening activated
+ 317                             		.loc 1 130 0
  318 0199 C9 F0 04 FF             		movw	r8, #-252
  319 019d AD F0                   		movw	ax, r8
  320 019f BD F4                   		movw	r12, ax
@@ -454,18 +453,18 @@
  327 01ad 4A F0 01                		cmp	r8, #1
  328 01b0 61 E8                   		 skz
  329 01b2 EC 06 02 00             		 br	!!.L4
- 132:../src/global.c **** 			{
- 133:../src/global.c **** 				prev_gate_status = gate_status;
- 330                             		.loc 1 133 0
+ 131:../src/global.c **** 			{
+ 132:../src/global.c **** 				prev_gate_status = gate_status;
+ 330                             		.loc 1 132 0
  331 01b6 AF 00 00                		movw	ax, !_gate_status
  332 01b9 BD F0                   		movw	r8, ax
  333 01bb BF 00 00                		movw	!_prev_gate_status, ax
- 134:../src/global.c **** 				gate_status = CLOSED;
- 334                             		.loc 1 134 0
+ 133:../src/global.c **** 				gate_status = CLOSED;
+ 334                             		.loc 1 133 0
  335 01be 30 02 00                		movw	ax, #2
  336 01c1 BF 00 00                		movw	!_gate_status, ax
- 135:../src/global.c **** 				if (prev_gate_status != gate_status)
- 337                             		.loc 1 135 0
+ 134:../src/global.c **** 				if (prev_gate_status != gate_status)
+ 337                             		.loc 1 134 0
  338 01c4 AF 00 00                		movw	ax, !_prev_gate_status
  339 01c7 BD F2                   		movw	r10, ax
  340 01c9 AF 00 00                		movw	ax, !_gate_status
@@ -474,12 +473,12 @@
  343 01d0 46 F0                   		cmpw	ax, r8
  344 01d2 61 F8                   		 sknz
  345 01d4 EC 06 02 00             		 br	!!.L4
- 136:../src/global.c **** 				{
- 137:../src/global.c **** 					dataPrint = 0;
- 346                             		.loc 1 137 0
+ 135:../src/global.c **** 				{
+ 136:../src/global.c **** 					dataPrint = 0;
+ 346                             		.loc 1 136 0
  347 01d8 F5 00 00                		clrb	!_dataPrint
- 138:../src/global.c **** 					DVR_nSLEEP = 0;
- 348                             		.loc 1 138 0
+ 137:../src/global.c **** 					DVR_nSLEEP = 0;
+ 348                             		.loc 1 137 0
  349 01db C9 F0 04 FF             		movw	r8, #-252
  350 01df AD F0                   		movw	ax, r8
  351 01e1 BD F4                   		movw	r12, ax
@@ -491,23 +490,23 @@
  357 01ed DA F4                   		movw	bc, r12
  358 01ef 8D F2                   		mov	a, r10
  359 01f1 48 00 00                		mov	[bc], a
- 139:../src/global.c **** 					print_lcd("Closed");
- 360                             		.loc 1 139 0
+ 138:../src/global.c **** 					print_lcd("Closed");
+ 360                             		.loc 1 138 0
  361 01f4 30 13 00                		movw	ax, #.LC2
  362 01f7 B8 00                   		movw	[sp], ax
  363 01f9 FC 00 00 00             		call	!!%code(_print_lcd)
- 140:../src/global.c **** 					msDelay(5);
- 364                             		.loc 1 140 0
+ 139:../src/global.c **** 					msDelay(5);
+ 364                             		.loc 1 139 0
  365 01fd 30 05 00                		movw	ax, #5
  366 0200 B8 00                   		movw	[sp], ax
  367 0202 FC 00 00 00             		call	!!%code(_msDelay)
  368                             	.L4:
- 141:../src/global.c **** 				}
- 142:../src/global.c **** 			}
- 143:../src/global.c **** 		}
- 144:../src/global.c **** 	}
- 145:../src/global.c **** }
- 369                             		.loc 1 145 0
+ 140:../src/global.c **** 				}
+ 141:../src/global.c **** 			}
+ 142:../src/global.c **** 		}
+ 143:../src/global.c **** 	}
+ 144:../src/global.c **** }
+ 369                             		.loc 1 144 0
  370 0206 10 02                   		addw	sp, #2
  371 0208 D7                      		ret
  372                             	.LFE2:
@@ -525,40 +524,44 @@
  382                             		.global	_boardBtn
  384                             	_boardBtn:
  385                             	.LFB3:
- 146:../src/global.c **** 
- 147:../src/global.c **** /**
- 148:../src/global.c ****  * Function to process PCB button presses
- 149:../src/global.c ****  */
- 150:../src/global.c **** void boardBtn(void)
- 151:../src/global.c **** {
- 386                             		.loc 1 151 0
+ 145:../src/global.c **** 
+ 146:../src/global.c **** /**
+ 147:../src/global.c ****  * Function to process PCB button presses:
+ 148:../src/global.c ****  * - Open gate
+ 149:../src/global.c ****  * - Close gate
+ 150:../src/global.c ****  * - Estop
+ 151:../src/global.c ****  * - Menu Step (not implemented)
+ 152:../src/global.c ****  */
+ 153:../src/global.c **** void boardBtn(void)
+ 154:../src/global.c **** {
+ 386                             		.loc 1 154 0
  387                             		; start of function
  388                             		; outgoing: 2 bytes
  389 0209 20 02                   		subw	sp, #2
  390                             	.LCFI3:
- 152:../src/global.c **** 	if (check_btns)
- 391                             		.loc 1 152 0
+ 155:../src/global.c **** 	if (check_btns)
+ 391                             		.loc 1 155 0
  392 020b AF 00 00                		movw	ax, !_check_btns
  393 020e BD F0                   		movw	r8, ax
  394 0210 44 00 00                		cmpw	ax, #0
  395 0213 61 F8                   		 sknz
  396 0215 EC D4 02 00             		 br	!!.L8
- 153:../src/global.c **** 	{
- 154:../src/global.c **** 		check_btns = 0;
- 397                             		.loc 1 154 0
+ 156:../src/global.c **** 	{
+ 157:../src/global.c **** 		check_btns = 0;
+ 397                             		.loc 1 157 0
  398 0219 F6                      		clrw	ax
  399 021a BF 00 00                		movw	!_check_btns, ax
- 155:../src/global.c **** 
- 156:../src/global.c **** 		if (ctrlMode == NORMAL)
- 400                             		.loc 1 156 0
+ 158:../src/global.c **** 
+ 159:../src/global.c **** 		if (ctrlMode == NORMAL)
+ 400                             		.loc 1 159 0
  401 021d AF 00 00                		movw	ax, !_ctrlMode
  402 0220 BD F0                   		movw	r8, ax
  403 0222 44 00 00                		cmpw	ax, #0
  404 0225 61 E8                   		 skz
  405 0227 EC 76 02 00             		 br	!!.L10
- 157:../src/global.c **** 		{
- 158:../src/global.c **** 			if (!BTN_STOP)
- 406                             		.loc 1 158 0
+ 160:../src/global.c **** 		{
+ 161:../src/global.c **** 			if (!BTN_STOP)
+ 406                             		.loc 1 161 0
  407 022b C9 F0 05 FF             		movw	r8, #-251
  408 022f AD F0                   		movw	ax, r8
  409 0231 BD F2                   		movw	r10, ax
@@ -571,26 +574,26 @@
  416 023f 61 E8                   		skz
  417 0241 EC 59 02 00             		 br	!!.L11
  418                             		 # zero-comparison eliminated
- 159:../src/global.c **** 			{
- 160:../src/global.c **** 				dataPrint = 0;
- 419                             		.loc 1 160 0
+ 162:../src/global.c **** 			{
+ 163:../src/global.c **** 				dataPrint = 0;
+ 419                             		.loc 1 163 0
  420 0245 F5 00 00                		clrb	!_dataPrint
- 161:../src/global.c **** 				stopGate();
- 421                             		.loc 1 161 0
+ 164:../src/global.c **** 				stopGate();
+ 421                             		.loc 1 164 0
  422 0248 FC 00 00 00             		call	!!%code(_stopGate)
- 162:../src/global.c **** 				print_lcd("Gate stopped.");
- 423                             		.loc 1 162 0
+ 165:../src/global.c **** 				print_lcd("Gate stopped.");
+ 423                             		.loc 1 165 0
  424 024c 30 1A 00                		movw	ax, #.LC3
  425 024f B8 00                   		movw	[sp], ax
  426 0251 FC 00 00 00             		call	!!%code(_print_lcd)
- 163:../src/global.c **** 				return;
- 427                             		.loc 1 163 0
+ 166:../src/global.c **** 				return;
+ 427                             		.loc 1 166 0
  428 0255 EC D4 02 00             		br	!!.L8
  429                             	.L11:
- 164:../src/global.c **** 			}
- 165:../src/global.c **** 
- 166:../src/global.c **** 			if (!BTN_STEP)
- 430                             		.loc 1 166 0
+ 167:../src/global.c **** 			}
+ 168:../src/global.c **** 
+ 169:../src/global.c **** 			if (!BTN_STEP)
+ 430                             		.loc 1 169 0
  431 0259 C9 F0 07 FF             		movw	r8, #-249
  432 025d AD F0                   		movw	ax, r8
  433 025f BD F2                   		movw	r10, ax
@@ -602,25 +605,25 @@
  439 026a D4 F0                   		cmp0	r8
  440 026c 61 E8                   		 skz
  441 026e EC D4 02 00             		 br	!!.L8
- 167:../src/global.c **** 			{
- 168:../src/global.c **** 				//TODO
- 169:../src/global.c **** 				return;
- 442                             		.loc 1 169 0
+ 170:../src/global.c **** 			{
+ 171:../src/global.c **** 				//TODO
+ 172:../src/global.c **** 				return;
+ 442                             		.loc 1 172 0
  443 0272 EC D4 02 00             		br	!!.L8
  444                             	.L10:
- 170:../src/global.c **** 			}
- 171:../src/global.c **** 		}
- 172:../src/global.c **** 
- 173:../src/global.c **** 		else if(ctrlMode == TEST)
- 445                             		.loc 1 173 0
+ 173:../src/global.c **** 			}
+ 174:../src/global.c **** 		}
+ 175:../src/global.c **** 
+ 176:../src/global.c **** 		else if(ctrlMode == TEST)
+ 445                             		.loc 1 176 0
  446 0276 AF 00 00                		movw	ax, !_ctrlMode
  447 0279 BD F0                   		movw	r8, ax
  448 027b 44 01 00                		cmpw	ax, #1
  449 027e 61 E8                   		 skz
  450 0280 EC D4 02 00             		 br	!!.L8
- 174:../src/global.c **** 		{
- 175:../src/global.c **** 			if (!BTN_OPEN)
- 451                             		.loc 1 175 0
+ 177:../src/global.c **** 		{
+ 178:../src/global.c **** 			if (!BTN_OPEN)
+ 451                             		.loc 1 178 0
  452 0284 C9 F0 05 FF             		movw	r8, #-251
  453 0288 AD F0                   		movw	ax, r8
  454 028a BD F2                   		movw	r10, ax
@@ -631,23 +634,23 @@
  459 0293 D4 F0                   		cmp0	r8
  460 0295 61 E8                   		 skz
  461 0297 EC AC 02 00             		 br	!!.L12
- 176:../src/global.c **** 			{
- 177:../src/global.c **** 				openGate();
- 462                             		.loc 1 177 0
+ 179:../src/global.c **** 			{
+ 180:../src/global.c **** 				openGate();
+ 462                             		.loc 1 180 0
  463 029b FC 00 00 00             		call	!!%code(_openGate)
- 178:../src/global.c **** 				print_lcd("Gate opening...");
- 464                             		.loc 1 178 0
+ 181:../src/global.c **** 				print_lcd("Gate opening...");
+ 464                             		.loc 1 181 0
  465 029f 30 28 00                		movw	ax, #.LC4
  466 02a2 B8 00                   		movw	[sp], ax
  467 02a4 FC 00 00 00             		call	!!%code(_print_lcd)
- 179:../src/global.c **** 				return;
- 468                             		.loc 1 179 0
+ 182:../src/global.c **** 				return;
+ 468                             		.loc 1 182 0
  469 02a8 EC D4 02 00             		br	!!.L8
  470                             	.L12:
- 180:../src/global.c **** 			}
- 181:../src/global.c **** 
- 182:../src/global.c **** 			if (!BTN_CLOSE)
- 471                             		.loc 1 182 0
+ 183:../src/global.c **** 			}
+ 184:../src/global.c **** 
+ 185:../src/global.c **** 			if (!BTN_CLOSE)
+ 471                             		.loc 1 185 0
  472 02ac C9 F0 03 FF             		movw	r8, #-253
  473 02b0 AD F0                   		movw	ax, r8
  474 02b2 BD F2                   		movw	r10, ax
@@ -660,66 +663,66 @@
  481 02c0 61 E8                   		skz
  482 02c2 EC D4 02 00             		 br	!!.L8
  483                             		 # zero-comparison eliminated
- 183:../src/global.c **** 			{
- 184:../src/global.c **** 				closeGate();
- 484                             		.loc 1 184 0
+ 186:../src/global.c **** 			{
+ 187:../src/global.c **** 				closeGate();
+ 484                             		.loc 1 187 0
  485 02c6 FC 00 00 00             		call	!!%code(_closeGate)
- 185:../src/global.c **** 				print_lcd("Gate closing...");
- 486                             		.loc 1 185 0
+ 188:../src/global.c **** 				print_lcd("Gate closing...");
+ 486                             		.loc 1 188 0
  487 02ca 30 38 00                		movw	ax, #.LC5
  488 02cd B8 00                   		movw	[sp], ax
  489 02cf FC 00 00 00             		call	!!%code(_print_lcd)
- 186:../src/global.c **** 				return;
- 490                             		.loc 1 186 0
+ 189:../src/global.c **** 				return;
+ 490                             		.loc 1 189 0
  491 02d3 00                      		nop
  492                             	.L8:
- 187:../src/global.c **** 			}
- 188:../src/global.c **** 		}
- 189:../src/global.c **** 	}
- 190:../src/global.c **** }
- 493                             		.loc 1 190 0
+ 190:../src/global.c **** 			}
+ 191:../src/global.c **** 		}
+ 192:../src/global.c **** 	}
+ 193:../src/global.c **** }
+ 493                             		.loc 1 193 0
  494 02d4 10 02                   		addw	sp, #2
  495 02d6 D7                      		ret
  496                             	.LFE3:
  498                             		.global	_IRtoLCD
  500                             	_IRtoLCD:
  501                             	.LFB4:
- 191:../src/global.c **** 
- 192:../src/global.c **** /**
- 193:../src/global.c ****  * Function to display last IR command to LCD
- 194:../src/global.c ****  */
- 195:../src/global.c **** void IRtoLCD(void)
- 196:../src/global.c **** {
- 502                             		.loc 1 196 0
+ 194:../src/global.c **** 
+ 195:../src/global.c **** /**
+ 196:../src/global.c ****  * Function to display last IR command to LCD
+ 197:../src/global.c ****  */
+ 198:../src/global.c **** void IRtoLCD(void)
+ 199:../src/global.c **** {
+ 502                             		.loc 1 199 0
  503                             		; start of function
  504                             		; locals: 16 bytes
  505                             		; outgoing: 4 bytes
  506 02d7 20 14                   		subw	sp, #20
  507                             	.LCFI4:
- 197:../src/global.c **** 	if (dataReady && dataPrint && (ctrlMode == TEST))
- 508                             		.loc 1 197 0
+ 200:../src/global.c **** 	if (dataReady && dataPrint && (ctrlMode == TEST))
+ 508                             		.loc 1 200 0
  509 02d9 8F 00 00                		mov	a, !_dataReady
  510 02dc 9D F0                   		mov	r8, a
  511 02de D4 F0                   		cmp0	r8
  512 02e0 61 F8                   		 sknz
  513 02e2 EC 37 03 00             		 br	!!.L13
- 514                             		.loc 1 197 0 is_stmt 0 discriminator 1
+ 514                             		.loc 1 200 0 is_stmt 0 discriminator 1
  515 02e6 8F 00 00                		mov	a, !_dataPrint
  516 02e9 9D F0                   		mov	r8, a
  517 02eb D4 F0                   		cmp0	r8
  518 02ed 61 F8                   		 sknz
  519 02ef EC 37 03 00             		 br	!!.L13
- 520                             		.loc 1 197 0 discriminator 2
+ 520                             		.loc 1 200 0 discriminator 2
  521 02f3 AF 00 00                		movw	ax, !_ctrlMode
  522 02f6 BD F0                   		movw	r8, ax
  523 02f8 44 01 00                		cmpw	ax, #1
  524 02fb 61 E8                   		 skz
  525 02fd EC 37 03 00             		 br	!!.L13
  526                             	.LBB2:
- 198:../src/global.c **** 	{
- 199:../src/global.c **** 		uint8_t ascii_word[16];
- 200:../src/global.c **** 		word_to_ascii(ir_rxMessage, ascii_word);
- 527                             		.loc 1 200 0 is_stmt 1
+ 201:../src/global.c **** 	{
+ 202:../src/global.c **** 		uint8_t ascii_word[16];
+ 203:../src/global.c **** 		word_to_ascii(ir_rxMessage, ascii_word);
+ 527                             		.loc 1 203 0 is_stmt 1
  528 0301 AF 00 00                		movw	ax, !_ir_rxMessage
  529 0304 BD F0                   		movw	r8, ax
  530 0306 B8 00                   		movw	[sp], ax
@@ -731,8 +734,8 @@
  536 0315 04 F0 FF                		addw	ax, #-16
  537 0318 B8 02                   		movw	[sp+2], ax
  538 031a FC 00 00 00             		call	!!%code(_word_to_ascii)
- 201:../src/global.c **** 		print_lcd(ascii_word);
- 539                             		.loc 1 201 0
+ 204:../src/global.c **** 		print_lcd(ascii_word);
+ 539                             		.loc 1 204 0
  540 031e C9 F0 14 00             		movw	r8, #20
  541 0322 AE F8                   		movw	ax, sp
  542 0324 BD F0                   		movw	r8, ax
@@ -741,14 +744,14 @@
  545 032b 04 F0 FF                		addw	ax, #-16
  546 032e B8 00                   		movw	[sp], ax
  547 0330 FC 00 00 00             		call	!!%code(_print_lcd)
- 202:../src/global.c **** 		dataPrint = 0;
- 548                             		.loc 1 202 0
+ 205:../src/global.c **** 		dataPrint = 0;
+ 548                             		.loc 1 205 0
  549 0334 F5 00 00                		clrb	!_dataPrint
  550                             	.L13:
  551                             	.LBE2:
- 203:../src/global.c **** 	}
- 204:../src/global.c **** }
- 552                             		.loc 1 204 0
+ 206:../src/global.c **** 	}
+ 207:../src/global.c **** }
+ 552                             		.loc 1 207 0
  553 0337 10 14                   		addw	sp, #20
  554 0339 D7                      		ret
  555                             	.LFE4:
@@ -765,31 +768,32 @@
  565                             		.global	_uartReceive
  567                             	_uartReceive:
  568                             	.LFB5:
- 205:../src/global.c **** 
- 206:../src/global.c **** /**
- 207:../src/global.c ****  * Function to process UART Receive flag
- 208:../src/global.c ****  */
- 209:../src/global.c **** void uartReceive(void)
- 210:../src/global.c **** {
- 569                             		.loc 1 210 0
+ 208:../src/global.c **** 
+ 209:../src/global.c **** /**
+ 210:../src/global.c ****  * Function to process UART Receive flag.
+ 211:../src/global.c ****  * Executes commands corresponding to the received hex data.
+ 212:../src/global.c ****  */
+ 213:../src/global.c **** void uartReceive(void)
+ 214:../src/global.c **** {
+ 569                             		.loc 1 214 0
  570                             		; start of function
  571                             		; locals: 4 bytes
  572                             		; outgoing: 4 bytes
  573 033a 20 08                   		subw	sp, #8
  574                             	.LCFI5:
- 211:../src/global.c **** 	if (uart1RxFlag)
- 575                             		.loc 1 211 0
+ 215:../src/global.c **** 	if (uart1RxFlag)
+ 575                             		.loc 1 215 0
  576 033c 8F 00 00                		mov	a, !_uart1RxFlag
  577 033f 9D F0                   		mov	r8, a
  578 0341 D4 F0                   		cmp0	r8
  579 0343 61 F8                   		 sknz
  580 0345 EC 33 06 00             		 br	!!.L15
- 212:../src/global.c **** 	{
- 213:../src/global.c **** 		uart1RxFlag = 0U;
- 581                             		.loc 1 213 0
+ 216:../src/global.c **** 	{
+ 217:../src/global.c **** 		uart1RxFlag = 0U;
+ 581                             		.loc 1 217 0
  582 0349 F5 00 00                		clrb	!_uart1RxFlag
- 214:../src/global.c **** 		switch(uart1RxBuf[0])
- 583                             		.loc 1 214 0
+ 218:../src/global.c **** 		switch(uart1RxBuf[0])
+ 583                             		.loc 1 218 0
  584 034c 8F 00 00                		mov	a, !_uart1RxBuf
  585 034f 9D F0                   		mov	r8, a
  586 0351 CD F1 00                		mov	r9, #0
@@ -865,125 +869,125 @@
  656 040b EC F7 05 00             		br	!!.L17
  657                             	.L22:
  658                             	.LBB3:
- 215:../src/global.c **** 		{
- 216:../src/global.c **** 			case 0x80: /*Enter Normal mode */
- 217:../src/global.c **** 				ctrlMode = NORMAL;
- 659                             		.loc 1 217 0
+ 219:../src/global.c **** 		{
+ 220:../src/global.c **** 			case 0x80: /*Enter Normal mode */
+ 221:../src/global.c **** 				ctrlMode = NORMAL;
+ 659                             		.loc 1 221 0
  660 040f F6                      		clrw	ax
  661 0410 BF 00 00                		movw	!_ctrlMode, ax
- 218:../src/global.c **** 				echo(0x80);
- 662                             		.loc 1 218 0
+ 222:../src/global.c **** 				echo(0x80);
+ 662                             		.loc 1 222 0
  663 0413 51 80                   		mov	a, #-128
  664 0415 98 00                   		mov	[sp], a
  665 0417 FC 00 00 00             		call	!!%code(_echo)
- 219:../src/global.c **** 				dataPrint = 0;
- 666                             		.loc 1 219 0
+ 223:../src/global.c **** 				dataPrint = 0;
+ 666                             		.loc 1 223 0
  667 041b F5 00 00                		clrb	!_dataPrint
- 220:../src/global.c **** 				print_lcd("Normal mode");
- 668                             		.loc 1 220 0
+ 224:../src/global.c **** 				print_lcd("Normal mode");
+ 668                             		.loc 1 224 0
  669 041e 30 00 00                		movw	ax, #.LC0
  670 0421 B8 00                   		movw	[sp], ax
  671 0423 FC 00 00 00             		call	!!%code(_print_lcd)
- 221:../src/global.c **** 				break;
- 672                             		.loc 1 221 0
+ 225:../src/global.c **** 				break;
+ 672                             		.loc 1 225 0
  673 0427 EC 22 06 00             		br	!!.L33
  674                             	.L23:
- 222:../src/global.c **** 			case 0x81:	/* Enter Test mode */
- 223:../src/global.c **** 				ctrlMode = TEST;
- 675                             		.loc 1 223 0
+ 226:../src/global.c **** 			case 0x81:	/* Enter Test mode */
+ 227:../src/global.c **** 				ctrlMode = TEST;
+ 675                             		.loc 1 227 0
  676 042b E6                      		onew	ax
  677 042c BF 00 00                		movw	!_ctrlMode, ax
- 224:../src/global.c **** 				echo(0x81);
- 678                             		.loc 1 224 0
+ 228:../src/global.c **** 				echo(0x81);
+ 678                             		.loc 1 228 0
  679 042f 51 81                   		mov	a, #-127
  680 0431 98 00                   		mov	[sp], a
  681 0433 FC 00 00 00             		call	!!%code(_echo)
- 225:../src/global.c **** 				dataPrint = 0;
- 682                             		.loc 1 225 0
+ 229:../src/global.c **** 				dataPrint = 0;
+ 682                             		.loc 1 229 0
  683 0437 F5 00 00                		clrb	!_dataPrint
- 226:../src/global.c **** 				print_lcd("Test mode");
- 684                             		.loc 1 226 0
+ 230:../src/global.c **** 				print_lcd("Test mode");
+ 684                             		.loc 1 230 0
  685 043a 30 48 00                		movw	ax, #.LC6
  686 043d B8 00                   		movw	[sp], ax
  687 043f FC 00 00 00             		call	!!%code(_print_lcd)
- 227:../src/global.c **** 				buzzerBeep(3);
- 688                             		.loc 1 227 0
+ 231:../src/global.c **** 				buzzerBeep(3);
+ 688                             		.loc 1 231 0
  689 0443 51 03                   		mov	a, #3
  690 0445 98 00                   		mov	[sp], a
  691 0447 FC 00 00 00             		call	!!%code(_buzzerBeep)
- 228:../src/global.c **** 				break;
- 692                             		.loc 1 228 0
+ 232:../src/global.c **** 				break;
+ 692                             		.loc 1 232 0
  693 044b EC 22 06 00             		br	!!.L33
  694                             	.L20:
- 229:../src/global.c **** 			case 0xF0:	/* Buzzer on */
- 230:../src/global.c **** 				echo(0xF0);
- 695                             		.loc 1 230 0
+ 233:../src/global.c **** 			case 0xF0:	/* Buzzer on */
+ 234:../src/global.c **** 				echo(0xF0);
+ 695                             		.loc 1 234 0
  696 044f 51 F0                   		mov	a, #-16
  697 0451 98 00                   		mov	[sp], a
  698 0453 FC 00 00 00             		call	!!%code(_echo)
- 231:../src/global.c **** 				R_PCLBUZ0_Start();
- 699                             		.loc 1 231 0
+ 235:../src/global.c **** 				R_PCLBUZ0_Start();
+ 699                             		.loc 1 235 0
  700 0457 FC 00 00 00             		call	!!%code(_R_PCLBUZ0_Start)
- 232:../src/global.c **** 				break;
- 701                             		.loc 1 232 0
+ 236:../src/global.c **** 				break;
+ 701                             		.loc 1 236 0
  702 045b EC 22 06 00             		br	!!.L33
  703                             	.L24:
- 233:../src/global.c **** 			case 0xF1:	/* Buzzer off */
- 234:../src/global.c **** 				echo(0xF1);
- 704                             		.loc 1 234 0
+ 237:../src/global.c **** 			case 0xF1:	/* Buzzer off */
+ 238:../src/global.c **** 				echo(0xF1);
+ 704                             		.loc 1 238 0
  705 045f 51 F1                   		mov	a, #-15
  706 0461 98 00                   		mov	[sp], a
  707 0463 FC 00 00 00             		call	!!%code(_echo)
- 235:../src/global.c **** 				R_PCLBUZ0_Stop();
- 708                             		.loc 1 235 0
+ 239:../src/global.c **** 				R_PCLBUZ0_Stop();
+ 708                             		.loc 1 239 0
  709 0467 FC 00 00 00             		call	!!%code(_R_PCLBUZ0_Stop)
- 236:../src/global.c **** 				break;
- 710                             		.loc 1 236 0
+ 240:../src/global.c **** 				break;
+ 710                             		.loc 1 240 0
  711 046b EC 22 06 00             		br	!!.L33
  712                             	.L25:
- 237:../src/global.c **** 			case 0xF2:	/* Set Real Time Clock to buffered 5 Bytes */
- 238:../src/global.c **** 				echo(0xF2);
- 713                             		.loc 1 238 0
+ 241:../src/global.c **** 			case 0xF2:	/* Set Real Time Clock to buffered 5 Bytes */
+ 242:../src/global.c **** 				echo(0xF2);
+ 713                             		.loc 1 242 0
  714 046f 51 F2                   		mov	a, #-14
  715 0471 98 00                   		mov	[sp], a
  716 0473 FC 00 00 00             		call	!!%code(_echo)
- 239:../src/global.c **** 				setRTC();
- 717                             		.loc 1 239 0
+ 243:../src/global.c **** 				setRTC();
+ 717                             		.loc 1 243 0
  718 0477 FC 00 00 00             		call	!!%code(_setRTC)
- 240:../src/global.c **** 				break;
- 719                             		.loc 1 240 0
+ 244:../src/global.c **** 				break;
+ 719                             		.loc 1 244 0
  720 047b EC 22 06 00             		br	!!.L33
  721                             	.L18:
- 241:../src/global.c **** 			case 0xF3:	/* Report current Real Time Clock via UART */
- 242:../src/global.c **** 				sendRTC();
- 722                             		.loc 1 242 0
+ 245:../src/global.c **** 			case 0xF3:	/* Report current Real Time Clock via UART */
+ 246:../src/global.c **** 				sendRTC();
+ 722                             		.loc 1 246 0
  723 047f FC 00 00 00             		call	!!%code(_sendRTC)
- 243:../src/global.c **** 				break;
- 724                             		.loc 1 243 0
+ 247:../src/global.c **** 				break;
+ 724                             		.loc 1 247 0
  725 0483 EC 22 06 00             		br	!!.L33
  726                             	.L28:
- 244:../src/global.c **** 			case 0xF4:	/* Display buffered data to LCD */
- 245:../src/global.c **** 				if(ctrlMode == TEST)
- 727                             		.loc 1 245 0
+ 248:../src/global.c **** 			case 0xF4:	/* Display buffered data to LCD */
+ 249:../src/global.c **** 				if(ctrlMode == TEST)
+ 727                             		.loc 1 249 0
  728 0487 AF 00 00                		movw	ax, !_ctrlMode
  729 048a BD F0                   		movw	r8, ax
  730 048c 44 01 00                		cmpw	ax, #1
  731 048f 61 E8                   		 skz
  732 0491 EC 9D 04 00             		 br	!!.L34
- 246:../src/global.c **** 				{
- 247:../src/global.c **** 					bufferToLCD();
- 733                             		.loc 1 247 0
+ 250:../src/global.c **** 				{
+ 251:../src/global.c **** 					bufferToLCD();
+ 733                             		.loc 1 251 0
  734 0495 FC 00 00 00             		call	!!%code(_bufferToLCD)
- 248:../src/global.c **** 				}
- 249:../src/global.c **** 				break;
- 735                             		.loc 1 249 0
+ 252:../src/global.c **** 				}
+ 253:../src/global.c **** 				break;
+ 735                             		.loc 1 253 0
  736 0499 EC 22 06 00             		br	!!.L33
  737                             	.L34:
  738 049d EC 22 06 00             		br	!!.L33
  739                             	.L29:
- 250:../src/global.c **** 			case 0xF7:	/* Report current via UART */
- 251:../src/global.c **** 				echoData(0xF7, initial_current/5);
- 740                             		.loc 1 251 0
+ 254:../src/global.c **** 			case 0xF7:	/* Report current via UART */
+ 255:../src/global.c **** 				echoData(0xF7, initial_current/5);
+ 740                             		.loc 1 255 0
  741 04a1 8F 00 00                		mov	a, !_initial_current
  742 04a4 9D F0                   		mov	r8, a
  743 04a6 CD F1 00                		mov	r9, #0
@@ -1004,75 +1008,75 @@
  758 04c4 8D F0                   		mov	a, r8
  759 04c6 98 02                   		mov	[sp+2], a
  760 04c8 FC 00 00 00             		call	!!%code(_echoData)
- 252:../src/global.c **** 				break;
- 761                             		.loc 1 252 0
+ 256:../src/global.c **** 				break;
+ 761                             		.loc 1 256 0
  762 04cc EC 22 06 00             		br	!!.L33
  763                             	.L26:
- 253:../src/global.c **** 			case 0xF8:	/* Close gate */
- 254:../src/global.c **** 				echo(0xF8);
- 764                             		.loc 1 254 0
+ 257:../src/global.c **** 			case 0xF8:	/* Close gate */
+ 258:../src/global.c **** 				echo(0xF8);
+ 764                             		.loc 1 258 0
  765 04d0 51 F8                   		mov	a, #-8
  766 04d2 98 00                   		mov	[sp], a
  767 04d4 FC 00 00 00             		call	!!%code(_echo)
- 255:../src/global.c **** 				closeGate();
- 768                             		.loc 1 255 0
+ 259:../src/global.c **** 				closeGate();
+ 768                             		.loc 1 259 0
  769 04d8 FC 00 00 00             		call	!!%code(_closeGate)
- 256:../src/global.c **** 				print_lcd("Gate closing...");
- 770                             		.loc 1 256 0
+ 260:../src/global.c **** 				print_lcd("Gate closing...");
+ 770                             		.loc 1 260 0
  771 04dc 30 38 00                		movw	ax, #.LC5
  772 04df B8 00                   		movw	[sp], ax
  773 04e1 FC 00 00 00             		call	!!%code(_print_lcd)
- 257:../src/global.c **** 				break;
- 774                             		.loc 1 257 0
+ 261:../src/global.c **** 				break;
+ 774                             		.loc 1 261 0
  775 04e5 EC 22 06 00             		br	!!.L33
  776                             	.L32:
- 258:../src/global.c **** 			case 0xF9:	/* Open gate */
- 259:../src/global.c **** 				echo(0xF9);
- 777                             		.loc 1 259 0
+ 262:../src/global.c **** 			case 0xF9:	/* Open gate */
+ 263:../src/global.c **** 				echo(0xF9);
+ 777                             		.loc 1 263 0
  778 04e9 51 F9                   		mov	a, #-7
  779 04eb 98 00                   		mov	[sp], a
  780 04ed FC 00 00 00             		call	!!%code(_echo)
- 260:../src/global.c **** 				openGate();
- 781                             		.loc 1 260 0
+ 264:../src/global.c **** 				openGate();
+ 781                             		.loc 1 264 0
  782 04f1 FC 00 00 00             		call	!!%code(_openGate)
- 261:../src/global.c **** 				print_lcd("Gate opening...");
- 783                             		.loc 1 261 0
+ 265:../src/global.c **** 				print_lcd("Gate opening...");
+ 783                             		.loc 1 265 0
  784 04f5 30 28 00                		movw	ax, #.LC4
  785 04f8 B8 00                   		movw	[sp], ax
  786 04fa FC 00 00 00             		call	!!%code(_print_lcd)
- 262:../src/global.c **** 				break;
- 787                             		.loc 1 262 0
+ 266:../src/global.c **** 				break;
+ 787                             		.loc 1 266 0
  788 04fe EC 22 06 00             		br	!!.L33
  789                             	.L30:
- 263:../src/global.c **** 			case 0xFC:	/* Report Infra-red command via UART */
- 264:../src/global.c **** 				echo(0xFC);
- 790                             		.loc 1 264 0
+ 267:../src/global.c **** 			case 0xFC:	/* Report Infra-red command via UART */
+ 268:../src/global.c **** 				echo(0xFC);
+ 790                             		.loc 1 268 0
  791 0502 51 FC                   		mov	a, #-4
  792 0504 98 00                   		mov	[sp], a
  793 0506 FC 00 00 00             		call	!!%code(_echo)
- 265:../src/global.c **** 				msDelay(10);
- 794                             		.loc 1 265 0
+ 269:../src/global.c **** 				msDelay(10);
+ 794                             		.loc 1 269 0
  795 050a 30 0A 00                		movw	ax, #10
  796 050d B8 00                   		movw	[sp], ax
  797 050f FC 00 00 00             		call	!!%code(_msDelay)
- 266:../src/global.c **** 				/* Separate data */
- 267:../src/global.c **** 				uint8_t cmd = ir_rxMessage & 0x7;
- 798                             		.loc 1 267 0
+ 270:../src/global.c **** 				/* Separate data */
+ 271:../src/global.c **** 				uint8_t cmd = ir_rxMessage & 0x7;
+ 798                             		.loc 1 271 0
  799 0513 AF 00 00                		movw	ax, !_ir_rxMessage
  800 0516 BD F0                   		movw	r8, ax
  801 0518 8D F0                   		mov	a, r8
  802 051a 5C 07                   		and	a, #7
  803 051c 98 07                   		mov	[sp+7], a
- 268:../src/global.c **** 				uint8_t addr = (ir_rxMessage >> 3) & 0xFF;
- 804                             		.loc 1 268 0
+ 272:../src/global.c **** 				uint8_t addr = (ir_rxMessage >> 3) & 0xFF;
+ 804                             		.loc 1 272 0
  805 051e AF 00 00                		movw	ax, !_ir_rxMessage
  806 0521 BD F0                   		movw	r8, ax
  807 0523 31 3E                   		shrw	ax, 3
  808 0525 BD F0                   		movw	r8, ax
  809 0527 8D F0                   		mov	a, r8
  810 0529 98 06                   		mov	[sp+6], a
- 269:../src/global.c **** 				uint8_t tog = (ir_rxMessage >> 11) & 0x1;
- 811                             		.loc 1 269 0
+ 273:../src/global.c **** 				uint8_t tog = (ir_rxMessage >> 11) & 0x1;
+ 811                             		.loc 1 273 0
  812 052b AF 00 00                		movw	ax, !_ir_rxMessage
  813 052e BD F0                   		movw	r8, ax
  814 0530 31 BE                   		shrw	ax, 11
@@ -1080,8 +1084,8 @@
  816 0534 8D F0                   		mov	a, r8
  817 0536 5C 01                   		and	a, #1
  818 0538 98 05                   		mov	[sp+5], a
- 270:../src/global.c **** 				echoData(addr, ((tog<<7) + cmd));
- 819                             		.loc 1 270 0
+ 274:../src/global.c **** 				echoData(addr, ((tog<<7) + cmd));
+ 819                             		.loc 1 274 0
  820 053a 31 79                   		shl	a, 7
  821 053c 9D F0                   		mov	r8, a
  822 053e 76                      		mov	l, a
@@ -1094,18 +1098,18 @@
  829 054b 8D F0                   		mov	a, r8
  830 054d 98 02                   		mov	[sp+2], a
  831 054f FC 00 00 00             		call	!!%code(_echoData)
- 271:../src/global.c **** 				break;
- 832                             		.loc 1 271 0
+ 275:../src/global.c **** 				break;
+ 832                             		.loc 1 275 0
  833 0553 EC 22 06 00             		br	!!.L33
  834                             	.L31:
- 272:../src/global.c **** 			case 0xFF:	/* Report gate status via UART */
- 273:../src/global.c **** 				msDelay(10);
- 835                             		.loc 1 273 0
+ 276:../src/global.c **** 			case 0xFF:	/* Report gate status via UART */
+ 277:../src/global.c **** 				msDelay(10);
+ 835                             		.loc 1 277 0
  836 0557 30 0A 00                		movw	ax, #10
  837 055a B8 00                   		movw	[sp], ax
  838 055c FC 00 00 00             		call	!!%code(_msDelay)
- 274:../src/global.c **** 				switch(gate_status)
- 839                             		.loc 1 274 0
+ 278:../src/global.c **** 				switch(gate_status)
+ 839                             		.loc 1 278 0
  840 0560 AF 00 00                		movw	ax, !_gate_status
  841 0563 BD F0                   		movw	r8, ax
  842 0565 44 01 00                		cmpw	ax, #1
@@ -1123,115 +1127,115 @@
  854 0586 44 03 00                		cmpw	ax, #3
  855 0589 61 F8                   		 sknz
  856 058b EC DD 05 00             		 br	!!.L39
- 275:../src/global.c **** 				{
- 276:../src/global.c **** 					case OPENED:
- 277:../src/global.c **** 						echoData(0xFF, 0x82);
- 278:../src/global.c **** 						print_lcd("Opened");
- 279:../src/global.c **** 						break;
- 280:../src/global.c **** 					case CLOSED:
- 281:../src/global.c **** 						echoData(0xFF, 0x81);
- 282:../src/global.c **** 						print_lcd("Closed");
+ 279:../src/global.c **** 				{
+ 280:../src/global.c **** 					case OPENED:
+ 281:../src/global.c **** 						echoData(0xFF, 0x82);
+ 282:../src/global.c **** 						print_lcd("Opened");
  283:../src/global.c **** 						break;
- 284:../src/global.c **** 					case UNKNOWN:
- 285:../src/global.c **** 						echoData(0xFF, 0x00);
- 286:../src/global.c **** 						print_lcd("Unknown");
+ 284:../src/global.c **** 					case CLOSED:
+ 285:../src/global.c **** 						echoData(0xFF, 0x81);
+ 286:../src/global.c **** 						print_lcd("Closed");
  287:../src/global.c **** 						break;
- 288:../src/global.c **** 					case ESTOP:
- 289:../src/global.c **** 						echoData(0xFF, 0x84);
- 290:../src/global.c **** 						print_lcd("Emergency stop");
+ 288:../src/global.c **** 					case UNKNOWN:
+ 289:../src/global.c **** 						echoData(0xFF, 0x00);
+ 290:../src/global.c **** 						print_lcd("Unknown");
  291:../src/global.c **** 						break;
- 292:../src/global.c **** 				}
- 293:../src/global.c **** 				break;
- 857                             		.loc 1 293 0
+ 292:../src/global.c **** 					case ESTOP:
+ 293:../src/global.c **** 						echoData(0xFF, 0x84);
+ 294:../src/global.c **** 						print_lcd("Emergency stop");
+ 295:../src/global.c **** 						break;
+ 296:../src/global.c **** 				}
+ 297:../src/global.c **** 				break;
+ 857                             		.loc 1 297 0
  858 058f EC 22 06 00             		br	!!.L33
  859                             	.L36:
- 277:../src/global.c **** 						print_lcd("Opened");
- 860                             		.loc 1 277 0
+ 281:../src/global.c **** 						print_lcd("Opened");
+ 860                             		.loc 1 281 0
  861 0593 51 FF                   		mov	a, #-1
  862 0595 98 00                   		mov	[sp], a
  863 0597 51 82                   		mov	a, #-126
  864 0599 98 02                   		mov	[sp+2], a
  865 059b FC 00 00 00             		call	!!%code(_echoData)
- 278:../src/global.c **** 						break;
- 866                             		.loc 1 278 0
+ 282:../src/global.c **** 						break;
+ 866                             		.loc 1 282 0
  867 059f 30 0C 00                		movw	ax, #.LC1
  868 05a2 B8 00                   		movw	[sp], ax
  869 05a4 FC 00 00 00             		call	!!%code(_print_lcd)
- 279:../src/global.c **** 					case CLOSED:
- 870                             		.loc 1 279 0
+ 283:../src/global.c **** 					case CLOSED:
+ 870                             		.loc 1 283 0
  871 05a8 EC F3 05 00             		br	!!.L35
  872                             	.L38:
- 281:../src/global.c **** 						print_lcd("Closed");
- 873                             		.loc 1 281 0
+ 285:../src/global.c **** 						print_lcd("Closed");
+ 873                             		.loc 1 285 0
  874 05ac 51 FF                   		mov	a, #-1
  875 05ae 98 00                   		mov	[sp], a
  876 05b0 51 81                   		mov	a, #-127
  877 05b2 98 02                   		mov	[sp+2], a
  878 05b4 FC 00 00 00             		call	!!%code(_echoData)
- 282:../src/global.c **** 						break;
- 879                             		.loc 1 282 0
+ 286:../src/global.c **** 						break;
+ 879                             		.loc 1 286 0
  880 05b8 30 13 00                		movw	ax, #.LC2
  881 05bb B8 00                   		movw	[sp], ax
  882 05bd FC 00 00 00             		call	!!%code(_print_lcd)
- 283:../src/global.c **** 					case UNKNOWN:
- 883                             		.loc 1 283 0
+ 287:../src/global.c **** 					case UNKNOWN:
+ 883                             		.loc 1 287 0
  884 05c1 EC F3 05 00             		br	!!.L35
  885                             	.L37:
- 285:../src/global.c **** 						print_lcd("Unknown");
- 886                             		.loc 1 285 0
+ 289:../src/global.c **** 						print_lcd("Unknown");
+ 886                             		.loc 1 289 0
  887 05c5 51 FF                   		mov	a, #-1
  888 05c7 98 00                   		mov	[sp], a
  889 05c9 F1                      		clrb	a
  890 05ca 98 02                   		mov	[sp+2], a
  891 05cc FC 00 00 00             		call	!!%code(_echoData)
- 286:../src/global.c **** 						break;
- 892                             		.loc 1 286 0
+ 290:../src/global.c **** 						break;
+ 892                             		.loc 1 290 0
  893 05d0 30 52 00                		movw	ax, #.LC7
  894 05d3 B8 00                   		movw	[sp], ax
  895 05d5 FC 00 00 00             		call	!!%code(_print_lcd)
- 287:../src/global.c **** 					case ESTOP:
- 896                             		.loc 1 287 0
+ 291:../src/global.c **** 					case ESTOP:
+ 896                             		.loc 1 291 0
  897 05d9 EC F3 05 00             		br	!!.L35
  898                             	.L39:
- 289:../src/global.c **** 						print_lcd("Emergency stop");
- 899                             		.loc 1 289 0
+ 293:../src/global.c **** 						print_lcd("Emergency stop");
+ 899                             		.loc 1 293 0
  900 05dd 51 FF                   		mov	a, #-1
  901 05df 98 00                   		mov	[sp], a
  902 05e1 51 84                   		mov	a, #-124
  903 05e3 98 02                   		mov	[sp+2], a
  904 05e5 FC 00 00 00             		call	!!%code(_echoData)
- 290:../src/global.c **** 						break;
- 905                             		.loc 1 290 0
+ 294:../src/global.c **** 						break;
+ 905                             		.loc 1 294 0
  906 05e9 30 5A 00                		movw	ax, #.LC8
  907 05ec B8 00                   		movw	[sp], ax
  908 05ee FC 00 00 00             		call	!!%code(_print_lcd)
- 291:../src/global.c **** 				}
- 909                             		.loc 1 291 0
+ 295:../src/global.c **** 				}
+ 909                             		.loc 1 295 0
  910 05f2 00                      		nop
  911                             	.L35:
- 912                             		.loc 1 293 0
+ 912                             		.loc 1 297 0
  913 05f3 EC 22 06 00             		br	!!.L33
  914                             	.L17:
- 294:../src/global.c **** 			default:	/* Store data in buffer if not full */
- 295:../src/global.c **** 				if(myCounter < RX_BUF_LEN)
- 915                             		.loc 1 295 0
+ 298:../src/global.c **** 			default:	/* Store data in buffer if not full */
+ 299:../src/global.c **** 				if(myCounter < RX_BUF_LEN)
+ 915                             		.loc 1 299 0
  916 05f7 AF 00 00                		movw	ax, !_myCounter
  917 05fa BD F0                   		movw	r8, ax
  918 05fc 44 0F 00                		cmpw	ax, #15
  919 05ff 71 FF                   		 xor1	CY, a.7
  920 0601 61 F3                   		 sknh
  921 0603 EC 22 06 00             		 br	!!.L33
- 296:../src/global.c **** 				{
- 297:../src/global.c **** 					myBuffer[myCounter] = uart1RxBuf[0];
- 922                             		.loc 1 297 0
+ 300:../src/global.c **** 				{
+ 301:../src/global.c **** 					myBuffer[myCounter] = uart1RxBuf[0];
+ 922                             		.loc 1 301 0
  923 0607 AF 00 00                		movw	ax, !_myCounter
  924 060a BD F0                   		movw	r8, ax
  925 060c 8F 00 00                		mov	a, !_uart1RxBuf
  926 060f 9D F2                   		mov	r10, a
  927 0611 DA F0                   		movw	bc, r8
  928 0613 48 00 00                		mov	_myBuffer[bc], a
- 298:../src/global.c **** 					myCounter++;
- 929                             		.loc 1 298 0
+ 302:../src/global.c **** 					myCounter++;
+ 929                             		.loc 1 302 0
  930 0616 AF 00 00                		movw	ax, !_myCounter
  931 0619 BD F0                   		movw	r8, ax
  932 061b A6 F0                   		incw	r8
@@ -1239,10 +1243,10 @@
  934 061f BF 00 00                		movw	!_myCounter, ax
  935                             	.L33:
  936                             	.LBE3:
- 299:../src/global.c **** 				}
- 300:../src/global.c **** 		}
- 301:../src/global.c **** 		uart1Status = R_UART1_Receive(uart1RxBuf,1);	/* Prime to Receive next data */
- 937                             		.loc 1 301 0
+ 303:../src/global.c **** 				}
+ 304:../src/global.c **** 		}
+ 305:../src/global.c **** 		uart1Status = R_UART1_Receive(uart1RxBuf,1);	/* Prime to Receive next data */
+ 937                             		.loc 1 305 0
  938 0622 30 00 00                		movw	ax, #_uart1RxBuf
  939 0625 B8 00                   		movw	[sp], ax
  940 0627 E6                      		onew	ax
@@ -1251,75 +1255,76 @@
  943 062e AD F0                   		movw	ax, r8
  944 0630 BF 00 00                		movw	!_uart1Status, ax
  945                             	.L15:
- 302:../src/global.c **** 	}
- 303:../src/global.c **** }
- 946                             		.loc 1 303 0
+ 306:../src/global.c **** 	}
+ 307:../src/global.c **** }
+ 946                             		.loc 1 307 0
  947 0633 10 08                   		addw	sp, #8
  948 0635 D7                      		ret
  949                             	.LFE5:
  951                             		.global	_uartSend
  953                             	_uartSend:
  954                             	.LFB6:
- 304:../src/global.c **** 
- 305:../src/global.c **** /**
- 306:../src/global.c ****  * Function to process the UART Send flag
- 307:../src/global.c ****  */
- 308:../src/global.c **** void uartSend(void)
- 309:../src/global.c **** {
- 955                             		.loc 1 309 0
- 310:../src/global.c **** 	if (uart1TxFlag)
- 956                             		.loc 1 310 0
+ 308:../src/global.c **** 
+ 309:../src/global.c **** /**
+ 310:../src/global.c ****  * Function to process the UART Send flag
+ 311:../src/global.c ****  */
+ 312:../src/global.c **** void uartSend(void)
+ 313:../src/global.c **** {
+ 955                             		.loc 1 313 0
+ 314:../src/global.c **** 	if (uart1TxFlag)
+ 956                             		.loc 1 314 0
  957 0636 8F 00 00                		mov	a, !_uart1TxFlag
  958 0639 9D F0                   		mov	r8, a
  959 063b D4 F0                   		cmp0	r8
  960 063d 61 F8                   		 sknz
  961 063f EC 46 06 00             		 br	!!.L40
- 311:../src/global.c **** 	{
- 312:../src/global.c **** 		uart1TxFlag = 0U;
- 962                             		.loc 1 312 0
+ 315:../src/global.c **** 	{
+ 316:../src/global.c **** 		uart1TxFlag = 0U;
+ 962                             		.loc 1 316 0
  963 0643 F5 00 00                		clrb	!_uart1TxFlag
  964                             	.L40:
- 313:../src/global.c **** 	}
- 314:../src/global.c **** }
- 965                             		.loc 1 314 0
+ 317:../src/global.c **** 	}
+ 318:../src/global.c **** }
+ 965                             		.loc 1 318 0
  966 0646 D7                      		ret
  967                             	.LFE6:
  969                             		.global	_pwm
  971                             	_pwm:
  972                             	.LFB7:
- 315:../src/global.c **** 
- 316:../src/global.c **** /**
- 317:../src/global.c ****  * Function to output Pulse Width Modulation signal to motor
- 318:../src/global.c ****  * The output is constant, and the motor's utilisation of the PWM
- 319:../src/global.c ****  * is toggled by its nSLEEP
- 320:../src/global.c ****  * @param cycles_per_second
- 321:../src/global.c ****  * @param divisor
- 322:../src/global.c ****  * @see global.h
- 323:../src/global.c ****  */
- 324:../src/global.c **** void pwm(int cycles_per_second, int divisor)
- 325:../src/global.c **** {
- 973                             		.loc 1 325 0
- 326:../src/global.c **** 	if (pwm_edge)
- 974                             		.loc 1 326 0
+ 319:../src/global.c **** 
+ 320:../src/global.c **** /**
+ 321:../src/global.c ****  * Function to output Pulse Width Modulation signal to motor
+ 322:../src/global.c ****  * The output is constant, and the motor's utilisation of the PWM
+ 323:../src/global.c ****  * is toggled by its nSLEEP
+ 324:../src/global.c ****  * PWM = divisor/cycles_per_second %
+ 325:../src/global.c ****  * @param cycles_per_second
+ 326:../src/global.c ****  * @param divisor
+ 327:../src/global.c ****  * @see global.h
+ 328:../src/global.c ****  */
+ 329:../src/global.c **** void pwm(int cycles_per_second, int divisor)
+ 330:../src/global.c **** {
+ 973                             		.loc 1 330 0
+ 331:../src/global.c **** 	if (pwm_edge)
+ 974                             		.loc 1 331 0
  975 0647 AF 00 00                		movw	ax, !_pwm_edge
  976 064a BD F0                   		movw	r8, ax
  977 064c 44 00 00                		cmpw	ax, #0
  978 064f 61 F8                   		 sknz
  979 0651 EC CC 06 00             		 br	!!.L42
- 327:../src/global.c **** 	{
- 328:../src/global.c **** 		pwm_edge=0;
- 980                             		.loc 1 328 0
+ 332:../src/global.c **** 	{
+ 333:../src/global.c **** 		pwm_edge=0;
+ 980                             		.loc 1 333 0
  981 0655 F6                      		clrw	ax
  982 0656 BF 00 00                		movw	!_pwm_edge, ax
- 329:../src/global.c **** 		pwm_counter++;
- 983                             		.loc 1 329 0
+ 334:../src/global.c **** 		pwm_counter++;
+ 983                             		.loc 1 334 0
  984 0659 AF 00 00                		movw	ax, !_pwm_counter
  985 065c BD F0                   		movw	r8, ax
  986 065e A6 F0                   		incw	r8
  987 0660 AD F0                   		movw	ax, r8
  988 0662 BF 00 00                		movw	!_pwm_counter, ax
- 330:../src/global.c **** 		pwm_counter%=cycles_per_second;					/*Rolls over*/
- 989                             		.loc 1 330 0
+ 335:../src/global.c **** 		pwm_counter%=cycles_per_second;					/*Rolls over*/
+ 989                             		.loc 1 335 0
  990 0665 BD F2                   		movw	r10, ax
  991 0667 A8 04                   		movw	ax, [sp+4]
  992 0669 BD F0                   		movw	r8, ax
@@ -1336,8 +1341,8 @@
  1003                             		; end of udivmodhi macro
  1004 067e AD F0                   		movw	ax, r8
  1005 0680 BF 00 00                		movw	!_pwm_counter, ax
- 331:../src/global.c **** 		if (pwm_counter < divisor) DVR_ENABLE = 1;		/*Reaches max of 'divisor'*/
- 1006                             		.loc 1 331 0
+ 336:../src/global.c **** 		if (pwm_counter < divisor) DVR_ENABLE = 1;		/*Reaches max of 'divisor'*/
+ 1006                             		.loc 1 336 0
  1007 0683 A8 06                   		movw	ax, [sp+6]
  1008 0685 BD F2                   		movw	r10, ax
  1009 0687 AF 00 00                		movw	ax, !_pwm_counter
@@ -1346,7 +1351,7 @@
  1012 068e 46 F0                   		cmpw	ax, r8
  1013 0690 61 E3                   		 skh
  1014 0692 EC B3 06 00             		 br	!!.L44
- 1015                             		.loc 1 331 0 is_stmt 0 discriminator 1
+ 1015                             		.loc 1 336 0 is_stmt 0 discriminator 1
  1016 0696 C9 F0 04 FF             		movw	r8, #-252
  1017 069a AD F0                   		movw	ax, r8
  1018 069c BD F4                   		movw	r12, ax
@@ -1360,8 +1365,8 @@
  1026 06ac 48 00 00                		mov	[bc], a
  1027 06af EC CC 06 00             		br	!!.L42
  1028                             	.L44:
- 332:../src/global.c **** 		else DVR_ENABLE = 0;
- 1029                             		.loc 1 332 0 is_stmt 1
+ 337:../src/global.c **** 		else DVR_ENABLE = 0;
+ 1029                             		.loc 1 337 0 is_stmt 1
  1030 06b3 C9 F0 04 FF             		movw	r8, #-252
  1031 06b7 AD F0                   		movw	ax, r8
  1032 06b9 BD F4                   		movw	r12, ax
@@ -1374,58 +1379,54 @@
  1039 06c7 8D F2                   		mov	a, r10
  1040 06c9 48 00 00                		mov	[bc], a
  1041                             	.L42:
- 333:../src/global.c **** 	}
- 334:../src/global.c **** }
- 1042                             		.loc 1 334 0
+ 338:../src/global.c **** 	}
+ 339:../src/global.c **** }
+ 1042                             		.loc 1 339 0
  1043 06cc D7                      		ret
  1044                             	.LFE7:
  1046                             		.global	_msDelay
  1048                             	_msDelay:
  1049                             	.LFB8:
- 335:../src/global.c **** 
- 336:../src/global.c **** /**
- 337:../src/global.c ****  * END PRIMARY FUNCTIONS
- 338:../src/global.c ****  */
- 339:../src/global.c **** 
- 340:../src/global.c **** /**
- 341:../src/global.c ****  * AUXILIARY FUNCTIONS
- 342:../src/global.c ****  */
- 343:../src/global.c **** 
- 344:../src/global.c **** /**
- 345:../src/global.c ****  * Delay for t milliseconds
- 346:../src/global.c ****  */
- 347:../src/global.c **** void msDelay(int t)
- 348:../src/global.c **** {
- 1050                             		.loc 1 348 0
+ 340:../src/global.c **** 
+ 341:../src/global.c **** /*END PRIMARY FUNCTIONS*/
+ 342:../src/global.c **** 
+ 343:../src/global.c **** /*AUXILIARY FUNCTIONS*/
+ 344:../src/global.c **** 
+ 345:../src/global.c **** /**
+ 346:../src/global.c ****  * Delay for t milliseconds
+ 347:../src/global.c ****  */
+ 348:../src/global.c **** void msDelay(int t)
+ 349:../src/global.c **** {
+ 1050                             		.loc 1 349 0
  1051                             		; start of function
  1052                             		; locals: 2 bytes
  1053                             		; outgoing: 2 bytes
  1054 06cd 20 04                   		subw	sp, #4
  1055                             	.LCFI6:
- 349:../src/global.c **** 	int a = 0;
- 1056                             		.loc 1 349 0
+ 350:../src/global.c **** 	int a = 0;
+ 1056                             		.loc 1 350 0
  1057 06cf F6                      		clrw	ax
  1058 06d0 B8 02                   		movw	[sp+2], ax
- 350:../src/global.c **** 	for(a = 0; a < t; a++)
- 1059                             		.loc 1 350 0
+ 351:../src/global.c **** 	for(a = 0; a < t; a++)
+ 1059                             		.loc 1 351 0
  1060 06d2 F6                      		clrw	ax
  1061 06d3 B8 02                   		movw	[sp+2], ax
  1062 06d5 EC E7 06 00             		br	!!.L46
  1063                             	.L47:
- 351:../src/global.c **** 	{
- 352:../src/global.c **** 		delayNoInt(1000);
- 1064                             		.loc 1 352 0 discriminator 3
+ 352:../src/global.c **** 	{
+ 353:../src/global.c **** 		delayNoInt(1000);
+ 1064                             		.loc 1 353 0 discriminator 3
  1065 06d9 30 E8 03                		movw	ax, #1000
  1066 06dc B8 00                   		movw	[sp], ax
  1067 06de FC 00 00 00             		call	!!%code(_delayNoInt)
- 350:../src/global.c **** 	for(a = 0; a < t; a++)
- 1068                             		.loc 1 350 0 discriminator 3
+ 351:../src/global.c **** 	for(a = 0; a < t; a++)
+ 1068                             		.loc 1 351 0 discriminator 3
  1069 06e2 A8 02                   		movw	ax, [sp+2]
  1070 06e4 A1                      		incw	ax
  1071 06e5 B8 02                   		movw	[sp+2], ax
  1072                             	.L46:
- 350:../src/global.c **** 	for(a = 0; a < t; a++)
- 1073                             		.loc 1 350 0 is_stmt 0 discriminator 1
+ 351:../src/global.c **** 	for(a = 0; a < t; a++)
+ 1073                             		.loc 1 351 0 is_stmt 0 discriminator 1
  1074 06e7 A8 08                   		movw	ax, [sp+8]
  1075 06e9 BD F0                   		movw	r8, ax
  1076 06eb A8 02                   		movw	ax, [sp+2]
@@ -1434,34 +1435,34 @@
  1079 06f1 71 77 F1                		 xor1	CY, r9.7
  1080 06f4 61 D8                   		 sknc
  1081 06f6 EC D9 06 00             		 br	!!.L47
- 353:../src/global.c **** 	}
- 354:../src/global.c **** }
- 1082                             		.loc 1 354 0 is_stmt 1
+ 354:../src/global.c **** 	}
+ 355:../src/global.c **** }
+ 1082                             		.loc 1 355 0 is_stmt 1
  1083 06fa 10 04                   		addw	sp, #4
  1084 06fc D7                      		ret
  1085                             	.LFE8:
  1087                             		.global	_echo
  1089                             	_echo:
  1090                             	.LFB9:
- 355:../src/global.c **** 
- 356:../src/global.c **** /**
- 357:../src/global.c ****  * Function to echo one Byte of data via UART
- 358:../src/global.c ****  * @param hex byte to be sent
- 359:../src/global.c ****  */
- 360:../src/global.c **** void echo(uint8_t hex)
- 361:../src/global.c **** {
- 1091                             		.loc 1 361 0
+ 356:../src/global.c **** 
+ 357:../src/global.c **** /**
+ 358:../src/global.c ****  * Function to echo one Byte of data via UART to PC
+ 359:../src/global.c ****  * @param hex byte to be sent
+ 360:../src/global.c ****  */
+ 361:../src/global.c **** void echo(uint8_t hex)
+ 362:../src/global.c **** {
+ 1091                             		.loc 1 362 0
  1092                             		; start of function
  1093                             		; outgoing: 4 bytes
  1094 06fd 20 04                   		subw	sp, #4
  1095                             	.LCFI7:
- 362:../src/global.c **** 	uart1TxBuf[0] = hex;
- 1096                             		.loc 1 362 0
+ 363:../src/global.c **** 	uart1TxBuf[0] = hex;
+ 1096                             		.loc 1 363 0
  1097 06ff 88 08                   		mov	a, [sp+8]
  1098 0701 9D F0                   		mov	r8, a
  1099 0703 9F 00 00                		mov	!_uart1TxBuf, a
- 363:../src/global.c **** 	uart1Status = R_UART1_Send(uart1TxBuf,1);
- 1100                             		.loc 1 363 0
+ 364:../src/global.c **** 	uart1Status = R_UART1_Send(uart1TxBuf,1);
+ 1100                             		.loc 1 364 0
  1101 0706 30 00 00                		movw	ax, #_uart1TxBuf
  1102 0709 B8 00                   		movw	[sp], ax
  1103 070b E6                      		onew	ax
@@ -1469,39 +1470,39 @@
  1105 070e FC 00 00 00             		call	!!%code(_R_UART1_Send)
  1106 0712 AD F0                   		movw	ax, r8
  1107 0714 BF 00 00                		movw	!_uart1Status, ax
- 364:../src/global.c **** }
- 1108                             		.loc 1 364 0
+ 365:../src/global.c **** }
+ 1108                             		.loc 1 365 0
  1109 0717 10 04                   		addw	sp, #4
  1110 0719 D7                      		ret
  1111                             	.LFE9:
  1113                             		.global	_echoData
  1115                             	_echoData:
  1116                             	.LFB10:
- 365:../src/global.c **** 
- 366:../src/global.c **** /**
- 367:../src/global.c ****  * Function to echo two Bytes of data via UART
- 368:../src/global.c ****  * @param hex first Byte to be sent
- 369:../src/global.c ****  * @param hex2 second Byte to be sent
- 370:../src/global.c ****  */
- 371:../src/global.c **** void echoData(uint8_t hex, uint8_t hex2)
- 372:../src/global.c **** {
- 1117                             		.loc 1 372 0
+ 366:../src/global.c **** 
+ 367:../src/global.c **** /**
+ 368:../src/global.c ****  * Function to echo two Bytes of data via UART to PC
+ 369:../src/global.c ****  * @param hex first Byte to be sent
+ 370:../src/global.c ****  * @param hex2 second Byte to be sent
+ 371:../src/global.c ****  */
+ 372:../src/global.c **** void echoData(uint8_t hex, uint8_t hex2)
+ 373:../src/global.c **** {
+ 1117                             		.loc 1 373 0
  1118                             		; start of function
  1119                             		; outgoing: 4 bytes
  1120 071a 20 04                   		subw	sp, #4
  1121                             	.LCFI8:
- 373:../src/global.c **** 	uart1TxBuf[0] = hex;
- 1122                             		.loc 1 373 0
+ 374:../src/global.c **** 	uart1TxBuf[0] = hex;
+ 1122                             		.loc 1 374 0
  1123 071c 88 08                   		mov	a, [sp+8]
  1124 071e 9D F0                   		mov	r8, a
  1125 0720 9F 00 00                		mov	!_uart1TxBuf, a
- 374:../src/global.c **** 	uart1TxBuf[1] = hex2;
- 1126                             		.loc 1 374 0
+ 375:../src/global.c **** 	uart1TxBuf[1] = hex2;
+ 1126                             		.loc 1 375 0
  1127 0723 88 0A                   		mov	a, [sp+10]
  1128 0725 9D F0                   		mov	r8, a
  1129 0727 9F 00 00                		mov	!_uart1TxBuf+1, a
- 375:../src/global.c **** 	uart1Status = R_UART1_Send(uart1TxBuf,2);
- 1130                             		.loc 1 375 0
+ 376:../src/global.c **** 	uart1Status = R_UART1_Send(uart1TxBuf,2);
+ 1130                             		.loc 1 376 0
  1131 072a 30 00 00                		movw	ax, #_uart1TxBuf
  1132 072d B8 00                   		movw	[sp], ax
  1133 072f 30 02 00                		movw	ax, #2
@@ -1509,100 +1510,100 @@
  1135 0734 FC 00 00 00             		call	!!%code(_R_UART1_Send)
  1136 0738 AD F0                   		movw	ax, r8
  1137 073a BF 00 00                		movw	!_uart1Status, ax
- 376:../src/global.c **** }
- 1138                             		.loc 1 376 0
+ 377:../src/global.c **** }
+ 1138                             		.loc 1 377 0
  1139 073d 10 04                   		addw	sp, #4
  1140 073f D7                      		ret
  1141                             	.LFE10:
  1143                             		.global	_bufferToLCD
  1145                             	_bufferToLCD:
  1146                             	.LFB11:
- 377:../src/global.c **** 
- 378:../src/global.c **** /**
- 379:../src/global.c ****  * Function to write data in the buffer to the LCD
- 380:../src/global.c ****  */
- 381:../src/global.c **** void bufferToLCD(void)
- 382:../src/global.c **** {
- 1147                             		.loc 1 382 0
+ 378:../src/global.c **** 
+ 379:../src/global.c **** /**
+ 380:../src/global.c ****  * Function to write data in the buffer to the LCD
+ 381:../src/global.c ****  */
+ 382:../src/global.c **** void bufferToLCD(void)
+ 383:../src/global.c **** {
+ 1147                             		.loc 1 383 0
  1148                             		; start of function
  1149                             		; locals: 12 bytes
  1150                             		; outgoing: 4 bytes
  1151 0740 20 10                   		subw	sp, #16
  1152                             	.LCFI9:
- 383:../src/global.c **** 	echo(0xF4);
- 1153                             		.loc 1 383 0
+ 384:../src/global.c **** 	echo(0xF4);
+ 1153                             		.loc 1 384 0
  1154 0742 51 F4                   		mov	a, #-12
  1155 0744 98 00                   		mov	[sp], a
  1156 0746 FC 00 00 00             		call	!!%code(_echo)
- 384:../src/global.c **** 	initLcd();
- 1157                             		.loc 1 384 0
+ 385:../src/global.c **** 	initLcd();
+ 1157                             		.loc 1 385 0
  1158 074a FC 00 00 00             		call	!!%code(_initLcd)
- 385:../src/global.c **** 	int display_x = 0;
- 1159                             		.loc 1 385 0
+ 386:../src/global.c **** 	int display_x = 0;
+ 1159                             		.loc 1 386 0
  1160 074e F6                      		clrw	ax
  1161 074f B8 0E                   		movw	[sp+14], ax
- 386:../src/global.c **** 	int display_y = 0;
- 1162                             		.loc 1 386 0
+ 387:../src/global.c **** 	int display_y = 0;
+ 1162                             		.loc 1 387 0
  1163 0751 F6                      		clrw	ax
  1164 0752 B8 0C                   		movw	[sp+12], ax
- 387:../src/global.c **** 	int display_scroll = 0;
- 1165                             		.loc 1 387 0
+ 388:../src/global.c **** 	int display_scroll = 0;
+ 1165                             		.loc 1 388 0
  1166 0754 F6                      		clrw	ax
  1167 0755 B8 0A                   		movw	[sp+10], ax
- 388:../src/global.c **** 	int display_length = 16;
- 1168                             		.loc 1 388 0
+ 389:../src/global.c **** 	int display_length = 16;
+ 1168                             		.loc 1 389 0
  1169 0757 30 10 00                		movw	ax, #16
  1170 075a B8 06                   		movw	[sp+6], ax
- 389:../src/global.c **** 	int display_loop = 1;
- 1171                             		.loc 1 389 0
+ 390:../src/global.c **** 	int display_loop = 1;
+ 1171                             		.loc 1 390 0
  1172 075c E6                      		onew	ax
  1173 075d B8 04                   		movw	[sp+4], ax
- 390:../src/global.c **** 	int overflow;
- 391:../src/global.c **** 
- 392:../src/global.c **** 	//Determine overflow
- 393:../src/global.c **** 	if (myCounter > 15) {
- 1174                             		.loc 1 393 0
+ 391:../src/global.c **** 	int overflow;
+ 392:../src/global.c **** 
+ 393:../src/global.c **** 	//Determine overflow
+ 394:../src/global.c **** 	if (myCounter > 15) {
+ 1174                             		.loc 1 394 0
  1175 075f AF 00 00                		movw	ax, !_myCounter
  1176 0762 BD F0                   		movw	r8, ax
  1177 0764 44 0F 00                		cmpw	ax, #15
  1178 0767 71 FF                   		 xor1	CY, a.7
  1179 0769 61 E3                   		 skh
  1180 076b EC 7D 07 00             		 br	!!.L51
- 394:../src/global.c **** 		overflow = myCounter - 15;
- 1181                             		.loc 1 394 0
+ 395:../src/global.c **** 		overflow = myCounter - 15;
+ 1181                             		.loc 1 395 0
  1182 076f AF 00 00                		movw	ax, !_myCounter
  1183 0772 BD F0                   		movw	r8, ax
  1184 0774 04 F1 FF                		addw	ax, #-15
  1185 0777 B8 08                   		movw	[sp+8], ax
  1186 0779 EC 80 07 00             		br	!!.L52
  1187                             	.L51:
- 395:../src/global.c **** 	}
- 396:../src/global.c **** 	else {
- 397:../src/global.c **** 		overflow = 1;
- 1188                             		.loc 1 397 0
+ 396:../src/global.c **** 	}
+ 397:../src/global.c **** 	else {
+ 398:../src/global.c **** 		overflow = 1;
+ 1188                             		.loc 1 398 0
  1189 077d E6                      		onew	ax
  1190 077e B8 08                   		movw	[sp+8], ax
  1191                             	.L52:
- 398:../src/global.c **** 	}
- 399:../src/global.c **** 
- 400:../src/global.c **** 	//For LCD index i
- 401:../src/global.c **** 	for(display_y = 0 ; display_y < overflow ; display_y++)
- 1192                             		.loc 1 401 0
+ 399:../src/global.c **** 	}
+ 400:../src/global.c **** 
+ 401:../src/global.c **** 	//For LCD index i
+ 402:../src/global.c **** 	for(display_y = 0 ; display_y < overflow ; display_y++)
+ 1192                             		.loc 1 402 0
  1193 0780 F6                      		clrw	ax
  1194 0781 B8 0C                   		movw	[sp+12], ax
  1195 0783 EC 10 08 00             		br	!!.L53
  1196                             	.L57:
- 402:../src/global.c **** 	{
- 403:../src/global.c **** 		//For message character j
- 404:../src/global.c **** 		for (display_x = 0 ; display_x < myCounter ; display_x++)
- 1197                             		.loc 1 404 0
+ 403:../src/global.c **** 	{
+ 404:../src/global.c **** 		//For message character j
+ 405:../src/global.c **** 		for (display_x = 0 ; display_x < myCounter ; display_x++)
+ 1197                             		.loc 1 405 0
  1198 0787 F6                      		clrw	ax
  1199 0788 B8 0E                   		movw	[sp+14], ax
  1200 078a EC D5 07 00             		br	!!.L54
  1201                             	.L56:
- 405:../src/global.c **** 		{
- 406:../src/global.c **** 			writeByteLcd(1U, myBuffer[(display_x+display_scroll)]);
- 1202                             		.loc 1 406 0
+ 406:../src/global.c **** 		{
+ 407:../src/global.c **** 			writeByteLcd(1U, myBuffer[(display_x+display_scroll)]);
+ 1202                             		.loc 1 407 0
  1203 078e A8 0A                   		movw	ax, [sp+10]
  1204 0790 16                      		movw	hl, ax
  1205 0791 A8 0E                   		movw	ax, [sp+14]
@@ -1617,38 +1618,38 @@
  1214 07a0 8D F0                   		mov	a, r8
  1215 07a2 98 02                   		mov	[sp+2], a
  1216 07a4 FC 00 00 00             		call	!!%code(_writeByteLcd)
- 407:../src/global.c **** 			delayNoInt(3250);
- 1217                             		.loc 1 407 0
+ 408:../src/global.c **** 			delayNoInt(3250);
+ 1217                             		.loc 1 408 0
  1218 07a8 30 B2 0C                		movw	ax, #3250
  1219 07ab B8 00                   		movw	[sp], ax
  1220 07ad FC 00 00 00             		call	!!%code(_delayNoInt)
- 408:../src/global.c **** 			if (display_x == 7){
- 1221                             		.loc 1 408 0
+ 409:../src/global.c **** 			if (display_x == 7){
+ 1221                             		.loc 1 409 0
  1222 07b1 A8 0E                   		movw	ax, [sp+14]
  1223 07b3 44 07 00                		cmpw	ax, #7
  1224 07b6 61 E8                   		 skz
  1225 07b8 EC D0 07 00             		 br	!!.L55
- 409:../src/global.c **** 				writeByteLcd(0U, LCD_HOME_L2);
- 1226                             		.loc 1 409 0
+ 410:../src/global.c **** 				writeByteLcd(0U, LCD_HOME_L2);
+ 1226                             		.loc 1 410 0
  1227 07bc F1                      		clrb	a
  1228 07bd 98 00                   		mov	[sp], a
  1229 07bf 51 C0                   		mov	a, #-64
  1230 07c1 98 02                   		mov	[sp+2], a
  1231 07c3 FC 00 00 00             		call	!!%code(_writeByteLcd)
- 410:../src/global.c **** 				delayNoInt(100);
- 1232                             		.loc 1 410 0
+ 411:../src/global.c **** 				delayNoInt(100);
+ 1232                             		.loc 1 411 0
  1233 07c7 30 64 00                		movw	ax, #100
  1234 07ca B8 00                   		movw	[sp], ax
  1235 07cc FC 00 00 00             		call	!!%code(_delayNoInt)
  1236                             	.L55:
- 404:../src/global.c **** 		{
- 1237                             		.loc 1 404 0 discriminator 2
+ 405:../src/global.c **** 		{
+ 1237                             		.loc 1 405 0 discriminator 2
  1238 07d0 A8 0E                   		movw	ax, [sp+14]
  1239 07d2 A1                      		incw	ax
  1240 07d3 B8 0E                   		movw	[sp+14], ax
  1241                             	.L54:
- 404:../src/global.c **** 		{
- 1242                             		.loc 1 404 0 is_stmt 0 discriminator 1
+ 405:../src/global.c **** 		{
+ 1242                             		.loc 1 405 0 is_stmt 0 discriminator 1
  1243 07d5 AF 00 00                		movw	ax, !_myCounter
  1244 07d8 BD F0                   		movw	r8, ax
  1245 07da A8 0E                   		movw	ax, [sp+14]
@@ -1657,38 +1658,38 @@
  1248 07e0 71 77 F1                		 xor1	CY, r9.7
  1249 07e3 61 D8                   		 sknc
  1250 07e5 EC 8E 07 00             		 br	!!.L56
- 411:../src/global.c **** 			}
- 412:../src/global.c **** 		}
- 413:../src/global.c **** 		display_scroll++;
- 1251                             		.loc 1 413 0 is_stmt 1 discriminator 2
+ 412:../src/global.c **** 			}
+ 413:../src/global.c **** 		}
+ 414:../src/global.c **** 		display_scroll++;
+ 1251                             		.loc 1 414 0 is_stmt 1 discriminator 2
  1252 07e9 A8 0A                   		movw	ax, [sp+10]
  1253 07eb A1                      		incw	ax
  1254 07ec B8 0A                   		movw	[sp+10], ax
- 414:../src/global.c **** 		writeByteLcd(0U, LCD_HOME_L1);
- 1255                             		.loc 1 414 0 discriminator 2
+ 415:../src/global.c **** 		writeByteLcd(0U, LCD_HOME_L1);
+ 1255                             		.loc 1 415 0 discriminator 2
  1256 07ee F1                      		clrb	a
  1257 07ef 98 00                   		mov	[sp], a
  1258 07f1 51 80                   		mov	a, #-128
  1259 07f3 98 02                   		mov	[sp+2], a
  1260 07f5 FC 00 00 00             		call	!!%code(_writeByteLcd)
- 415:../src/global.c **** 		delayNoInt(100);
- 1261                             		.loc 1 415 0 discriminator 2
+ 416:../src/global.c **** 		delayNoInt(100);
+ 1261                             		.loc 1 416 0 discriminator 2
  1262 07f9 30 64 00                		movw	ax, #100
  1263 07fc B8 00                   		movw	[sp], ax
  1264 07fe FC 00 00 00             		call	!!%code(_delayNoInt)
- 416:../src/global.c **** 		msDelay(350);
- 1265                             		.loc 1 416 0 discriminator 2
+ 417:../src/global.c **** 		msDelay(350);
+ 1265                             		.loc 1 417 0 discriminator 2
  1266 0802 30 5E 01                		movw	ax, #350
  1267 0805 B8 00                   		movw	[sp], ax
  1268 0807 FC 00 00 00             		call	!!%code(_msDelay)
- 401:../src/global.c **** 	{
- 1269                             		.loc 1 401 0 discriminator 2
+ 402:../src/global.c **** 	{
+ 1269                             		.loc 1 402 0 discriminator 2
  1270 080b A8 0C                   		movw	ax, [sp+12]
  1271 080d A1                      		incw	ax
  1272 080e B8 0C                   		movw	[sp+12], ax
  1273                             	.L53:
- 401:../src/global.c **** 	{
- 1274                             		.loc 1 401 0 is_stmt 0 discriminator 1
+ 402:../src/global.c **** 	{
+ 1274                             		.loc 1 402 0 is_stmt 0 discriminator 1
  1275 0810 A8 08                   		movw	ax, [sp+8]
  1276 0812 BD F0                   		movw	r8, ax
  1277 0814 A8 0C                   		movw	ax, [sp+12]
@@ -1697,29 +1698,29 @@
  1280 081a 71 77 F1                		 xor1	CY, r9.7
  1281 081d 61 D8                   		 sknc
  1282 081f EC 87 07 00             		 br	!!.L57
- 417:../src/global.c **** 	}
- 418:../src/global.c **** 	myCounter = 0;
- 1283                             		.loc 1 418 0 is_stmt 1
+ 418:../src/global.c **** 	}
+ 419:../src/global.c **** 	myCounter = 0;
+ 1283                             		.loc 1 419 0 is_stmt 1
  1284 0823 F6                      		clrw	ax
  1285 0824 BF 00 00                		movw	!_myCounter, ax
- 419:../src/global.c **** }
- 1286                             		.loc 1 419 0
+ 420:../src/global.c **** }
+ 1286                             		.loc 1 420 0
  1287 0827 10 10                   		addw	sp, #16
  1288 0829 D7                      		ret
  1289                             	.LFE11:
  1291                             		.global	_openGate
  1293                             	_openGate:
  1294                             	.LFB12:
- 420:../src/global.c **** 
- 421:../src/global.c **** /**
- 422:../src/global.c ****  * Opens the gate
- 423:../src/global.c ****  */
- 424:../src/global.c **** void openGate(void)
- 425:../src/global.c **** {
- 1295                             		.loc 1 425 0
- 426:../src/global.c **** 	//gate_cmd = 1;
- 427:../src/global.c **** 	DVR_PHASE = DVR_PHASE_OPEN;
- 1296                             		.loc 1 427 0
+ 421:../src/global.c **** 
+ 422:../src/global.c **** /**
+ 423:../src/global.c ****  * Opens the gate
+ 424:../src/global.c ****  */
+ 425:../src/global.c **** void openGate(void)
+ 426:../src/global.c **** {
+ 1295                             		.loc 1 426 0
+ 427:../src/global.c **** 	//gate_cmd = 1;
+ 428:../src/global.c **** 	DVR_PHASE = DVR_PHASE_OPEN;
+ 1296                             		.loc 1 428 0
  1297 082a C9 F0 04 FF             		movw	r8, #-252
  1298 082e AD F0                   		movw	ax, r8
  1299 0830 BD F4                   		movw	r12, ax
@@ -1731,8 +1732,8 @@
  1305 083c DA F4                   		movw	bc, r12
  1306 083e 8D F2                   		mov	a, r10
  1307 0840 48 00 00                		mov	[bc], a
- 428:../src/global.c **** 	DVR_nSLEEP = 1;
- 1308                             		.loc 1 428 0
+ 429:../src/global.c **** 	DVR_nSLEEP = 1;
+ 1308                             		.loc 1 429 0
  1309 0843 C9 F0 04 FF             		movw	r8, #-252
  1310 0847 AD F0                   		movw	ax, r8
  1311 0849 BD F4                   		movw	r12, ax
@@ -1744,33 +1745,33 @@
  1317 0855 DA F4                   		movw	bc, r12
  1318 0857 8D F2                   		mov	a, r10
  1319 0859 48 00 00                		mov	[bc], a
- 429:../src/global.c **** 	prev_gate_status = gate_status;
- 1320                             		.loc 1 429 0
+ 430:../src/global.c **** 	prev_gate_status = gate_status;
+ 1320                             		.loc 1 430 0
  1321 085c AF 00 00                		movw	ax, !_gate_status
  1322 085f BD F0                   		movw	r8, ax
  1323 0861 BF 00 00                		movw	!_prev_gate_status, ax
- 430:../src/global.c **** 	gate_status = UNKNOWN;
- 1324                             		.loc 1 430 0
+ 431:../src/global.c **** 	gate_status = UNKNOWN;
+ 1324                             		.loc 1 431 0
  1325 0864 F6                      		clrw	ax
  1326 0865 BF 00 00                		movw	!_gate_status, ax
- 431:../src/global.c **** 	//msDelay(COLLISION_DET_DELAY);
- 432:../src/global.c **** }
- 1327                             		.loc 1 432 0
+ 432:../src/global.c **** 	//msDelay(COLLISION_DET_DELAY);
+ 433:../src/global.c **** }
+ 1327                             		.loc 1 433 0
  1328 0868 D7                      		ret
  1329                             	.LFE12:
  1331                             		.global	_closeGate
  1333                             	_closeGate:
  1334                             	.LFB13:
- 433:../src/global.c **** 
- 434:../src/global.c **** /**
- 435:../src/global.c ****  * Closes the gate
- 436:../src/global.c ****  */
- 437:../src/global.c **** void closeGate(void)
- 438:../src/global.c **** {
- 1335                             		.loc 1 438 0
- 439:../src/global.c **** 	//gate_cmd = 1;
- 440:../src/global.c **** 	DVR_PHASE = DVR_PHASE_CLOSE;
- 1336                             		.loc 1 440 0
+ 434:../src/global.c **** 
+ 435:../src/global.c **** /**
+ 436:../src/global.c ****  * Closes the gate
+ 437:../src/global.c ****  */
+ 438:../src/global.c **** void closeGate(void)
+ 439:../src/global.c **** {
+ 1335                             		.loc 1 439 0
+ 440:../src/global.c **** 	//gate_cmd = 1;
+ 441:../src/global.c **** 	DVR_PHASE = DVR_PHASE_CLOSE;
+ 1336                             		.loc 1 441 0
  1337 0869 C9 F0 04 FF             		movw	r8, #-252
  1338 086d AD F0                   		movw	ax, r8
  1339 086f BD F4                   		movw	r12, ax
@@ -1782,8 +1783,8 @@
  1345 087b DA F4                   		movw	bc, r12
  1346 087d 8D F2                   		mov	a, r10
  1347 087f 48 00 00                		mov	[bc], a
- 441:../src/global.c **** 	DVR_nSLEEP = 1;
- 1348                             		.loc 1 441 0
+ 442:../src/global.c **** 	DVR_nSLEEP = 1;
+ 1348                             		.loc 1 442 0
  1349 0882 C9 F0 04 FF             		movw	r8, #-252
  1350 0886 AD F0                   		movw	ax, r8
  1351 0888 BD F4                   		movw	r12, ax
@@ -1795,48 +1796,48 @@
  1357 0894 DA F4                   		movw	bc, r12
  1358 0896 8D F2                   		mov	a, r10
  1359 0898 48 00 00                		mov	[bc], a
- 442:../src/global.c **** 	prev_gate_status = gate_status;
- 1360                             		.loc 1 442 0
+ 443:../src/global.c **** 	prev_gate_status = gate_status;
+ 1360                             		.loc 1 443 0
  1361 089b AF 00 00                		movw	ax, !_gate_status
  1362 089e BD F0                   		movw	r8, ax
  1363 08a0 BF 00 00                		movw	!_prev_gate_status, ax
- 443:../src/global.c **** 	gate_status = UNKNOWN;
- 1364                             		.loc 1 443 0
+ 444:../src/global.c **** 	gate_status = UNKNOWN;
+ 1364                             		.loc 1 444 0
  1365 08a3 F6                      		clrw	ax
  1366 08a4 BF 00 00                		movw	!_gate_status, ax
- 444:../src/global.c **** 	if (auto_close)
- 1367                             		.loc 1 444 0
+ 445:../src/global.c **** 	if (auto_close)
+ 1367                             		.loc 1 445 0
  1368 08a7 8F 00 00                		mov	a, !_auto_close
  1369 08aa 9D F0                   		mov	r8, a
  1370 08ac D4 F0                   		cmp0	r8
  1371 08ae 61 F8                   		 sknz
  1372 08b0 EC BA 08 00             		 br	!!.L59
- 445:../src/global.c **** 	{
- 446:../src/global.c **** 		auto_close = 0;
- 1373                             		.loc 1 446 0
+ 446:../src/global.c **** 	{
+ 447:../src/global.c **** 		auto_close = 0;
+ 1373                             		.loc 1 447 0
  1374 08b4 F5 00 00                		clrb	!_auto_close
- 447:../src/global.c **** 		auto_close_cntr = 0;
- 1375                             		.loc 1 447 0
+ 448:../src/global.c **** 		auto_close_cntr = 0;
+ 1375                             		.loc 1 448 0
  1376 08b7 F5 00 00                		clrb	!_auto_close_cntr
  1377                             	.L59:
- 448:../src/global.c **** 	}
- 449:../src/global.c **** 	//msDelay(COLLISION_DET_DELAY);
- 450:../src/global.c **** }
- 1378                             		.loc 1 450 0
+ 449:../src/global.c **** 	}
+ 450:../src/global.c **** 	//msDelay(COLLISION_DET_DELAY);
+ 451:../src/global.c **** }
+ 1378                             		.loc 1 451 0
  1379 08ba D7                      		ret
  1380                             	.LFE13:
  1382                             		.global	_stopGate
  1384                             	_stopGate:
  1385                             	.LFB14:
- 451:../src/global.c **** 
- 452:../src/global.c **** /**
- 453:../src/global.c ****  * Stops the gate (emergency stop)
- 454:../src/global.c ****  */
- 455:../src/global.c **** void stopGate(void)
- 456:../src/global.c **** {
- 1386                             		.loc 1 456 0
- 457:../src/global.c **** 	DVR_nSLEEP = 0;
- 1387                             		.loc 1 457 0
+ 452:../src/global.c **** 
+ 453:../src/global.c **** /**
+ 454:../src/global.c ****  * Stops the gate (emergency stop)
+ 455:../src/global.c ****  */
+ 456:../src/global.c **** void stopGate(void)
+ 457:../src/global.c **** {
+ 1386                             		.loc 1 457 0
+ 458:../src/global.c **** 	DVR_nSLEEP = 0;
+ 1387                             		.loc 1 458 0
  1388 08bb C9 F0 04 FF             		movw	r8, #-252
  1389 08bf AD F0                   		movw	ax, r8
  1390 08c1 BD F4                   		movw	r12, ax
@@ -1848,36 +1849,36 @@
  1396 08cd DA F4                   		movw	bc, r12
  1397 08cf 8D F2                   		mov	a, r10
  1398 08d1 48 00 00                		mov	[bc], a
- 458:../src/global.c **** 	prev_gate_status = gate_status;
- 1399                             		.loc 1 458 0
+ 459:../src/global.c **** 	prev_gate_status = gate_status;
+ 1399                             		.loc 1 459 0
  1400 08d4 AF 00 00                		movw	ax, !_gate_status
  1401 08d7 BD F0                   		movw	r8, ax
  1402 08d9 BF 00 00                		movw	!_prev_gate_status, ax
- 459:../src/global.c **** 	gate_status = ESTOP;
- 1403                             		.loc 1 459 0
+ 460:../src/global.c **** 	gate_status = ESTOP;
+ 1403                             		.loc 1 460 0
  1404 08dc 30 03 00                		movw	ax, #3
  1405 08df BF 00 00                		movw	!_gate_status, ax
- 460:../src/global.c **** }
- 1406                             		.loc 1 460 0
+ 461:../src/global.c **** }
+ 1406                             		.loc 1 461 0
  1407 08e2 D7                      		ret
  1408                             	.LFE14:
  1410                             		.global	_setRTC
  1412                             	_setRTC:
  1413                             	.LFB15:
- 461:../src/global.c **** 
- 462:../src/global.c **** /**
- 463:../src/global.c ****  * Sets the Real Time Clock to the last 5 Bytes stored in the UART Receive buffer
- 464:../src/global.c ****  */
- 465:../src/global.c **** void setRTC(void)
- 466:../src/global.c **** {
- 1414                             		.loc 1 466 0
+ 462:../src/global.c **** 
+ 463:../src/global.c **** /**
+ 464:../src/global.c ****  * Sets the Real Time Clock to the last 5 Bytes stored in the UART Receive buffer
+ 465:../src/global.c ****  */
+ 466:../src/global.c **** void setRTC(void)
+ 467:../src/global.c **** {
+ 1414                             		.loc 1 467 0
  1415                             		; start of function
  1416                             		; locals: 2 bytes
  1417                             		; outgoing: 8 bytes
  1418 08e3 20 0A                   		subw	sp, #10
  1419                             	.LCFI10:
- 467:../src/global.c **** 	time_now.sec = toBCD(myBuffer[myCounter - 1]);
- 1420                             		.loc 1 467 0
+ 468:../src/global.c **** 	time_now.sec = toBCD(myBuffer[myCounter - 1]);
+ 1420                             		.loc 1 468 0
  1421 08e5 AF 00 00                		movw	ax, !_myCounter
  1422 08e8 BD F0                   		movw	r8, ax
  1423 08ea B6 F0                   		decw	r8
@@ -1890,8 +1891,8 @@
  1430 08f7 FC 00 00 00             		call	!!%code(_toBCD)
  1431 08fb 8D F0                   		mov	a, r8
  1432 08fd 9F 00 00                		mov	!_time_now, a
- 468:../src/global.c **** 	time_now.min = toBCD(myBuffer[myCounter - 2]);
- 1433                             		.loc 1 468 0
+ 469:../src/global.c **** 	time_now.min = toBCD(myBuffer[myCounter - 2]);
+ 1433                             		.loc 1 469 0
  1434 0900 AF 00 00                		movw	ax, !_myCounter
  1435 0903 BD F0                   		movw	r8, ax
  1436 0905 B6 F0                   		decw	r8 
@@ -1905,8 +1906,8 @@
  1444 0914 FC 00 00 00             		call	!!%code(_toBCD)
  1445 0918 8D F0                   		mov	a, r8
  1446 091a 9F 00 00                		mov	!_time_now+1, a
- 469:../src/global.c **** 	time_now.hour = toBCD(myBuffer[myCounter - 3]);
- 1447                             		.loc 1 469 0
+ 470:../src/global.c **** 	time_now.hour = toBCD(myBuffer[myCounter - 3]);
+ 1447                             		.loc 1 470 0
  1448 091d AF 00 00                		movw	ax, !_myCounter
  1449 0920 BD F0                   		movw	r8, ax
  1450 0922 04 FD FF                		addw	ax, #-3
@@ -1919,8 +1920,8 @@
  1457 0930 FC 00 00 00             		call	!!%code(_toBCD)
  1458 0934 8D F0                   		mov	a, r8
  1459 0936 9F 00 00                		mov	!_time_now+2, a
- 470:../src/global.c **** 	time_now.day = toBCD(myBuffer[myCounter - 4]);
- 1460                             		.loc 1 470 0
+ 471:../src/global.c **** 	time_now.day = toBCD(myBuffer[myCounter - 4]);
+ 1460                             		.loc 1 471 0
  1461 0939 AF 00 00                		movw	ax, !_myCounter
  1462 093c BD F0                   		movw	r8, ax
  1463 093e 04 FC FF                		addw	ax, #-4
@@ -1933,8 +1934,8 @@
  1470 094c FC 00 00 00             		call	!!%code(_toBCD)
  1471 0950 8D F0                   		mov	a, r8
  1472 0952 9F 00 00                		mov	!_time_now+3, a
- 471:../src/global.c **** 	time_now.month = toBCD(myBuffer[myCounter - 5]);
- 1473                             		.loc 1 471 0
+ 472:../src/global.c **** 	time_now.month = toBCD(myBuffer[myCounter - 5]);
+ 1473                             		.loc 1 472 0
  1474 0955 AF 00 00                		movw	ax, !_myCounter
  1475 0958 BD F0                   		movw	r8, ax
  1476 095a 04 FB FF                		addw	ax, #-5
@@ -1947,11 +1948,11 @@
  1483 0968 FC 00 00 00             		call	!!%code(_toBCD)
  1484 096c 8D F0                   		mov	a, r8
  1485 096e 9F 00 00                		mov	!_time_now+5, a
- 472:../src/global.c **** 	R_RTC_Stop();
- 1486                             		.loc 1 472 0
+ 473:../src/global.c **** 	R_RTC_Stop();
+ 1486                             		.loc 1 473 0
  1487 0971 FC 00 00 00             		call	!!%code(_R_RTC_Stop)
- 473:../src/global.c **** 	R_RTC_Set_CounterValue(time_now);
- 1488                             		.loc 1 473 0
+ 474:../src/global.c **** 	R_RTC_Set_CounterValue(time_now);
+ 1488                             		.loc 1 474 0
  1489 0975 8F 00 00                		mov	a, !_time_now
  1490 0978 9D F0                   		mov	r8, a
  1491 097a 98 00                   		mov	[sp], a
@@ -1974,19 +1975,19 @@
  1508 09a2 9D F0                   		mov	r8, a
  1509 09a4 98 06                   		mov	[sp+6], a
  1510 09a6 FC 00 00 00             		call	!!%code(_R_RTC_Set_CounterValue)
- 474:../src/global.c **** 	R_RTC_Start();
- 1511                             		.loc 1 474 0
+ 475:../src/global.c **** 	R_RTC_Start();
+ 1511                             		.loc 1 475 0
  1512 09aa FC 00 00 00             		call	!!%code(_R_RTC_Start)
- 475:../src/global.c **** 	int i;
- 476:../src/global.c **** 	for (i = 0; i < RX_BUF_LEN; i++)
- 1513                             		.loc 1 476 0
+ 476:../src/global.c **** 	int i;
+ 477:../src/global.c **** 	for (i = 0; i < RX_BUF_LEN; i++)
+ 1513                             		.loc 1 477 0
  1514 09ae F6                      		clrw	ax
  1515 09af B8 08                   		movw	[sp+8], ax
  1516 09b1 EC C9 09 00             		br	!!.L63
  1517                             	.L64:
- 477:../src/global.c **** 	{
- 478:../src/global.c **** 		myBuffer[i] = 0x0;
- 1518                             		.loc 1 478 0 discriminator 3
+ 478:../src/global.c **** 	{
+ 479:../src/global.c **** 		myBuffer[i] = 0x0;
+ 1518                             		.loc 1 479 0 discriminator 3
  1519 09b5 A8 08                   		movw	ax, [sp+8]
  1520 09b7 04 00 00                		addw	ax, #_myBuffer
  1521 09ba BD F0                   		movw	r8, ax
@@ -1994,54 +1995,54 @@
  1523 09be DA F2                   		movw	bc, r10
  1524 09c0 F1                      		clrb	a
  1525 09c1 48 00 00                		mov	[bc], a
- 476:../src/global.c **** 	{
- 1526                             		.loc 1 476 0 discriminator 3
+ 477:../src/global.c **** 	{
+ 1526                             		.loc 1 477 0 discriminator 3
  1527 09c4 A8 08                   		movw	ax, [sp+8]
  1528 09c6 A1                      		incw	ax
  1529 09c7 B8 08                   		movw	[sp+8], ax
  1530                             	.L63:
- 476:../src/global.c **** 	{
- 1531                             		.loc 1 476 0 is_stmt 0 discriminator 1
+ 477:../src/global.c **** 	{
+ 1531                             		.loc 1 477 0 is_stmt 0 discriminator 1
  1532 09c9 A8 08                   		movw	ax, [sp+8]
  1533 09cb 44 0F 00                		cmpw	ax, #15
  1534 09ce 71 FF                   		 xor1	CY, a.7
  1535 09d0 61 E3                   		 skh
  1536 09d2 EC B5 09 00             		 br	!!.L64
- 479:../src/global.c **** 	}
- 480:../src/global.c **** 	myCounter = 0;
- 1537                             		.loc 1 480 0 is_stmt 1
+ 480:../src/global.c **** 	}
+ 481:../src/global.c **** 	myCounter = 0;
+ 1537                             		.loc 1 481 0 is_stmt 1
  1538 09d6 F6                      		clrw	ax
  1539 09d7 BF 00 00                		movw	!_myCounter, ax
- 481:../src/global.c **** }
- 1540                             		.loc 1 481 0
+ 482:../src/global.c **** }
+ 1540                             		.loc 1 482 0
  1541 09da 10 0A                   		addw	sp, #10
  1542 09dc D7                      		ret
  1543                             	.LFE15:
  1545                             		.global	_sendRTC
  1547                             	_sendRTC:
  1548                             	.LFB16:
- 482:../src/global.c **** 
- 483:../src/global.c **** /**
- 484:../src/global.c ****  * Sends the current Real Time Clock value via UART
- 485:../src/global.c ****  */
- 486:../src/global.c **** void sendRTC(void)
- 487:../src/global.c **** {
- 1549                             		.loc 1 487 0
+ 483:../src/global.c **** 
+ 484:../src/global.c **** /**
+ 485:../src/global.c ****  * Sends the current Real Time Clock value via UART
+ 486:../src/global.c ****  */
+ 487:../src/global.c **** void sendRTC(void)
+ 488:../src/global.c **** {
+ 1549                             		.loc 1 488 0
  1550                             		; start of function
  1551                             		; locals: 2 bytes
  1552                             		; outgoing: 4 bytes
  1553 09dd 20 06                   		subw	sp, #6
  1554                             	.LCFI11:
- 488:../src/global.c **** 	int i;
- 489:../src/global.c **** 	for (i = 0; i < RX_BUF_LEN; i++)
- 1555                             		.loc 1 489 0
+ 489:../src/global.c **** 	int i;
+ 490:../src/global.c **** 	for (i = 0; i < RX_BUF_LEN; i++)
+ 1555                             		.loc 1 490 0
  1556 09df F6                      		clrw	ax
  1557 09e0 B8 04                   		movw	[sp+4], ax
  1558 09e2 EC FA 09 00             		br	!!.L66
  1559                             	.L67:
- 490:../src/global.c **** 	{
- 491:../src/global.c **** 		myBuffer[i] = 0x0;
- 1560                             		.loc 1 491 0 discriminator 3
+ 491:../src/global.c **** 	{
+ 492:../src/global.c **** 		myBuffer[i] = 0x0;
+ 1560                             		.loc 1 492 0 discriminator 3
  1561 09e6 A8 04                   		movw	ax, [sp+4]
  1562 09e8 04 00 00                		addw	ax, #_myBuffer
  1563 09eb BD F0                   		movw	r8, ax
@@ -2049,161 +2050,161 @@
  1565 09ef DA F2                   		movw	bc, r10
  1566 09f1 F1                      		clrb	a
  1567 09f2 48 00 00                		mov	[bc], a
- 489:../src/global.c **** 	{
- 1568                             		.loc 1 489 0 discriminator 3
+ 490:../src/global.c **** 	{
+ 1568                             		.loc 1 490 0 discriminator 3
  1569 09f5 A8 04                   		movw	ax, [sp+4]
  1570 09f7 A1                      		incw	ax
  1571 09f8 B8 04                   		movw	[sp+4], ax
  1572                             	.L66:
- 489:../src/global.c **** 	{
- 1573                             		.loc 1 489 0 is_stmt 0 discriminator 1
+ 490:../src/global.c **** 	{
+ 1573                             		.loc 1 490 0 is_stmt 0 discriminator 1
  1574 09fa A8 04                   		movw	ax, [sp+4]
  1575 09fc 44 0F 00                		cmpw	ax, #15
  1576 09ff 71 FF                   		 xor1	CY, a.7
  1577 0a01 61 E3                   		 skh
  1578 0a03 EC E6 09 00             		 br	!!.L67
- 492:../src/global.c **** 	}
- 493:../src/global.c **** 	myCounter = 0;
- 1579                             		.loc 1 493 0 is_stmt 1
+ 493:../src/global.c **** 	}
+ 494:../src/global.c **** 	myCounter = 0;
+ 1579                             		.loc 1 494 0 is_stmt 1
  1580 0a07 F6                      		clrw	ax
  1581 0a08 BF 00 00                		movw	!_myCounter, ax
- 494:../src/global.c **** 	R_RTC_Get_CounterValue(&time_now);
- 1582                             		.loc 1 494 0
+ 495:../src/global.c **** 	R_RTC_Get_CounterValue(&time_now);
+ 1582                             		.loc 1 495 0
  1583 0a0b 30 00 00                		movw	ax, #_time_now
  1584 0a0e B8 00                   		movw	[sp], ax
  1585 0a10 FC 00 00 00             		call	!!%code(_R_RTC_Get_CounterValue)
- 495:../src/global.c **** 	myBuffer[0] = 0xF3;
- 1586                             		.loc 1 495 0
+ 496:../src/global.c **** 	myBuffer[0] = 0xF3;
+ 1586                             		.loc 1 496 0
  1587 0a14 51 F3                   		mov	a, #-13
  1588 0a16 9F 00 00                		mov	!_myBuffer, a
- 496:../src/global.c **** 	myBuffer[1] = toHex(time_now.month);
- 1589                             		.loc 1 496 0
+ 497:../src/global.c **** 	myBuffer[1] = toHex(time_now.month);
+ 1589                             		.loc 1 497 0
  1590 0a19 8F 00 00                		mov	a, !_time_now+5
  1591 0a1c 9D F0                   		mov	r8, a
  1592 0a1e 98 00                   		mov	[sp], a
  1593 0a20 FC 00 00 00             		call	!!%code(_toHex)
  1594 0a24 8D F0                   		mov	a, r8
  1595 0a26 9F 00 00                		mov	!_myBuffer+1, a
- 497:../src/global.c **** 	myBuffer[2] = toHex(time_now.day);
- 1596                             		.loc 1 497 0
+ 498:../src/global.c **** 	myBuffer[2] = toHex(time_now.day);
+ 1596                             		.loc 1 498 0
  1597 0a29 8F 00 00                		mov	a, !_time_now+3
  1598 0a2c 9D F0                   		mov	r8, a
  1599 0a2e 98 00                   		mov	[sp], a
  1600 0a30 FC 00 00 00             		call	!!%code(_toHex)
  1601 0a34 8D F0                   		mov	a, r8
  1602 0a36 9F 00 00                		mov	!_myBuffer+2, a
- 498:../src/global.c **** 	myBuffer[3] = toHex(time_now.hour);
- 1603                             		.loc 1 498 0
+ 499:../src/global.c **** 	myBuffer[3] = toHex(time_now.hour);
+ 1603                             		.loc 1 499 0
  1604 0a39 8F 00 00                		mov	a, !_time_now+2
  1605 0a3c 9D F0                   		mov	r8, a
  1606 0a3e 98 00                   		mov	[sp], a
  1607 0a40 FC 00 00 00             		call	!!%code(_toHex)
  1608 0a44 8D F0                   		mov	a, r8
  1609 0a46 9F 00 00                		mov	!_myBuffer+3, a
- 499:../src/global.c **** 	myBuffer[4] = toHex(time_now.min);
- 1610                             		.loc 1 499 0
+ 500:../src/global.c **** 	myBuffer[4] = toHex(time_now.min);
+ 1610                             		.loc 1 500 0
  1611 0a49 8F 00 00                		mov	a, !_time_now+1
  1612 0a4c 9D F0                   		mov	r8, a
  1613 0a4e 98 00                   		mov	[sp], a
  1614 0a50 FC 00 00 00             		call	!!%code(_toHex)
  1615 0a54 8D F0                   		mov	a, r8
  1616 0a56 9F 00 00                		mov	!_myBuffer+4, a
- 500:../src/global.c **** 	myBuffer[5] = toHex(time_now.sec);
- 1617                             		.loc 1 500 0
+ 501:../src/global.c **** 	myBuffer[5] = toHex(time_now.sec);
+ 1617                             		.loc 1 501 0
  1618 0a59 8F 00 00                		mov	a, !_time_now
  1619 0a5c 9D F0                   		mov	r8, a
  1620 0a5e 98 00                   		mov	[sp], a
  1621 0a60 FC 00 00 00             		call	!!%code(_toHex)
  1622 0a64 8D F0                   		mov	a, r8
  1623 0a66 9F 00 00                		mov	!_myBuffer+5, a
- 501:../src/global.c **** 
- 502:../src/global.c **** 	R_UART1_Send(myBuffer, 6);
- 1624                             		.loc 1 502 0
+ 502:../src/global.c **** 
+ 503:../src/global.c **** 	R_UART1_Send(myBuffer, 6);
+ 1624                             		.loc 1 503 0
  1625 0a69 30 00 00                		movw	ax, #_myBuffer
  1626 0a6c B8 00                   		movw	[sp], ax
  1627 0a6e 30 06 00                		movw	ax, #6
  1628 0a71 B8 02                   		movw	[sp+2], ax
  1629 0a73 FC 00 00 00             		call	!!%code(_R_UART1_Send)
- 503:../src/global.c **** }
- 1630                             		.loc 1 503 0
+ 504:../src/global.c **** }
+ 1630                             		.loc 1 504 0
  1631 0a77 10 06                   		addw	sp, #6
  1632 0a79 D7                      		ret
  1633                             	.LFE16:
  1635                             		.global	_buzzerBeep
  1637                             	_buzzerBeep:
  1638                             	.LFB17:
- 504:../src/global.c **** 
- 505:../src/global.c **** /**
- 506:../src/global.c ****  * Causes the buzzer to emit a series of beeps at 20 millisecond intervals
- 507:../src/global.c ****  * @param beeps number of consecutive beeps
- 508:../src/global.c ****  */
- 509:../src/global.c **** void buzzerBeep(uint8_t beeps)
- 510:../src/global.c **** {
- 1639                             		.loc 1 510 0
+ 505:../src/global.c **** 
+ 506:../src/global.c **** /**
+ 507:../src/global.c ****  * Causes the buzzer to emit a series of beeps at 20 millisecond intervals
+ 508:../src/global.c ****  * @param beeps number of consecutive beeps
+ 509:../src/global.c ****  */
+ 510:../src/global.c **** void buzzerBeep(uint8_t beeps)
+ 511:../src/global.c **** {
+ 1639                             		.loc 1 511 0
  1640                             		; start of function
  1641                             		; outgoing: 2 bytes
  1642 0a7a 20 02                   		subw	sp, #2
  1643                             	.LCFI12:
- 511:../src/global.c **** 	while (beeps){
- 1644                             		.loc 1 511 0
+ 512:../src/global.c **** 	while (beeps){
+ 1644                             		.loc 1 512 0
  1645 0a7c EC A7 0A 00             		br	!!.L69
  1646                             	.L70:
  1647                             	.LBB4:
- 512:../src/global.c **** 		R_PCLBUZ0_Start();
- 1648                             		.loc 1 512 0
+ 513:../src/global.c **** 		R_PCLBUZ0_Start();
+ 1648                             		.loc 1 513 0
  1649 0a80 FC 00 00 00             		call	!!%code(_R_PCLBUZ0_Start)
- 513:../src/global.c **** 		msDelay(20);
- 1650                             		.loc 1 513 0
+ 514:../src/global.c **** 		msDelay(20);
+ 1650                             		.loc 1 514 0
  1651 0a84 30 14 00                		movw	ax, #20
  1652 0a87 B8 00                   		movw	[sp], ax
  1653 0a89 FC 00 00 00             		call	!!%code(_msDelay)
- 514:../src/global.c **** 		R_PCLBUZ0_Stop();
- 1654                             		.loc 1 514 0
+ 515:../src/global.c **** 		R_PCLBUZ0_Stop();
+ 1654                             		.loc 1 515 0
  1655 0a8d FC 00 00 00             		call	!!%code(_R_PCLBUZ0_Stop)
- 515:../src/global.c **** 		beeps--;
- 1656                             		.loc 1 515 0
+ 516:../src/global.c **** 		beeps--;
+ 1656                             		.loc 1 516 0
  1657 0a91 88 06                   		mov	a, [sp+6]
  1658 0a93 9D F0                   		mov	r8, a
  1659 0a95 91                      		dec	a
  1660 0a96 98 06                   		mov	[sp+6], a
- 516:../src/global.c **** 		if (beeps) msDelay(40);
- 1661                             		.loc 1 516 0
+ 517:../src/global.c **** 		if (beeps) msDelay(40);
+ 1661                             		.loc 1 517 0
  1662 0a98 61 F8                   		sknz
  1663 0a9a EC A7 0A 00             		 br	!!.L69
  1664                             		 # zero-comparison eliminated
- 1665                             		.loc 1 516 0 is_stmt 0 discriminator 1
+ 1665                             		.loc 1 517 0 is_stmt 0 discriminator 1
  1666 0a9e 30 28 00                		movw	ax, #40
  1667 0aa1 B8 00                   		movw	[sp], ax
  1668 0aa3 FC 00 00 00             		call	!!%code(_msDelay)
  1669                             	.L69:
  1670                             	.LBE4:
- 511:../src/global.c **** 		R_PCLBUZ0_Start();
- 1671                             		.loc 1 511 0 is_stmt 1
+ 512:../src/global.c **** 		R_PCLBUZ0_Start();
+ 1671                             		.loc 1 512 0 is_stmt 1
  1672 0aa7 88 06                   		mov	a, [sp+6]
  1673 0aa9 D1                      		cmp0	a
  1674 0aaa 61 E8                   		 skz
  1675 0aac EC 80 0A 00             		 br	!!.L70
- 517:../src/global.c **** 	}
- 518:../src/global.c **** }
- 1676                             		.loc 1 518 0
+ 518:../src/global.c **** 	}
+ 519:../src/global.c **** }
+ 1676                             		.loc 1 519 0
  1677 0ab0 10 02                   		addw	sp, #2
  1678 0ab2 D7                      		ret
  1679                             	.LFE17:
  1681                             		.global	_toHex
  1683                             	_toHex:
  1684                             	.LFB18:
- 519:../src/global.c **** 
- 520:../src/global.c **** /**
- 521:../src/global.c ****  * Converts Binary Coded Decimal to Hexadecimal
- 522:../src/global.c ****  * Maximum input/output value is 99
- 523:../src/global.c ****  * @param decimal BCD value
- 524:../src/global.c ****  * @return Hexadecimal value
- 525:../src/global.c ****  */
- 526:../src/global.c **** uint8_t toHex(uint8_t decimal)
- 527:../src/global.c **** {
- 1685                             		.loc 1 527 0
- 528:../src/global.c **** 	return (decimal & 0x0F) + ((decimal >> 4) * 10);
- 1686                             		.loc 1 528 0
+ 520:../src/global.c **** 
+ 521:../src/global.c **** /**
+ 522:../src/global.c ****  * Converts Binary Coded Decimal to Hexadecimal
+ 523:../src/global.c ****  * Maximum input/output value is 99
+ 524:../src/global.c ****  * @param decimal BCD value
+ 525:../src/global.c ****  * @return Hexadecimal value
+ 526:../src/global.c ****  */
+ 527:../src/global.c **** uint8_t toHex(uint8_t decimal)
+ 528:../src/global.c **** {
+ 1685                             		.loc 1 528 0
+ 529:../src/global.c **** 	return (decimal & 0x0F) + ((decimal >> 4) * 10);
+ 1686                             		.loc 1 529 0
  1687 0ab3 88 04                   		mov	a, [sp+4]
  1688 0ab5 5C 0F                   		and	a, #15
  1689 0ab7 9D F1                   		mov	r9, a
@@ -2222,29 +2223,29 @@
  1702 0acf 8D F1                   		mov	a, r9
  1703 0ad1 61 0E                   		add	a, l
  1704 0ad3 9D F0                   		mov	r8, a
- 529:../src/global.c **** }
- 1705                             		.loc 1 529 0
+ 530:../src/global.c **** }
+ 1705                             		.loc 1 530 0
  1706 0ad5 D7                      		ret
  1707                             	.LFE18:
  1709                             		.global	_toBCD
  1711                             	_toBCD:
  1712                             	.LFB19:
- 530:../src/global.c **** 
- 531:../src/global.c **** /**
- 532:../src/global.c ****  * Converts Hexadecimal to Binary Coded Decimal
- 533:../src/global.c ****  * Maximum input/output value is 99
- 534:../src/global.c ****  * @param hex Hexadecimal value
- 535:../src/global.c ****  * @return Binary Coded Decimal value
- 536:../src/global.c ****  */
- 537:../src/global.c **** uint8_t toBCD(uint8_t hex)
- 538:../src/global.c **** {
- 1713                             		.loc 1 538 0
+ 531:../src/global.c **** 
+ 532:../src/global.c **** /**
+ 533:../src/global.c ****  * Converts Hexadecimal to Binary Coded Decimal
+ 534:../src/global.c ****  * Maximum input/output value is 99
+ 535:../src/global.c ****  * @param hex Hexadecimal value
+ 536:../src/global.c ****  * @return Binary Coded Decimal value
+ 537:../src/global.c ****  */
+ 538:../src/global.c **** uint8_t toBCD(uint8_t hex)
+ 539:../src/global.c **** {
+ 1713                             		.loc 1 539 0
  1714                             		; start of function
  1715                             		; locals: 4 bytes
  1716 0ad6 20 04                   		subw	sp, #4
  1717                             	.LCFI13:
- 539:../src/global.c **** 	uint8_t nibble_l = hex % 10; //Isolate lower nibble
- 1718                             		.loc 1 539 0
+ 540:../src/global.c **** 	uint8_t nibble_l = hex % 10; //Isolate lower nibble
+ 1718                             		.loc 1 540 0
  1719 0ad8 88 08                   		mov	a, [sp+8]
  1720 0ada 70                      		mov	x, a 
  1721 0adb 51 00                   		mov	a, #0
@@ -2263,8 +2264,8 @@
  1734                             		; end of udivmodhi macro
  1735 0af6 8D F0                   		mov	a, r8
  1736 0af8 98 03                   		mov	[sp+3], a
- 540:../src/global.c **** 	uint8_t nibble_h = ((hex / 10) % 10) << 4; //Isolate higher nibble
- 1737                             		.loc 1 540 0
+ 541:../src/global.c **** 	uint8_t nibble_h = ((hex / 10) % 10) << 4; //Isolate higher nibble
+ 1737                             		.loc 1 541 0
  1738 0afa 88 08                   		mov	a, [sp+8]
  1739 0afc 70                      		mov	x, a 
  1740 0afd 51 00                   		mov	a, #0
@@ -2297,18 +2298,18 @@
  1767 0b32 8D F0                   		mov	a, r8
  1768 0b34 31 49                   		shl	a, 4
  1769 0b36 98 02                   		mov	[sp+2], a
- 541:../src/global.c **** 	uint8_t byte = nibble_h | nibble_l; //Combine them as two consecutive values
- 1770                             		.loc 1 541 0
+ 542:../src/global.c **** 	uint8_t byte = nibble_h | nibble_l; //Combine them as two consecutive values
+ 1770                             		.loc 1 542 0
  1771 0b38 88 03                   		mov	a, [sp+3]
  1772 0b3a 76                      		mov	l, a
  1773 0b3b 88 02                   		mov	a, [sp+2]
  1774 0b3d 61 6E                   		or	a, l
  1775 0b3f 98 01                   		mov	[sp+1], a
- 542:../src/global.c **** 	return byte;
- 1776                             		.loc 1 542 0
+ 543:../src/global.c **** 	return byte;
+ 1776                             		.loc 1 543 0
  1777 0b41 9D F0                   		mov	r8, a
- 543:../src/global.c **** }
- 1778                             		.loc 1 543 0
+ 544:../src/global.c **** }
+ 1778                             		.loc 1 544 0
  1779 0b43 10 04                   		addw	sp, #4
  1780 0b45 D7                      		ret
  1781                             	.LFE19:

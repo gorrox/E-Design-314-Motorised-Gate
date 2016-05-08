@@ -8,6 +8,8 @@
 #ifndef LCD_H_
 #define LCD_H_
 
+ 	/* User */
+#define USERNAME "                Nel T. 18179460"
 
 	// Local LCD Port 7 bit allocation
 #define LCD_RS              P7_bit.no6		// Register select

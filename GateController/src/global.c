@@ -35,9 +35,7 @@ void core(void)
 	}
 }
 
-/**
- * PRIMARY FUNCTIONS
- */
+/*PRIMARY FUNCTIONS*/
 
 /**
  * Function to initialize:
@@ -102,6 +100,7 @@ void init(void)
 
 /**
  * Function to process proximity switch presses
+ * Stops gate if contact is detected and changes gate status
  */
 void mtrBtn(void)
 {
@@ -145,7 +144,11 @@ void mtrBtn(void)
 }
 
 /**
- * Function to process PCB button presses
+ * Function to process PCB button presses:
+ * - Open gate
+ * - Close gate
+ * - Estop
+ * - Menu Step (not implemented)
  */
 void boardBtn(void)
 {
@@ -204,7 +207,8 @@ void IRtoLCD(void)
 }
 
 /**
- * Function to process UART Receive flag
+ * Function to process UART Receive flag.
+ * Executes commands corresponding to the received hex data.
  */
 void uartReceive(void)
 {
@@ -317,6 +321,7 @@ void uartSend(void)
  * Function to output Pulse Width Modulation signal to motor
  * The output is constant, and the motor's utilisation of the PWM
  * is toggled by its nSLEEP
+ * PWM = divisor/cycles_per_second %
  * @param cycles_per_second
  * @param divisor
  * @see global.h
@@ -333,13 +338,9 @@ void pwm(int cycles_per_second, int divisor)
 	}
 }
 
-/**
- * END PRIMARY FUNCTIONS
- */
+/*END PRIMARY FUNCTIONS*/
 
-/**
- * AUXILIARY FUNCTIONS
- */
+/*AUXILIARY FUNCTIONS*/
 
 /**
  * Delay for t milliseconds
@@ -354,7 +355,7 @@ void msDelay(int t)
 }
 
 /**
- * Function to echo one Byte of data via UART
+ * Function to echo one Byte of data via UART to PC
  * @param hex byte to be sent
  */
 void echo(uint8_t hex)
@@ -364,7 +365,7 @@ void echo(uint8_t hex)
 }
 
 /**
- * Function to echo two Bytes of data via UART
+ * Function to echo two Bytes of data via UART to PC
  * @param hex first Byte to be sent
  * @param hex2 second Byte to be sent
  */
@@ -542,6 +543,4 @@ uint8_t toBCD(uint8_t hex)
 	return byte;
 }
 
-/**
- * END AUXILIARY FUNCTIONS
- */
+/*END AUXILIARY FUNCTIONS*/

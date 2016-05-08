@@ -24,10 +24,10 @@
   24                             	r31	=	0xffee7
   25                             	.text
   26                             	.Ltext0:
-  27                             		.section	.text.startup.main,"ax",@progbits
-  28                             		.global	_main
-  30                             	_main:
-  31                             	.LFB0:
+  27                             		.section	.text.R_MAIN_UserInit,"ax",@progbits
+  28                             		.global	_R_MAIN_UserInit
+  30                             	_R_MAIN_UserInit:
+  31                             	.LFB1:
   32                             		.file 1 "../src/r_main.c"
    1:../src/r_main.c **** /**************************************************************************************************
    2:../src/r_main.c **** * DISCLAIMER
@@ -85,119 +85,61 @@
   54:../src/r_main.c **** ***************************************************************************************************
   55:../src/r_main.c **** void main(void)
   56:../src/r_main.c **** {
-  33                             		.loc 1 56 0
-  34                             	.LBB4:
-  35                             	.LBB5:
   57:../src/r_main.c ****     R_MAIN_UserInit();
   58:../src/r_main.c ****     /* Start user code. Do not edit comment generated here */
-  59:../src/r_main.c ****     R_TAU0_Channel0_Start(); 	//PWM carrier
-  60:../src/r_main.c ****     R_TAU0_Channel3_Start();	//Manchester RC5 modulator
-  61:../src/r_main.c ****     btnOpenTrigger = 0;
-  62:../src/r_main.c ****     btnOpenTrigger = 0;
-  63:../src/r_main.c ****     R_INTC0_Start(); 			// Buttons
-  64:../src/r_main.c ****     R_INTC1_Start();
-  65:../src/r_main.c ****     frameBase = frameBaseDef;
-  66:../src/r_main.c ****     tx = 0;
-  67:../src/r_main.c ****     while (1U)
-  68:../src/r_main.c ****     {
-  69:../src/r_main.c ****     	if (btnOpenTrigger) btnOpenTriggered();
-  70:../src/r_main.c ****     	else if (btnCloseTrigger) btnCloseTriggered();
-  71:../src/r_main.c ****     }
-  72:../src/r_main.c ****     /* End user code. Do not edit comment generated here */
-  73:../src/r_main.c **** }
-  74:../src/r_main.c **** 
-  75:../src/r_main.c **** 
-  76:../src/r_main.c **** /**************************************************************************************************
-  77:../src/r_main.c **** * Function Name: R_MAIN_UserInit
-  78:../src/r_main.c **** * Description  : This function adds user code before implementing main function.
-  79:../src/r_main.c **** * Arguments    : None
-  80:../src/r_main.c **** * Return Value : None
-  81:../src/r_main.c **** ***************************************************************************************************
-  82:../src/r_main.c **** void R_MAIN_UserInit(void)
-  83:../src/r_main.c **** {
-  84:../src/r_main.c ****     /* Start user code. Do not edit comment generated here */
-  85:../src/r_main.c ****     EI();
-  36                             		.loc 1 85 0
-  37                             	 ; 85 "../src/r_main.c" 1
-  38 0000 71 7A FA                		ei
-  39                             	 ; 0 "" 2
-  40                             	.LBE5:
-  41                             	.LBE4:
-  59:../src/r_main.c ****     R_TAU0_Channel3_Start();	//Manchester RC5 modulator
-  42                             		.loc 1 59 0
-  43 0003 FC 00 00 00             		call	!!%code(_R_TAU0_Channel0_Start)
-  44                             	.LVL0:
-  60:../src/r_main.c ****     btnOpenTrigger = 0;
-  45                             		.loc 1 60 0
-  46 0007 FC 00 00 00             		call	!!%code(_R_TAU0_Channel3_Start)
-  47                             	.LVL1:
-  61:../src/r_main.c ****     btnOpenTrigger = 0;
-  48                             		.loc 1 61 0
-  49 000b F5 00 00                		clrb	!_btnOpenTrigger
-  62:../src/r_main.c ****     R_INTC0_Start(); 			// Buttons
-  50                             		.loc 1 62 0
-  51 000e F5 00 00                		clrb	!_btnOpenTrigger
-  63:../src/r_main.c ****     R_INTC1_Start();
-  52                             		.loc 1 63 0
-  53 0011 FC 00 00 00             		call	!!%code(_R_INTC0_Start)
-  54                             	.LVL2:
-  64:../src/r_main.c ****     frameBase = frameBaseDef;
-  55                             		.loc 1 64 0
-  56 0015 FC 00 00 00             		call	!!%code(_R_INTC1_Start)
-  57                             	.LVL3:
-  65:../src/r_main.c ****     tx = 0;
-  58                             		.loc 1 65 0
-  59 0019 30 20 34                		movw	ax, #13344
-  60 001c BF 00 00                		movw	!_frameBase, ax
-  66:../src/r_main.c ****     while (1U)
-  61                             		.loc 1 66 0
-  62 001f F5 00 00                		clrb	!_tx
-  63                             	.L2:
-  69:../src/r_main.c ****     	else if (btnCloseTrigger) btnCloseTriggered();
-  64                             		.loc 1 69 0
-  65 0022 D5 00 00                		cmp0	!_btnOpenTrigger
-  66 0025 61 F8                   		 sknz
-  67 0027 EC 33 00 00             		 br	!!.L3
-  69:../src/r_main.c ****     	else if (btnCloseTrigger) btnCloseTriggered();
-  68                             		.loc 1 69 0 is_stmt 0 discriminator 1
-  69 002b FC 00 00 00             		call	!!%code(_btnOpenTriggered)
-  70                             	.LVL4:
-  71 002f EC 22 00 00             		br	!!.L2
-  72                             	.L3:
-  70:../src/r_main.c ****     }
-  73                             		.loc 1 70 0 is_stmt 1
-  74 0033 D5 00 00                		cmp0	!_btnCloseTrigger
-  75 0036 61 F8                   		 sknz
-  76 0038 EC 22 00 00             		 br	!!.L2
-  70:../src/r_main.c ****     }
-  77                             		.loc 1 70 0 is_stmt 0 discriminator 1
-  78 003c FC 00 00 00             		call	!!%code(_btnCloseTriggered)
-  79                             	.LVL5:
-  80 0040 EC 22 00 00             		br	!!.L2
-  81                             	.LFE0:
-  83                             		.section	.text.R_MAIN_UserInit,"ax",@progbits
-  84                             		.global	_R_MAIN_UserInit
-  86                             	_R_MAIN_UserInit:
-  87                             	.LFB1:
-  83:../src/r_main.c ****     /* Start user code. Do not edit comment generated here */
-  88                             		.loc 1 83 0 is_stmt 1
-  89                             		.loc 1 85 0
-  90                             	 ; 85 "../src/r_main.c" 1
-  91 0000 71 7A FA                		ei
-  92                             	 ; 0 "" 2
-  86:../src/r_main.c ****     /* End user code. Do not edit comment generated here */
-  87:../src/r_main.c **** }
-  93                             		.loc 1 87 0
-  94 0003 D7                      		ret
-  95                             	.LFE1:
-  97                             		.comm	_msg,2,2
-  98                             		.comm	_tx,1,1
-  99                             		.comm	_modulate,1,1
- 100                             		.comm	_frameBase,2,2
- 101                             		.comm	_btnCloseTrigger,1,1
- 102                             		.comm	_btnOpenTrigger,1,1
- 137                             	.Letext0:
- 138                             		.file 2 "../src/r_cg_macrodriver.h"
- 139                             		.file 3 "../src/global.h"
- 140                             		.file 4 "../src/r_cg_timer.h"
- 141                             		.file 5 "../src/r_cg_intc.h"
+  59:../src/r_main.c ****     core();
+  60:../src/r_main.c ****     /* End user code. Do not edit comment generated here */
+  61:../src/r_main.c **** }
+  62:../src/r_main.c **** 
+  63:../src/r_main.c **** 
+  64:../src/r_main.c **** /**************************************************************************************************
+  65:../src/r_main.c **** * Function Name: R_MAIN_UserInit
+  66:../src/r_main.c **** * Description  : This function adds user code before implementing main function.
+  67:../src/r_main.c **** * Arguments    : None
+  68:../src/r_main.c **** * Return Value : None
+  69:../src/r_main.c **** ***************************************************************************************************
+  70:../src/r_main.c **** void R_MAIN_UserInit(void)
+  71:../src/r_main.c **** {
+  33                             		.loc 1 71 0
+  72:../src/r_main.c ****     /* Start user code. Do not edit comment generated here */
+  73:../src/r_main.c ****     EI();
+  34                             		.loc 1 73 0
+  35                             	 ; 73 "../src/r_main.c" 1
+  36 0000 71 7A FA                		ei
+  37                             	 ; 0 "" 2
+  74:../src/r_main.c ****     init();
+  38                             		.loc 1 74 0
+  39 0003 FC 00 00 00             		call	!!%code(_init)
+  40                             	.LVL0:
+  75:../src/r_main.c ****     /* End user code. Do not edit comment generated here */
+  76:../src/r_main.c **** }
+  41                             		.loc 1 76 0
+  42 0007 D7                      		ret
+  43                             	.LFE1:
+  45                             		.section	.text.startup.main,"ax",@progbits
+  46                             		.global	_main
+  48                             	_main:
+  49                             	.LFB0:
+  56:../src/r_main.c ****     R_MAIN_UserInit();
+  50                             		.loc 1 56 0
+  57:../src/r_main.c ****     /* Start user code. Do not edit comment generated here */
+  51                             		.loc 1 57 0
+  52 0000 FC 00 00 00             		call	!!%code(_R_MAIN_UserInit)
+  53                             	.LVL1:
+  59:../src/r_main.c ****     /* End user code. Do not edit comment generated here */
+  54                             		.loc 1 59 0
+  55 0004 FC 00 00 00             		call	!!%code(_core)
+  56                             	.LVL2:
+  61:../src/r_main.c **** 
+  57                             		.loc 1 61 0
+  58 0008 D7                      		ret
+  59                             	.LFE0:
+  61                             		.comm	_msg,2,2
+  62                             		.comm	_tx,1,1
+  63                             		.comm	_modulate,1,1
+  64                             		.comm	_frameBase,2,2
+  65                             		.comm	_btnCloseTrigger,1,1
+  66                             		.comm	_btnOpenTrigger,1,1
+ 101                             	.Letext0:
+ 102                             		.file 2 "../src/r_cg_macrodriver.h"
+ 103                             		.file 3 "../src/global.h"
